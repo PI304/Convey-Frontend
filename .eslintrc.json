@@ -53,6 +53,17 @@
     "@typescript-eslint/no-namespace": "off"
   },
   "settings": {
-    "import/parsers": { "@typescript-eslint/parser": [".ts"] }
-  }
+    "import/parsers": { "@typescript-eslint/parser": [".ts", ".tsx"] },
+    "import/resolver": {
+      "typescript": {}
+    }
+  },
+  "overrides": [
+    {
+      "files": ["./pages/**/*"],
+      "rules": {
+        "no-restricted-syntax": 0
+      }
+    }
+  ]
 }
