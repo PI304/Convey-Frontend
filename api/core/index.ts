@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { GenericInstance } from '../../@types/axios/core';
 
-const request: GenericInstance = axios.create({
+export const request: GenericInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACK_END_BASE_URL,
   timeout: 2500,
   headers: { 'Content-Type': 'application/json' },
@@ -24,5 +24,3 @@ request.interceptors.response.use(
     return Promise.reject(error);
   },
 );
-
-export default request;
