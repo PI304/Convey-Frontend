@@ -5,6 +5,15 @@ const nextConfig = {
   compiler: {
     emotion: true,
   },
+  redirects: async () => {
+    return [
+      {
+        source: '/',
+        destination: '/surveys',
+        permanent: false,
+      },
+    ];
+  },
 };
 
 module.exports = nextConfig;

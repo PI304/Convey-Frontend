@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { BreakPointsInNumber } from '@/styles';
+import { BreakPointsInNumber } from '@styles';
 
 export const useMobile = () => {
   const [isMobile, setIsMobile] = useState(false);
