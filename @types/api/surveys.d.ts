@@ -11,31 +11,7 @@ declare namespace RequestSurveys {
     abbr: string;
   };
 
-  type Put = {
-    title: string;
-    description: string;
-    questionType: string;
-    commonChoices: {
-      number: number;
-      content: string;
-      isDescriptive: boolean;
-      descForm: string;
-    }[];
-    questions: [
-      {
-        number: number;
-        content: string;
-        isRequired: boolean;
-        linkedSector: number;
-        choices: {
-          number: number;
-          content: string;
-          isDescriptive: boolean;
-          descForm: string;
-        }[];
-      },
-    ];
-  }[];
+  type Put = SurveyType[];
 }
 
 declare namespace ResponseSurveys {
