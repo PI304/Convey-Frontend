@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
 import axios from 'axios';
 import { GenericInstance } from '../../@types/axios/core';
 
@@ -21,6 +22,7 @@ request.interceptors.response.use(
     return response.data;
   },
   (error) => {
-    return Promise.reject(error);
+    console.log(error);
+    return new Promise(() => {});
   },
 );
