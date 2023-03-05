@@ -25,6 +25,7 @@
       "@utils": ["./utils"],
       "@constants": ["./constants"],
       "@atoms": ["./atoms"],
+      "@models": ["./models"],
       "@emotion/*": ["./node_modules/@emotion/*"]
     },
     "outDir": "./dist"
