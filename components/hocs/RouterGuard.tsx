@@ -18,6 +18,7 @@ export const RouterGuard = ({ children }: ChildrenType) => {
   const restoreAuthData = () => {
     const accessToken = sessionStorage.getItem(StorageKeys.accessToken);
     if (accessToken) setAuth({ accessToken });
+    else decideWhetherToRender();
   };
 
   const decideWhetherToRender = () => {
