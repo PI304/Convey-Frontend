@@ -1,6 +1,8 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import axios from 'axios';
-import { GenericInstance } from '../../@types/axios/core';
+import axios, { AxiosRequestConfig } from 'axios';
+import { authAtom } from '../../atoms/authAtom';
+import { store } from '../../atoms/index';
+import { GenericInstance } from '_types/axios/core';
 
 export const request: GenericInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACK_END_BASE_URL,
@@ -10,6 +12,8 @@ export const request: GenericInstance = axios.create({
 
 request.interceptors.request.use(
   (config) => {
+    const accessToken = store.get(authAtom)?.accessToken;
+    if (accessToken) setAuthorizedConfig(config, accessToken);
     return config;
   },
   (error) => {
@@ -26,3 +30,8 @@ request.interceptors.response.use(
     return new Promise(() => {});
   },
 );
+
+const setAuthorizedConfig = (config: AxiosRequestConfig, authToken: string) => {
+  config.headers = { Authorization: `Bearer ${authToken}` };
+  config.withCredentials = true;
+};
