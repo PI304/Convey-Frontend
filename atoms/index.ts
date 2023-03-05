@@ -6,3 +6,4 @@ export const store = getDefaultStore();
 export const unsub = store.sub(authAtom, () => {});
 
 export * from './authAtom';
+export * from './surveysAtom';
