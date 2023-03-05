@@ -25,7 +25,7 @@ export const SurveysPage = () => {
         bodies={
           (surveys?.length &&
             surveys.map((survey) => [
-              survey.id,
+              survey.id, //
               survey.title,
               survey.abbr,
               survey.author.name,

@@ -1,8 +1,8 @@
 import { atom } from 'jotai';
 
-export const authAtom = atom<ResponseAuth.Login | null, ResponseAuth.Login[], void>(
+export const authAtom = atom<ResponseAuth.PostLogin | null, ResponseAuth.PostLogin[], void>(
   null,
-  (_get, set, update: ResponseAuth.Login) => {
+  (_get, set, update: ResponseAuth.PostLogin) => {
     set(authAtom, { accessToken: update.accessToken });
   },
 );
