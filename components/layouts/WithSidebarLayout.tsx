@@ -6,11 +6,15 @@ export const WithSidebarLayout = ({ children }: LayoutProps) => {
   return (
     <DefaultLayout forwardCss={Container}>
       <Sidebar />
-      {children}
+      <section>{children}</section>
     </DefaultLayout>
   );
 };
 
 const Container = css`
   display: flex;
+
+  > section {
+    padding: 3rem;
+  }
 `;

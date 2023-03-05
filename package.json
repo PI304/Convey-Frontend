@@ -35,6 +35,7 @@
     "eslint-config-prettier": "^8.6.0",
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-prettier": "^4.2.1",
+    "eslint-plugin-react": "^7.32.2",
     "jotai-devtools": "^0.2.0",
     "prettier": "^2.8.3",
     "typescript": "^4.9.4"

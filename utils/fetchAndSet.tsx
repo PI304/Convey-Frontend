@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from 'react';
 
-export const useGet = async <T,>(
+export const fetchAndSet = async <T,>(
   api: () => Promise<T>,
   dispatch: Dispatch<SetStateAction<T | undefined>>,
 ) => {
