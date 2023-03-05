@@ -1,12 +1,17 @@
 declare namespace RequestAuth {
-  type Login = {
+  type PostLogin = {
     email: string;
     password: string;
   };
 }
 
 declare namespace ResponseAuth {
-  type Login = {
+  type PostLogin = {
     accessToken: string;
+  };
+
+  type PostRefresh = {
+    refresh: string;
+    access: string;
   };
 }
