@@ -20,7 +20,7 @@
       "_types/*": ["@types/*"],
       "@api": ["./api"],
       "@components": ["./components"],
-      "@hooks": ["./hooks"],
+      "@hooks/*": ["./hooks/*"],
       "@styles": ["./styles"],
       "@utils": ["./utils"],
       "@constants": ["./constants"],
