@@ -24,6 +24,7 @@
       "@styles": ["./styles"],
       "@utils": ["./utils"],
       "@constants": ["./constants"],
+      "@atoms": ["./atoms"],
       "@emotion/*": ["./node_modules/@emotion/*"]
     },
     "outDir": "./dist"
