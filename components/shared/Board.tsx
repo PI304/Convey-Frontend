@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useCustomRouter } from '@hooks/useCustomRouter';
 
 export const Board = ({ heads, bodies, viewPath }: BoardProps) => {
-  const { onRouteToPath } = useCustomRouter();
+  const { routeToPath } = useCustomRouter();
   return (
     <table css={Table}>
       <thead>
@@ -14,7 +14,7 @@ export const Board = ({ heads, bodies, viewPath }: BoardProps) => {
       </thead>
       <tbody>
         {bodies?.map((data, i) => (
-          <tr key={i} onClick={() => onRouteToPath(viewPath + '/' + data[0])}>
+          <tr key={i} onClick={() => routeToPath(viewPath + '/' + data[0])}>
             {data?.map((data, i) => (
               <td key={i}>{data}</td>
             ))}
