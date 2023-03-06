@@ -23,6 +23,7 @@ request.interceptors.request.use(
 
 request.interceptors.response.use(
   (response) => {
+    if (response.data.results) return response.data.results;
     return response.data;
   },
   (error) => {

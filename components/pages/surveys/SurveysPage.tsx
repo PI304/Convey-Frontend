@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import { getSurveys } from '@api';
 import { Board, Button } from '@components';
 import { Paths } from '@constants';
+import { parseSubmitDate } from '@hooks/parseSubmitDate';
 import { useChange } from '@hooks/useChange';
 import { useRouteToPath } from '@hooks/useRouteToPath';
 import { fetchAndSet } from '@utils';
@@ -29,7 +30,7 @@ export const SurveysPage = () => {
               survey.title,
               survey.abbr,
               survey.author.name,
-              survey.createdAt,
+              parseSubmitDate(survey.createdAt),
             ])) ||
           []
         }
