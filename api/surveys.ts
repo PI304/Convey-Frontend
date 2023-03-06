@@ -3,7 +3,7 @@ import { request } from './core';
 const baseUrl = '/surveys';
 
 export const getSurveys = (page: number) => {
-  const url = `${baseUrl}?page=${page}`;
+  const url = `${baseUrl}`;
   return request.get<ResponseSurveys.Get>(url);
 };
 

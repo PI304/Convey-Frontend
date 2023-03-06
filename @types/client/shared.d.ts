@@ -8,3 +8,8 @@ type BoardProps = {
   bodies: (string | number)[][];
   viewPath: string;
 };
+
+type SurveyBoxProps = {
+  surveyIdx: number;
+  survey: SurveyType;
+};
