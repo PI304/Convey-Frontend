@@ -29,10 +29,8 @@ export class Survey implements SurveyType {
         this.initializeShortAnswer();
         break;
       case QuestionTypes.singleSelect:
-        this.initializeSingleSelect();
-        break;
       case QuestionTypes.multiSelect:
-        this.initializeMultiSelect();
+        this.initializeSelect();
         break;
       case QuestionTypes.extent:
         this.initializeExtent();
@@ -82,25 +80,14 @@ export class Survey implements SurveyType {
     this.questions[0].choices = [
       {
         number: 1,
-        content: '선택1',
+        content: null,
         isDescriptive: true,
-        descForm: '%d',
-      },
-    ];
-  }
-
-  initializeSingleSelect() {
-    this.questions[0].choices = [
-      {
-        number: 1,
-        content: '선택1',
-        isDescriptive: false,
         descForm: null,
       },
     ];
   }
 
-  initializeMultiSelect() {
+  initializeSelect() {
     this.questions[0].choices = [
       {
         number: 1,
