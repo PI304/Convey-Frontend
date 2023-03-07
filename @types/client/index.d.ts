@@ -5,6 +5,10 @@ type LayoutProps = ChildrenType & {
   forwardCss?: SerializedStyles;
 };
 
+type AddSurveyAtomType = {
+  questionType: ValueOf<typeof QuestionTypes>;
+};
+
 type AddQuestionAtomType = {
   surveyIdx: number;
   questionType: ValueOf<typeof QuestionTypes>;

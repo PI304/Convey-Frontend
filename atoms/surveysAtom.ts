@@ -1,15 +1,29 @@
 import produce from 'immer';
 import { atom } from 'jotai';
 import { Choice } from '../models/choice';
-import { QuestionTypes } from '@constants';
 import { Survey } from '@models';
-import { AddChoiceAtomType, AddCommonChoiceAtomType, AddQuestionAtomType } from '_types/client';
+import { AddChoiceAtomType, AddCommonChoiceAtomType, AddQuestionAtomType, AddSurveyAtomType } from '_types/client';
 import { Question } from 'models/question';
 
-export const surveysAtom = atom<RequestSurveys.Put | null>([
-  new Survey(QuestionTypes.multiSelect),
-  new Survey(QuestionTypes.shortAnswer),
-]);
+export const surveysAtom = atom<RequestSurveys.Put | null>([]);
+
+export const addSurveyAtom = atom(null, (get, set, update: AddSurveyAtomType) => {
+  const surveys = get(surveysAtom);
+  if (!surveys) return;
+  const newSurveys = produce(surveys, (draft) => {
+    draft.push(new Survey(update.questionType));
+  });
+  set(surveysAtom, newSurveys);
+});
+
+export const removeSurveyAtom = atom(null, (get, set, update: RemoveSurveyAtomType) => {
+  const surveys = get(surveysAtom);
+  if (!surveys) return;
+  const newSurveys = produce(surveys, (draft) => {
+    draft.splice(update.surveyIdx, 1);
+  });
+  set(surveysAtom, newSurveys);
+});
 
 export const writeSurveyTitleAtom = atom(null, (get, set, update: WriteSurveyTitleAtomType) => {
   const surveys = get(surveysAtom);
@@ -210,6 +224,18 @@ export const eraseDescFormAtom = atom(null, (get, set, update: EraseDescFormType
       .filter((v) => v !== '')
       .slice(0, -1)
       .join('');
+  });
+  set(surveysAtom, newSurveys);
+});
+
+export const toggleChoiceIsDescriptiveAtom = atom(null, (get, set, update: ToggleChoiceIsDescriptiveType) => {
+  const surveys = get(surveysAtom);
+  if (!surveys) return;
+  const newSurveys = produce(surveys, (draft) => {
+    const choices = draft[update.surveyIdx].questions[update.questionIdx].choices;
+    if (!choices) return;
+    if (choices[update.choiceIdx].isDescriptive) choices[update.choiceIdx].descForm = null;
+    choices[update.choiceIdx].isDescriptive = !choices[update.choiceIdx].isDescriptive;
   });
   set(surveysAtom, newSurveys);
 });

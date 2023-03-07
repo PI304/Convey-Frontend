@@ -12,8 +12,10 @@ export const Button = ({ label, onClick }: CommonButtonProps) => {
 const Container = css`
   ${Fonts.medium14};
   width: fit-content;
+  height: fit-content;
   padding: 0.5rem 0.8rem;
   border: 0.1rem solid black;
   border-radius: 8px;
   cursor: pointer;
+  white-space: nowrap;
 `;

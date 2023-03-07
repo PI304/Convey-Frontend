@@ -3,10 +3,9 @@ import { useEffect, useState } from 'react';
 import { getSurveys } from '@api';
 import { Board, Button } from '@components';
 import { Paths } from '@constants';
-import { parseSubmitDate } from '@hooks/parseSubmitDate';
 import { useChange } from '@hooks/useChange';
 import { useRouteToPath } from '@hooks/useRouteToPath';
-import { fetchAndSet } from '@utils';
+import { fetchAndSet, parseSubmitDate } from '@utils';
 
 export const SurveysPage = () => {
   const onRouteToNew = useRouteToPath(Paths.surveysNew);

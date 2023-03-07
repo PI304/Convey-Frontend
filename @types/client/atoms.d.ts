@@ -1,3 +1,7 @@
+type RemoveSurveyAtomType = {
+  surveyIdx: number;
+};
+
 type WriteSurveyTitleAtomType = {
   surveyIdx: number;
   title: string;
@@ -73,6 +77,12 @@ type AddStaticDescFormAtomType = AddDescFormAtomType & {
 };
 
 type EraseDescFormType = {
+  surveyIdx: number;
+  questionIdx: number;
+  choiceIdx: number;
+};
+
+type ToggleChoiceIsDescriptiveType = {
   surveyIdx: number;
   questionIdx: number;
   choiceIdx: number;
