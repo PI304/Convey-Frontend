@@ -5,30 +5,32 @@ import { Button } from './Button';
 import {
   writeSurveyTitleAtom,
   writeSurveyDescriptionAtom,
-  removeChoiceAtom,
-  addChoiceAtom,
-  writeChoiceContentAtom,
-  writeQuestionContentAtom,
   writeQuestionNumberAtom,
-  writeChoiceNumberAtom,
+  writeQuestionContentAtom,
   addQuestionAtom,
-  addCommonChoiceAtom,
   removeQuestionAtom,
-  writeCommonChoiceContentAtom,
-  removeCommonChoiceAtom,
+  writeChoiceNumberAtom,
+  writeChoiceContentAtom,
+  addChoiceAtom,
+  removeChoiceAtom,
   writeCommonChoiceNumberAtom,
+  writeCommonChoiceContentAtom,
+  addCommonChoiceAtom,
+  removeCommonChoiceAtom,
   addNumberDescFormAtom,
   addStringDescFormAtom,
   addStaticDescFormAtom,
   eraseDescFormAtom,
+  toggleChoiceIsDescriptiveAtom,
+  removeSurveyAtom,
 } from '@atoms';
-import { QuestionTypeCategories, QuestionTypeLables, QuestionTypes } from '@constants';
+import { QuestionTypeLables, QuestionTypes } from '@constants';
 import { useInput } from '@hooks/useInput';
-import { Fonts } from '@styles';
 
 export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
-  const [staticDesc, onChangeStaticDesc, onResetStaticDesc] = useInput();
   const questionType = survey.questionType as ValueOf<typeof QuestionTypes>;
+  const [staticDesc, onChangeStaticDesc, onResetStaticDesc] = useInput();
+  const removeSurvey = useSetAtom(removeSurveyAtom);
   const writeTitle = useSetAtom(writeSurveyTitleAtom);
   const writeDescription = useSetAtom(writeSurveyDescriptionAtom);
   const writeQuestionNumber = useSetAtom(writeQuestionNumberAtom);
@@ -47,220 +49,181 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
   const addStringDescForm = useSetAtom(addStringDescFormAtom);
   const addStaticDescForm = useSetAtom(addStaticDescFormAtom);
   const eraseDescForm = useSetAtom(eraseDescFormAtom);
+  const toggleChoiceIsDescriptive = useSetAtom(toggleChoiceIsDescriptiveAtom);
   return (
     <div css={Container}>
       <div css={QuestionTypeLabel}>{QuestionTypeLables[questionType]}</div>
-      <div css={Box}>
-        <div css={Meta}>
-          <input //
-            value={survey.title}
-            onChange={(e) => writeTitle({ surveyIdx, title: e.target.value })}
-            placeholder='제목'
-          />
-        </div>
-        <div css={Meta}>
-          <input
-            value={survey.description}
-            onChange={(e) => writeDescription({ surveyIdx, description: e.target.value })}
-            placeholder='설명'
-          />
-        </div>
-        <div css={Grids}>
-          <div css={ContentsGrid}>
-            <div>번호</div>
-            <div>항목</div>
-            {survey.questions.map((question, questionIdx) => (
-              <Fragment key={questionIdx}>
-                <div>
-                  <input
-                    value={question.number}
-                    onChange={(e) => writeQuestionNumber({ surveyIdx, questionIdx, number: +e.target.value })}
-                  />
-                  <Button label='질문 삭제' onClick={() => removeQuestion({ surveyIdx, questionIdx })} />
-                </div>
-                <div>
-                  <input
-                    value={question.content}
-                    onChange={(e) => writeQuestionContent({ surveyIdx, questionIdx, content: e.target.value })}
-                  />
-                </div>
-              </Fragment>
-            ))}
-          </div>
-          <div css={[ChoicesGrid, { gridTemplateColumns: `repeat(${survey.commonChoices?.length}, 1fr)` }]}>
-            {QuestionTypeCategories.needCommonChoice.includes(questionType as any) && (
-              <div css={AddCommonStandard}>
-                <Button label='기준 추가' onClick={() => addCommonChoice({ surveyIdx, questionType })} />
+      <Button label='서베이삭제' onClick={() => removeSurvey({ surveyIdx })} />
+      <div css={Meta}>
+        <input
+          value={survey.title}
+          onChange={(e) => writeTitle({ surveyIdx, title: e.target.value })}
+          placeholder='제목'
+        />
+      </div>
+      <div css={Meta}>
+        <input
+          value={survey.description}
+          onChange={(e) => writeDescription({ surveyIdx, description: e.target.value })}
+          placeholder='제목'
+        />
+      </div>
+      <div css={Table}>
+        {/* Head */}
+        <div>번호</div>
+        <div>항목</div>
+        {survey.commonChoices && (
+          <div>
+            {survey.commonChoices.map((commonChoice, choiceIdx) => (
+              <div key={choiceIdx}>
+                <input
+                  value={commonChoice.content + ''}
+                  onChange={(e) => writeCommonChoiceContent({ surveyIdx, choiceIdx, content: e.target.value })}
+                />
+                <Button label='기준삭제' onClick={() => removeCommonChoice({ surveyIdx, choiceIdx })} />
               </div>
-            )}
-            {survey.commonChoices &&
-              survey.commonChoices?.map((commonChoice, choiceIdx) => (
-                <div key={choiceIdx}>
-                  {commonChoice.content !== null && (
-                    <input
-                      value={commonChoice.content}
-                      onChange={(e) => writeCommonChoiceContent({ surveyIdx, choiceIdx, content: e.target.value })}
-                    />
-                  )}
-                  <Button label='삭제' onClick={() => removeCommonChoice({ surveyIdx, choiceIdx })} />
-                </div>
-              ))}
-            {!survey.commonChoices && <div css={StandardLabel}>응답기준</div>}
-            {survey.commonChoices &&
-              survey.commonChoices?.map((commonChoice, choiceIdx) => (
-                <div key={choiceIdx}>
-                  <input
-                    value={commonChoice.number}
-                    onChange={(e) => writeCommonChoiceNumber({ surveyIdx, choiceIdx, number: +e.target.value })}
-                  />
-                </div>
-              ))}
-            {!survey.commonChoices &&
-              survey.questions?.map((question, questionIdx) => (
-                <div css={Choices} key={questionIdx}>
-                  {question.choices?.map((choice, choiceIdx) => (
-                    <div key={choiceIdx}>
+            ))}
+            <Button label='기준추가' onClick={() => addCommonChoice({ surveyIdx, questionType })} />
+          </div>
+        )}
+        {!survey.commonChoices && <div>응답기준</div>}
+        {/* Body */}
+        {survey.questions.map((question, questionIdx) => (
+          <Fragment key={questionIdx}>
+            <div>
+              <input
+                value={question.number}
+                onChange={(e) => writeQuestionNumber({ surveyIdx, questionIdx, number: +e.target.value })}
+              />
+              <div>
+                <Button label='질문삭제' onClick={() => removeQuestion({ surveyIdx, questionIdx })} />
+              </div>
+            </div>
+            <div>
+              <input
+                value={question.content}
+                onChange={(e) => writeQuestionContent({ surveyIdx, questionIdx, content: e.target.value })}
+              />
+            </div>
+            <div css={[Choices.default, survey.commonChoices ? Choices.common : Choices.notCommon]}>
+              {survey.commonChoices &&
+                survey.commonChoices.map((commonChoice, choiceIdx) => (
+                  <div css={Choice} key={choiceIdx}>
+                    <div>
+                      <input
+                        value={commonChoice.number}
+                        onChange={(e) => writeCommonChoiceNumber({ surveyIdx, choiceIdx, number: +e.target.value })}
+                      />
+                    </div>
+                  </div>
+                ))}
+              {!survey.commonChoices &&
+                question.choices?.map((choice, choiceIdx) => (
+                  <div css={Choice} key={choiceIdx}>
+                    <div>
                       <input
                         value={choice.number}
                         onChange={(e) =>
                           writeChoiceNumber({ surveyIdx, questionIdx, choiceIdx, number: +e.target.value })
                         }
-                      />{' '}
-                      {choice.content !== null && (
+                      />
+                    </div>
+                    {choice.content !== null && (
+                      <div>
                         <input
                           value={choice.content}
                           onChange={(e) =>
                             writeChoiceContent({ surveyIdx, questionIdx, choiceIdx, content: e.target.value })
                           }
                         />
-                      )}
-                      {choice.isDescriptive && choice.descForm}
-                      {choice.isDescriptive && (
-                        <>
-                          <Button
-                            label='숫자'
-                            onClick={() => addNumberDescForm({ surveyIdx, questionIdx, choiceIdx })}
-                          />
-                          <Button
-                            label='문자'
-                            onClick={() => addStringDescForm({ surveyIdx, questionIdx, choiceIdx })}
-                          />
-                          <input value={staticDesc} onChange={onChangeStaticDesc} />
-                          <Button
-                            label='글자'
-                            onClick={() => {
-                              {
-                                addStaticDescForm({ surveyIdx, questionIdx, choiceIdx, content: staticDesc });
-                                onResetStaticDesc();
-                              }
-                            }}
-                          />
-                          <Button label='지우기' onClick={() => eraseDescForm({ surveyIdx, questionIdx, choiceIdx })} />
-                        </>
-                      )}
-                      <Button label='삭제' onClick={() => removeChoice({ surveyIdx, questionIdx, choiceIdx })} />
-                    </div>
-                  ))}
-                  <Button label='추가' onClick={() => addChoice({ surveyIdx, questionIdx, questionType })} />
-                </div>
-              ))}
-          </div>
-        </div>
+                      </div>
+                    )}
+                    {choice.isDescriptive && (
+                      <div>
+                        {choice.descForm || 'descForm'}
+                        <Button label='숫자' onClick={() => addNumberDescForm({ surveyIdx, questionIdx, choiceIdx })} />
+                        <Button label='문자' onClick={() => addStringDescForm({ surveyIdx, questionIdx, choiceIdx })} />
+                        <input value={staticDesc} onChange={onChangeStaticDesc} />
+                        <Button
+                          label='글자'
+                          onClick={() => addStaticDescForm({ surveyIdx, questionIdx, choiceIdx, content: staticDesc })}
+                        />
+                        <Button label='지우기' onClick={() => eraseDescForm({ surveyIdx, questionIdx, choiceIdx })} />
+                      </div>
+                    )}
+                    {survey.questionType !== QuestionTypes.shortAnswer && (
+                      <Button
+                        label='서술여부'
+                        onClick={() => toggleChoiceIsDescriptive({ surveyIdx, questionIdx, choiceIdx })}
+                      />
+                    )}
+                    <Button label='삭제' onClick={() => removeChoice({ surveyIdx, questionIdx, choiceIdx })} />
+                  </div>
+                ))}
+              {!survey.commonChoices && questionType !== QuestionTypes.longAnswer && (
+                <Button label='선지추가' onClick={() => addChoice({ surveyIdx, questionIdx, questionType })} />
+              )}
+            </div>
+          </Fragment>
+        ))}
       </div>
-      <Button label='질문 추가' onClick={() => addQuestion({ surveyIdx, questionType })} />
+      <Button label='질문추가' onClick={() => addQuestion({ surveyIdx, questionType })} />
     </div>
   );
 };
 
 const Container = css`
-  margin: 1rem 0;
-`;
-
-const Box = css`
-  border: 0.1rem solid black;
-  border-right: 0;
-  border-bottom: 0;
-  min-width: 60rem;
-`;
-
-const Meta = css`
-  padding: 1rem;
-  border-right: 0.1rem solid black;
-  border-bottom: 0.1rem solid black;
-`;
-
-const Grids = css`
+  background-color: antiquewhite;
   display: flex;
-
-  > div > div {
-    /* height: 4rem; */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    white-space: nowrap;
-  }
-`;
-
-const ContentsGrid = css`
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  text-align: center;
-
-  > div {
-    border-right: 0.1rem solid black;
-    border-bottom: 0.1rem solid black;
-    padding: 0.5rem;
-  }
-`;
-
-const ChoicesGrid = css`
-  display: grid;
-  text-align: center;
-  flex-grow: 1;
-  position: relative;
-
-  > div {
-    padding: 0.5rem;
-    border-right: 0.1rem solid black;
-    border-bottom: 0.1rem solid black;
-  }
-
-  input {
-    width: 8rem;
-  }
-`;
-
-const Choices = css`
-  display: flex;
-  gap: 5rem;
-
-  > div {
-    display: flex;
-    gap: 1rem;
-  }
-
-  input {
-    width: 5rem;
-  }
+  flex-direction: column;
+  gap: 1rem;
+  margin: 2rem 0;
 `;
 
 const QuestionTypeLabel = css`
-  ${Fonts.medium14}
-  background-color: gray;
-  color: white;
   width: fit-content;
   padding: 0.5rem 0.8rem;
   border-radius: 0.8rem;
-  margin: 0.5rem 0;
+  background-color: lightblue;
 `;
 
-const StandardLabel = css`
-  grid-column: 1;
+const Table = css`
+  display: grid;
+  grid-template-columns: 1fr 1fr 3fr;
+
+  > div {
+    border: 0.1rem solid dimgray;
+
+    :nth-of-type(3n) {
+      display: flex;
+      gap: 1rem;
+    }
+  }
 `;
 
-const AddCommonStandard = css`
-  position: absolute;
-  right: 0;
-  transform: translateX(100%);
-  border: 0 !important;
+const Meta = css`
+  grid-column: 1/4;
+`;
+
+const Choices = {
+  default: css`
+    gap: 2rem;
+  `,
+  common: css`
+    flex-direction: row;
+  `,
+  notCommon: css`
+    flex-direction: column;
+  `,
+};
+
+const Choice = css`
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  > div {
+    display: flex;
+    align-items: center;
+  }
 `;
