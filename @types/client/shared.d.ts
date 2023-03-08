@@ -1,6 +1,7 @@
 type CommonButtonProps = {
   label: string;
   onClick: () => void;
+  backgroundColor?: string;
 };
 
 type BoardProps = {
@@ -12,4 +13,11 @@ type BoardProps = {
 type SurveyBoxProps = {
   surveyIdx: number;
   survey: SurveyType;
+};
+
+type InputProps = {
+  value: string;
+  onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  placeholder: string;
+  width?: string;
 };

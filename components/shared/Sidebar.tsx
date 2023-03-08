@@ -22,6 +22,7 @@ export const Sidebar = () => {
 
 const Container = css`
   width: 20rem;
+  flex-shrink: 0;
   padding: 5rem 0;
   background-color: ${Colors.white};
   display: flex;

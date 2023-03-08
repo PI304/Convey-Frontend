@@ -1,9 +1,7 @@
 import produce from 'immer';
 import { atom } from 'jotai';
-import { Choice } from '../models/choice';
-import { Survey } from '@models';
+import { Choice, Question, Survey } from '@models';
 import { AddChoiceAtomType, AddCommonChoiceAtomType, AddQuestionAtomType, AddSurveyAtomType } from '_types/client';
-import { Question } from 'models/question';
 
 export const surveysAtom = atom<RequestSurveys.Put | null>([]);
 
@@ -77,6 +75,7 @@ export const removeQuestionAtom = atom(null, (get, set, update: RemoveQuestionAt
   if (!surveys) return;
   const newSurveys = produce(surveys, (draft) => {
     const questions = draft[update.surveyIdx].questions;
+    if (questions.length === 1) return;
     questions.splice(update.questionIdx, 1);
   });
   set(surveysAtom, newSurveys);
@@ -122,7 +121,7 @@ export const removeChoiceAtom = atom(null, (get, set, update: RemoveChoiceAtomTy
   if (!surveys) return;
   const newSurveys = produce(surveys, (draft) => {
     const choices = draft[update.surveyIdx].questions[update.questionIdx].choices;
-    if (!choices) return;
+    if (!choices || choices.length === 1) return;
     choices.splice(update.choiceIdx, 1);
   });
   set(surveysAtom, newSurveys);
@@ -166,7 +165,7 @@ export const removeCommonChoiceAtom = atom(null, (get, set, update: RemoveCommon
   if (!surveys) return;
   const newSurveys = produce(surveys, (draft) => {
     const commonChoices = draft[update.surveyIdx].commonChoices;
-    if (!commonChoices) return;
+    if (!commonChoices || commonChoices.length === 1) return;
     commonChoices.splice(update.choiceIdx, 1);
   });
   set(surveysAtom, newSurveys);
