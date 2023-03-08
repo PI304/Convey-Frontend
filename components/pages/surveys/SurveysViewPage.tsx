@@ -29,4 +29,5 @@ export const SurveysViewPage = () => {
 
 const AddSurveyButtons = css`
   display: flex;
+  gap: 1rem;
 `;
