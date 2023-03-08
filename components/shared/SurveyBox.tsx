@@ -210,7 +210,6 @@ const Container = css`
   display: flex;
   flex-direction: column;
   gap: 1rem;
-  margin: 2rem 0;
   background-color: white;
   padding: 1rem;
   border: 0.1rem solid lightgray;

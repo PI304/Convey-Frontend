@@ -1,5 +1,6 @@
 import produce from 'immer';
 import { atom } from 'jotai';
+import { QuestionTypes } from '@constants';
 import { Choice, Question, Survey } from '@models';
 import { AddChoiceAtomType, AddCommonChoiceAtomType, AddQuestionAtomType, AddSurveyAtomType } from '_types/client';
 
@@ -67,6 +68,7 @@ export const addQuestionAtom = atom(null, (get, set, update: AddQuestionAtomType
     questions.push(new Question(questions.length + 1));
   });
   set(surveysAtom, newSurveys);
+  if (update.questionType === QuestionTypes.longAnswer) return;
   set(addChoiceAtom, { ...update, questionIdx: surveys[update.surveyIdx].questions.length });
 });
 

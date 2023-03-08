@@ -22,7 +22,6 @@ export class Choice implements ChoiceType {
 
     switch (questionType) {
       case QuestionTypes.shortAnswer:
-      case QuestionTypes.longAnswer:
         this.initializeDescriptiveChoice();
     }
   }

@@ -1,5 +1,7 @@
 import { css } from '@emotion/react';
 import { useAtomValue, useSetAtom } from 'jotai';
+import { useMutation } from 'react-query';
+import { putSurveys } from '../../../api/surveys';
 import { addSurveyAtom, surveysAtom } from '@atoms';
 import { Button, SurveyBox } from '@components';
 import { QuestionTypes } from '@constants';
@@ -9,9 +11,16 @@ export const SurveysViewPage = () => {
   const id = useQueryString('id');
   const surveys = useAtomValue(surveysAtom);
   const addSurvey = useSetAtom(addSurveyAtom);
+  const { mutate } = useMutation(() => putSurveys(+(id || 0), surveys || []), {
+    onSuccess: (data) => {
+      console.log(data);
+    },
+  });
+
   return (
-    <div>
+    <div css={Container}>
       <h1>SurveysViewPage / {id}</h1>
+      <Button label='저장하기' onClick={mutate} />
       {surveys?.map((survey, i) => (
         <SurveyBox survey={survey} surveyIdx={i} key={i} />
       ))}
@@ -26,6 +35,12 @@ export const SurveysViewPage = () => {
     </div>
   );
 };
+
+const Container = css`
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+`;
 
 const AddSurveyButtons = css`
   display: flex;

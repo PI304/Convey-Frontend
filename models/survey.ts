@@ -113,16 +113,6 @@ export class Survey implements SurveyType {
         descForm: null,
       },
     ];
-    this.questions = [
-      ...this.questions,
-      {
-        number: 2,
-        content: '질문2',
-        isRequired: true,
-        linkedSector: null,
-        choices: null,
-      },
-    ];
   }
 
   // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-empty-function
