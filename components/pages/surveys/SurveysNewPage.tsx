@@ -12,8 +12,7 @@ export const SurveysNewPage = () => {
   const onRouteToBoard = useRouteToPath(Paths.surveys);
 
   const onSubmit = async () => {
-    const post = postSurveys({ title, description, abbr });
-    console.log(post);
+    await postSurveys({ title, description, abbr });
     onRouteToBoard();
   };
 
