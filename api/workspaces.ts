@@ -1,4 +1,4 @@
-import { request } from './core/index';
+import { request } from './core';
 
 const baseUrl = '/workspaces';
 

@@ -1,0 +1,38 @@
+/* eslint-disable @typescript-eslint/no-empty-function */
+import axios, { AxiosRequestConfig } from 'axios';
+import { authAtom } from '../../atoms/authAtom';
+import { store } from '../../atoms/index';
+import { GenericInstance } from '_types/axios/core';
+
+export const request: GenericInstance = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BACK_END_BASE_URL,
+  timeout: 2500,
+  headers: { 'Content-Type': 'application/json' },
+});
+
+request.interceptors.request.use(
+  (config) => {
+    const accessToken = store.get(authAtom)?.accessToken;
+    if (accessToken) setAuthorizedConfig(config, accessToken);
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  },
+);
+
+request.interceptors.response.use(
+  (response) => {
+    if (response.data.results) return response.data.results;
+    return response.data;
+  },
+  (error) => {
+    console.log(error);
+    return new Promise(() => {});
+  },
+);
+
+const setAuthorizedConfig = (config: AxiosRequestConfig, authToken: string) => {
+  config.headers = { Authorization: `Bearer ${authToken}` };
+  config.withCredentials = true;
+};
