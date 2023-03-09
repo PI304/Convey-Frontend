@@ -21,13 +21,13 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
   return (
     <AtomsDevtools>
       <Provider store={store}>
-        <RouterGuard>
-          <QueryClientProvider client={queryClient}>
-            <ReactQueryDevtools initialIsOpen={false} />
-            <Global styles={GlobalStyle} />
-            {getLayout(<Component {...pageProps} />)}
-          </QueryClientProvider>
-        </RouterGuard>
+        {/* <RouterGuard> */}
+        <QueryClientProvider client={queryClient}>
+          <ReactQueryDevtools initialIsOpen={false} />
+          <Global styles={GlobalStyle} />
+          {getLayout(<Component {...pageProps} />)}
+        </QueryClientProvider>
+        {/* </RouterGuard> */}
       </Provider>
     </AtomsDevtools>
   );

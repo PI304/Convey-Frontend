@@ -240,3 +240,15 @@ export const toggleChoiceIsDescriptiveAtom = atom(null, (get, set, update: Toggl
   });
   set(surveysAtom, newSurveys);
 });
+
+export const setSurveysFromServerDataAtom = atom(null, (get, set, update: SetFromServerDataType) => {
+  const surveys = update.surveys;
+  const newSurveys: SurveyType[] = [];
+  surveys.forEach((survey) => {
+    const questionType = survey.questionType as ValueOf<typeof QuestionTypes>;
+    const newSurvey = new Survey(questionType);
+    newSurvey.setFromServerData(survey);
+    newSurveys.push(newSurvey);
+  });
+  set(surveysAtom, newSurveys);
+});

@@ -1,12 +1,13 @@
 import { immerable } from 'immer';
-import { QuestionTypes } from '../constants/questionTypes';
+import { QuestionTypes } from '@constants';
+import { Choice, Question } from '@models';
 
 export class Survey implements SurveyType {
   [immerable] = true;
 
   title = '제목';
   description = '설명';
-  questionType = '';
+  questionType: ValueOf<typeof QuestionTypes>;
   commonChoices: ChoiceType[] | null = null;
   questions: QuestionType[] = [
     {
@@ -117,4 +118,23 @@ export class Survey implements SurveyType {
 
   // eslint-disable-next-line no-restricted-syntax, @typescript-eslint/no-empty-function
   initializeLongAnswer() {}
+
+  setFromServerData(survey: ResponseSurveyType) {
+    this.title = survey.title;
+    this.description = survey.description;
+    const commonChoices: ChoiceType[] = [];
+    survey.commonChoices?.forEach((choice, idx) => {
+      const newCommonChoice = new Choice(idx, this.questionType, true);
+      newCommonChoice.setFromServerData(choice);
+      commonChoices.push(newCommonChoice);
+    });
+    this.commonChoices = commonChoices.length ? commonChoices : null;
+    const questions: QuestionType[] = [];
+    survey.questions.forEach((question, idx) => {
+      const newQuestion = new Question(idx);
+      newQuestion.setFromServerData(question, this.questionType);
+      questions.push(newQuestion);
+    });
+    this.questions = questions;
+  }
 }

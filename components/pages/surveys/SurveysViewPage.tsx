@@ -1,21 +1,33 @@
 import { css } from '@emotion/react';
 import { useAtomValue, useSetAtom } from 'jotai';
-import { useMutation } from 'react-query';
-import { putSurveys } from '../../../api/surveys';
-import { addSurveyAtom, surveysAtom } from '@atoms';
+import { useMutation, useQuery } from 'react-query';
+import { getMockSurveysById, putSurveys } from '@api';
+import { addSurveyAtom, setSurveysFromServerDataAtom, surveysAtom } from '@atoms';
 import { Button, SurveyBox } from '@components';
-import { QuestionTypes } from '@constants';
+import { QueryKeys, QuestionTypes } from '@constants';
 import { useQueryString } from '@hooks/useQueryString';
 
 export const SurveysViewPage = () => {
   const id = useQueryString('id');
   const surveys = useAtomValue(surveysAtom);
   const addSurvey = useSetAtom(addSurveyAtom);
+  const setSurveysFromServerData = useSetAtom(setSurveysFromServerDataAtom);
   const { mutate } = useMutation(() => putSurveys(+(id || 0), surveys || []), {
     onSuccess: (data) => {
       console.log(data);
     },
   });
+  useQuery(
+    [QueryKeys.surveysById, id],
+    () => {
+      if (id) return getMockSurveysById();
+    },
+    {
+      onSuccess: (data) => {
+        if (data) setSurveysFromServerData({ surveys: data.sectors });
+      },
+    },
+  );
 
   return (
     <div css={Container}>

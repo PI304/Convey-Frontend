@@ -30,4 +30,11 @@ export class Choice implements ChoiceType {
     this.isDescriptive = true;
     this.content = null;
   }
+
+  setFromServerData(choice: ResponseChoiceType) {
+    this.number = choice.number;
+    this.content = choice.content;
+    this.isDescriptive = choice.isDescriptive;
+    this.descForm = choice.descForm;
+  }
 }
