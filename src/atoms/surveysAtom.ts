@@ -2,7 +2,7 @@ import produce from 'immer';
 import { atom } from 'jotai';
 import { QuestionTypes } from '@constants';
 import { Choice, Question, Survey } from '@models';
-import { AddChoiceAtomType, AddCommonChoiceAtomType, AddQuestionAtomType, AddSurveyAtomType } from '_types/client';
+import { AddSurveyAtomType, AddQuestionAtomType, AddChoiceAtomType, AddCommonChoiceAtomType } from '_types/client';
 
 export const surveysAtom = atom<RequestSurveys.Put | null>([]);
 

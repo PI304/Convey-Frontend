@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
-import { postSurveys } from '../../../api/surveys';
-import { Paths } from '../../../constants/paths';
-import { useInput } from '../../../hooks/useInput';
-import { useRouteToPath } from '../../../hooks/useRouteToPath';
-import { Button } from 'components/shared/Button';
+import { postSurveys } from '@api';
+import { Button } from '@components';
+import { Paths } from '@constants';
+import { useInput } from '@hooks/useInput';
+import { useRouteToPath } from '@hooks/useRouteToPath';
 
 export const SurveysNewPage = () => {
   const [title, onChangeTitle] = useInput();

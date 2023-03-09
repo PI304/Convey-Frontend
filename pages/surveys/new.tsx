@@ -1,6 +1,5 @@
-import { SurveysNewPage } from '../../components/pages/surveys/SurveysNewPage';
-import { WithSidebarLayout } from '@components';
-import { setLayout } from '@utils';
+import { SurveysNewPage, WithSidebarLayout } from '@components';
+import { setLayout } from '@utils/setLayout';
 
 export default function _new() {
   return <SurveysNewPage />;

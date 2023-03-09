@@ -27,7 +27,7 @@ import { Button, Input } from '@components';
 import { QuestionTypeLables, QuestionTypes } from '@constants';
 import { useInput } from '@hooks/useInput';
 import { Fonts } from '@styles';
-import { parseDescForm } from '@utils';
+import { parseDescForm } from '@utils/parseDescForm';
 
 export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
   const questionType = survey.questionType as ValueOf<typeof QuestionTypes>;

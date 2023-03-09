@@ -1,8 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import axios, { AxiosRequestConfig } from 'axios';
-import { authAtom } from '../../atoms/authAtom';
-import { store } from '../../atoms/index';
-import { GenericInstance } from '_types/axios/core';
+import { authAtom, store } from '@atoms';
+import { GenericInstance } from '_types/dep/axios';
 
 export const request: GenericInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACK_END_BASE_URL,

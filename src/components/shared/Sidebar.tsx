@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import Link from 'next/link';
-import { Paths } from '../../constants/paths';
+import { Paths } from '@constants';
 import { Colors, Fonts } from '@styles';
 
 export const Sidebar = () => {

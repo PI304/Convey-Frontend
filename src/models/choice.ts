@@ -1,5 +1,5 @@
 import { immerable } from 'immer';
-import { QuestionTypes } from '../constants/questionTypes';
+import { QuestionTypes } from '@constants';
 
 export class Choice implements ChoiceType {
   [immerable] = true;

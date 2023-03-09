@@ -5,7 +5,8 @@ import { Board, Button } from '@components';
 import { Paths } from '@constants';
 import { useChange } from '@hooks/useChange';
 import { useRouteToPath } from '@hooks/useRouteToPath';
-import { fetchAndSet, parseSubmitDate } from '@utils';
+import { fetchAndSet } from '@utils/fetchAndSet';
+import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const SurveysPage = () => {
   const onRouteToNew = useRouteToPath(Paths.surveysNew);

@@ -7,7 +7,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { store } from '@atoms';
 import { RouterGuard } from '@components';
-import { GlobalStyle } from '@styles';
+import { GlobalStyle } from 'src/styles';
 
 const queryClient = new QueryClient();
 

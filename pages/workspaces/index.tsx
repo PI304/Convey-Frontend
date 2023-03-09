@@ -1,5 +1,5 @@
 import { WithSidebarLayout, WorkspacesPage } from '@components';
-import { setLayout } from '@utils';
+import { setLayout } from '@utils/setLayout';
 
 export default function index() {
   return <WorkspacesPage />;

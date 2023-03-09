@@ -17,19 +17,19 @@
     "incremental": true,
     "baseUrl": ".",
     "paths": {
-      "_types/*": ["@types/*"],
-      "@api": ["./api"],
-      "@components": ["./components"],
-      "@hooks/*": ["./hooks/*"],
-      "@styles": ["./styles"],
-      "@utils": ["./utils"],
-      "@constants": ["./constants"],
-      "@atoms": ["./atoms"],
-      "@models": ["./models"],
+      "_types/*": ["src/@types/*"],
+      "@api": ["src/api"],
+      "@components": ["src/components"],
+      "@styles": ["src/styles"],
+      "@constants": ["src/constants"],
+      "@atoms": ["src/atoms"],
+      "@models": ["src/models"],
+      "@hooks/*": ["src/hooks/*"],
+      "@utils/*": ["src/utils/*"],
       "@emotion/*": ["./node_modules/@emotion/*"]
     },
     "outDir": "./dist"
   },
-  "include": ["next-env.d.ts", "**/*.ts", "**/*.d.ts", "**/*.tsx", "@types/**/*"],
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx", "@types/*"],
   "exclude": ["node_modules", ".next"]
 }

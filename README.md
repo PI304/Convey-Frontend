@@ -48,64 +48,28 @@ $ yarn dev
 ## 3. 디렉토리 구조 가이드
 
 ```
-├── @types
-│   ├── api
-│   │   └── auth.d.ts
-│   ├── axios
-│   │   └── core.d.ts
-│   └── client
-│       ├── base.d.ts
-│       ├── custom.d.ts
-│       ├── index.d.ts
-│       └── seo.d.ts
-├── api
-│   ├── core
-│   │   └── index.ts
-│   ├── auth.ts
-│   └── index.ts
-├── atoms
-│   ├── authAtom.ts
-│   └── index.ts
-├── components
-│   ├── index.ts
-│   ├── hocs
-│   ├── layouts
-│   ├── pages
-│   └── seo
-├── constants
-│   ├── index.ts
-│   ├── keys.ts
-│   └── paths.ts
-├── hooks
-│   ├── useChange.ts
-│   ├── useCustomRouter.ts
-│   ├── useInput.ts
-│   ├── useMobile.ts
-│   ├── usePreventScroll.ts
-│   ├── useQueryString.ts
-│   ├── useRouteToPath.ts
-│   ├── useSwitch.ts
-│   └── useUniqueId.ts
-├── styles
-│   ├── alphaToHex.ts
-│   ├── colors.ts
-│   ├── devices.ts
-│   ├── fonts.ts
-│   ├── global.ts
-│   ├── index.ts
-│   ├── reset.ts
-│   ├── sizes.ts
-│   └── svgs.tsx
 ├── pages
-│   ├── _app.tsx
-│   └── home
-│       └── index.tsx
-├── utils
 ├── public
+├── src
+│   ├── @types
+│   │   ├── api
+│   │   ├── client
+│   │   └── dep
+│   ├── api
+│   │   └── core
+│   ├── atoms
+│   ├── components
+│   │   ├── hocs
+│   │   ├── layouts
+│   │   ├── pages
+│   │   └── seo
+│   ├── constants
+│   ├── hooks
+│   ├── styles
+│   └── utils
 ├── README.md
-├── tsconfig.json
 ├── next.config.js
-├── next-env.d.ts
+├── tsconfig.json
 ├── package.json
 └── yarn.lock
 ```
@@ -165,11 +129,7 @@ $ yarn dev
 7. styles/sizes.ts
 8. styles/svgs.tsx
 
-### 8. pages/
-
-라우터 설정을 위한 Next.js 예약 디렉토리
-
-### 9. utils/
+### 8. utils/
 
 자주 사용하는 Utils
 
@@ -177,7 +137,7 @@ $ yarn dev
 2. utils/setLayout.ts
 3. utils/withoutPropagation.ts
 
-### 10. Named Export & Re-Export in Index.ts
+### 9. Named Export & Re-Export in Index.ts
 
 ```javascript
 // components/shared/index.ts
@@ -253,7 +213,7 @@ export const Paths = {
 Axios Instance의 Request Methods 시그니쳐 오버라이딩
 
 ```typescript
-// @types/axios/core.d.ts
+// @types/dep/axios.d.ts
 import { AxiosInstance, AxiosRequestConfig } from 'axios';
 
 export interface GenericInstance extends AxiosInstance {

@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import axios from 'axios';
-import { GenericInstance } from '_types/axios/core';
+import { GenericInstance } from '_types/dep/axios';
 
 export const mock: GenericInstance = axios.create({
   baseURL: '/',
