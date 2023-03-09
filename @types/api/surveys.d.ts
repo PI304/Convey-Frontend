@@ -40,78 +40,12 @@ declare namespace ResponseSurveys {
     description: string;
     abbr: string;
     author: number;
-    sectors: {
-      id: number;
-      survey: number;
-      title: string;
-      description: string;
-      questionType: string;
-      commonChoices: {
-        id: number;
-        createdAt: string;
-        updatedAt: string;
-        number: number;
-        content: string;
-        isDescriptive: boolean;
-        descForm: string;
-        relatedSector: number;
-        relatedQuestion: number;
-      }[];
-      questions: {
-        id: number;
-        sector: number;
-        choices: {
-          id: number;
-          createdAt: string;
-          updatedAt: string;
-          number: number;
-          content: string;
-          isDescriptive: boolean;
-          descForm: string;
-          relatedSector: number;
-          relatedQuestion: number;
-        }[];
-        number: number;
-        content: string;
-        isRequired: boolean;
-        linkedSector: number;
-        createdAt: string;
-        updatedAt: string;
-      }[];
-    }[];
-    commonChoices: {
-      id: number;
-      createdAt: string;
-      updatedAt: string;
-      number: number;
-      content: string;
-      isDescriptive: boolean;
-      descForm: string;
-      relatedSector: number;
-      relatedQuestion: number;
-    }[];
+    sectors: ResponseSurveyType[];
     createdAt: string;
     updatedAt: string;
   };
 
-  type Post = {
-    id: number;
-    author: {
-      id: number;
-      email: string;
-      name: string;
-      socialProvider: string;
-      role: number;
-      password: string;
-      createdAt: string;
-      updatedAt: string;
-    };
-    title: string;
-    description: string;
-    abbr: string;
-    createdAt: string;
-    updatedAt: string;
-  };
+  type Post = Get;
 
   type Patch = {
     id: number;
@@ -132,63 +66,5 @@ declare namespace ResponseSurveys {
     updatedAt: string;
   };
 
-  type Put = {
-    id: number;
-    title: string;
-    description: string;
-    abbr: string;
-    author: number;
-    sectors: {
-      id: number;
-      survey: number;
-      title: string;
-      description: string;
-      questionType: string;
-      commonChoices: {
-        id: number;
-        createdAt: string;
-        updatedAt: string;
-        number: number;
-        content: string;
-        isDescriptive: boolean;
-        descForm: string;
-        relatedSector: number;
-        relatedQuestion: number;
-      }[];
-      questions: {
-        id: number;
-        sector: number;
-        choices: {
-          id: number;
-          createdAt: string;
-          updatedAt: string;
-          number: number;
-          content: string;
-          isDescriptive: boolean;
-          descForm: string;
-          relatedSector: number;
-          relatedQuestion: number;
-        }[];
-        number: number;
-        content: string;
-        isRequired: boolean;
-        linkedSector: number;
-        createdAt: string;
-        updatedAt: string;
-      }[];
-    }[];
-    commonChoices: {
-      id: number;
-      createdAt: string;
-      updatedAt: string;
-      number: number;
-      content: string;
-      isDescriptive: boolean;
-      descForm: string;
-      relatedSector: number;
-      relatedQuestion: number;
-    }[];
-    createdAt: string;
-    updatedAt: string;
-  };
+  type Put = GetById;
 }

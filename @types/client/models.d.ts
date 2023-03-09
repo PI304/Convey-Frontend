@@ -20,3 +20,26 @@ type ChoiceType = {
   isDescriptive: boolean;
   descForm: string | null;
 };
+
+type ResponseSurveyType = Omit<SurveyType, 'commonChoices' | 'questions'> & {
+  id: number;
+  survey: number;
+  commonChoices: ResponseChoiceType[] | null;
+  questions: ResponseQuestionType[];
+};
+
+type ResponseQuestionType = Omit<QuestionType, 'choices'> & {
+  id: number;
+  sector: number;
+  createdAt: string;
+  updatedAt: string;
+  choices: ResponseChoiceType[] | null;
+};
+
+type ResponseChoiceType = ChoiceType & {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  relatedSector: number;
+  relatedQuestion: number;
+};
