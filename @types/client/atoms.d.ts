@@ -87,3 +87,7 @@ type ToggleChoiceIsDescriptiveType = {
   questionIdx: number;
   choiceIdx: number;
 };
+
+type SetFromServerDataType = {
+  surveys: ResponseSurveyType[];
+};
