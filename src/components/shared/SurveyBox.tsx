@@ -55,6 +55,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
   return (
     <div css={Container}>
       <div css={QuestionTypeLabel}>{QuestionTypeLables[questionType]}</div>
+      {/* Meta */}
       <div css={Meta}>
         <Input
           value={survey.title}
@@ -67,7 +68,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
         <Input
           value={survey.description}
           onChange={(e) => writeDescription({ surveyIdx, description: e.target.value })}
-          placeholder='제목'
+          placeholder='설명'
           width='50%'
         />
       </div>
@@ -75,6 +76,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
         {/* Head */}
         <div>번호</div>
         <div>항목</div>
+        {/* 응답기준 */}
         {survey.commonChoices && (
           <div>
             {survey.commonChoices.map((commonChoice, choiceIdx) => (
@@ -94,6 +96,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
         {/* Body */}
         {survey.questions.map((question, questionIdx) => (
           <Fragment key={questionIdx}>
+            {/* 번호 */}
             <div>
               <Input
                 value={question.number + ''}
@@ -105,6 +108,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
                 <Button label='질문삭제' onClick={() => removeQuestion({ surveyIdx, questionIdx })} />
               </div>
             </div>
+            {/* 질문 */}
             <div>
               <Input
                 value={question.content}
@@ -113,7 +117,9 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
                 width='100%'
               />
             </div>
+            {/* 선지 */}
             <div css={[Choices.default, survey.commonChoices ? Choices.common : Choices.notCommon]}>
+              {/* 공통선지 */}
               {survey.commonChoices &&
                 survey.commonChoices.map((commonChoice, choiceIdx) => (
                   <div css={Choice} key={choiceIdx}>
@@ -126,6 +132,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
                     </div>
                   </div>
                 ))}
+              {/* 개별선지 */}
               {!survey.commonChoices &&
                 question.choices?.map((choice, choiceIdx) => (
                   <div css={Choice} key={choiceIdx}>
@@ -151,6 +158,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
                         />
                       </div>
                     )}
+                    {/* 서술형식 */}
                     {choice.isDescriptive && (
                       <div css={DescForm} className='DescForm'>
                         <div>
@@ -183,6 +191,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
                         </div>
                       </div>
                     )}
+                    {/* 서술 ON/OFF */}
                     {survey.questionType !== QuestionTypes.shortAnswer && (
                       <Button
                         label={choice.isDescriptive ? '서술OFF' : '서술ON'}

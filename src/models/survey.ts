@@ -92,7 +92,7 @@ export class Survey implements SurveyType {
     this.questions[0].choices = [
       {
         number: 1,
-        content: '선택1',
+        content: '선지1',
         isDescriptive: false,
         descForm: null,
       },

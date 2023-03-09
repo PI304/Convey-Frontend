@@ -17,7 +17,7 @@ export class Choice implements ChoiceType {
         this.content = '기준' + idx;
         break;
       case false:
-        this.content = '선택' + idx;
+        this.content = '선지' + idx;
     }
 
     switch (questionType) {
