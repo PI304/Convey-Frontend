@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useMutation, useQuery } from 'react-query';
-import { getMockSurveysById, putSurveys } from '@api';
+import { getSurveysById, putSurveys } from '@api';
 import { addSurveyAtom, setSurveysFromServerDataAtom, surveysAtom } from '@atoms';
 import { Button, SurveyBox } from '@components';
 import { QueryKeys, QuestionTypes } from '@constants';
@@ -20,7 +20,7 @@ export const SurveysViewPage = () => {
   useQuery(
     [QueryKeys.surveysById, id],
     () => {
-      if (id) return getMockSurveysById();
+      if (id) return getSurveysById(+(id || 0));
     },
     {
       onSuccess: (data) => {
