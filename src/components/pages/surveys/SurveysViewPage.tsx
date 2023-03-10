@@ -1,23 +1,28 @@
 import { css } from '@emotion/react';
 import { useAtomValue, useSetAtom } from 'jotai';
+import { useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
+import { Colors } from '../../../styles/colors';
 import { getSurveysById, putSurveys } from '@api';
-import { addSurveyAtom, setSurveysFromServerDataAtom, surveysAtom } from '@atoms';
+import { addSurveyAtom, resetSurveysAtom, setSurveysFromServerDataAtom, surveysAtom } from '@atoms';
 import { Button, SurveyBox } from '@components';
 import { QueryKeys, QuestionTypes } from '@constants';
 import { useQueryString } from '@hooks/useQueryString';
+import { AlphaToHex, Fonts } from '@styles';
+import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const SurveysViewPage = () => {
   const id = useQueryString('id');
   const surveys = useAtomValue(surveysAtom);
   const addSurvey = useSetAtom(addSurveyAtom);
   const setSurveysFromServerData = useSetAtom(setSurveysFromServerDataAtom);
+  const resetSurveys = useSetAtom(resetSurveysAtom);
   const { mutate } = useMutation(() => putSurveys(+(id || 0), surveys || []), {
     onSuccess: (data) => {
       console.log(data);
     },
   });
-  useQuery(
+  const { data } = useQuery(
     [QueryKeys.surveysById, id],
     () => {
       if (id) return getSurveysById(+(id || 0));
@@ -29,10 +34,22 @@ export const SurveysViewPage = () => {
     },
   );
 
+  useEffect(() => {
+    return () => resetSurveys();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <div css={Container}>
-      <h1>SurveysViewPage / {id}</h1>
-      <Button label='저장하기' onClick={mutate} />
+      <div css={Meta}>
+        <h1>
+          {data?.title}&nbsp;
+          <span>{data?.abbr}</span>
+        </h1>
+        <h2>{data?.description}</h2>
+        <p>{parseSubmitDate(data?.createdAt ?? '')}</p>
+        <Button label='저장하기' onClick={mutate} backgroundColor={`${Colors.highlight}${AlphaToHex['0.6']}`} />
+      </div>
       {surveys?.map((survey, i) => (
         <SurveyBox survey={survey} surveyIdx={i} key={i} />
       ))}
@@ -52,6 +69,27 @@ const Container = css`
   display: flex;
   flex-direction: column;
   gap: 2rem;
+`;
+
+const Meta = css`
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  border-bottom: 0.1rem solid lightgray;
+  padding-bottom: 1.5rem;
+
+  > h1 {
+    ${Fonts.semiBold32}
+
+    > span {
+      ${Fonts.medium16}
+    }
+  }
+
+  > p {
+    ${Fonts.light14}
+  }
 `;
 
 const AddSurveyButtons = css`
