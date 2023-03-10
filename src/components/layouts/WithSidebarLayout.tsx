@@ -1,5 +1,6 @@
 import { css } from '@emotion/react';
 import { DefaultLayout, Sidebar } from '@components';
+import { Sizes } from '@styles';
 import { LayoutProps } from '_types/client';
 
 export const WithSidebarLayout = ({ children }: LayoutProps) => {
@@ -12,9 +13,11 @@ export const WithSidebarLayout = ({ children }: LayoutProps) => {
 };
 
 const Container = css`
-  display: flex;
-
   > section {
     padding: 3rem;
+    display: flex;
+    overflow: scroll;
+    margin-left: ${Sizes.sidebarWidth};
+    min-height: 100vh;
   }
 `;
