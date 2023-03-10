@@ -17,5 +17,6 @@ export const GlobalStyle = css`
     font-size: 1.6rem;
     font-weight: 400;
     box-sizing: border-box;
+    color: #383c46;
   }
 `;
