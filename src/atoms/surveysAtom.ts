@@ -252,3 +252,7 @@ export const setSurveysFromServerDataAtom = atom(null, (get, set, update: SetFro
   });
   set(surveysAtom, newSurveys);
 });
+
+export const resetSurveysAtom = atom(null, (get, set) => {
+  set(surveysAtom, []);
+});

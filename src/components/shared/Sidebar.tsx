@@ -1,40 +1,60 @@
 import { css } from '@emotion/react';
 import Link from 'next/link';
 import { Paths } from '@constants';
-import { Colors, Fonts } from '@styles';
+import { useCustomRouter } from '@hooks/useCustomRouter';
+import { Colors, Fonts, Sizes } from '@styles';
+import { AlphaToHex } from 'src/styles/alphaToHex';
 
 export const Sidebar = () => {
+  const { getPathname } = useCustomRouter();
+
   return (
     <div css={Container}>
-      <h1>SIDEBAR</h1>
-      <Link href={Paths.workspaces}>
-        <h2>워크스페이스</h2>
-      </Link>
-      <Link href={Paths.packages}>
-        <h2>설문패키지</h2>
-      </Link>
-      <Link href={Paths.surveys}>
-        <h2>설문(=소주제)</h2>
-      </Link>
+      <div>
+        <Link href={Paths.workspaces} css={/workspaces/g.test(getPathname()) && Active}>
+          workspaces
+        </Link>
+        <Link href={Paths.packages} css={/packages/g.test(getPathname()) && Active}>
+          packages
+        </Link>
+        <Link href={Paths.surveys} css={/surveys/g.test(getPathname()) && Active}>
+          surveys
+        </Link>
+      </div>
     </div>
   );
 };
 
 const Container = css`
-  width: 20rem;
+  width: ${Sizes.sidebarWidth};
+  height: 100vh;
   flex-shrink: 0;
-  padding: 5rem 0;
-  background-color: ${Colors.white};
+  padding: 1rem;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  gap: 2rem;
+  position: fixed;
 
-  > h1 {
-    ${Fonts.semiBold18}
-    margin-bottom: 2rem;
-  }
+  > div {
+    position: absolute;
+    left: 0;
+    top: 0;
+    transform: translateY(25vh);
+    display: flex;
+    flex-direction: column;
 
-  > h2 {
+    > a {
+      ${Fonts.medium16}
+      padding: 0.7rem 1.5rem;
+      padding-bottom: 0.9rem;
+      border-left: 0.35rem solid transparent;
+      color: ${Colors.highlight}${AlphaToHex['0.5']};
+      transition: 0.3s ease;
+    }
   }
+`;
+
+const Active = css`
+  font-weight: 600 !important;
+  border-color: ${Colors.highlight} !important;
+  color: ${Colors.highlight} !important;
 `;

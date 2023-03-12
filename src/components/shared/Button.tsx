@@ -15,7 +15,7 @@ const Container = css`
   height: fit-content;
   display: block;
   padding: 0.5rem 0.8rem;
-  border: 0.1rem solid black;
+  border: 0.1rem solid dimgray;
   border-radius: 8px;
   cursor: pointer;
   white-space: nowrap;

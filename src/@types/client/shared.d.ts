@@ -21,3 +21,10 @@ type InputProps = {
   placeholder: string;
   width?: string;
 };
+
+type ModalProps = ChildrenType & {
+  title: string;
+  onCancel: () => void;
+  onSubmit: () => void;
+  isHidden: boolean;
+};

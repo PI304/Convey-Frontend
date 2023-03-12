@@ -1,4 +1,5 @@
 import { css } from '@emotion/react';
+import { Colors } from '@styles';
 import { LayoutProps } from '_types/client';
 
 export const DefaultLayout = ({ children, forwardCss }: LayoutProps) => {
@@ -8,5 +9,5 @@ export const DefaultLayout = ({ children, forwardCss }: LayoutProps) => {
 const Container = css`
   width: 100vw;
   min-height: 100vh;
-  background-color: aliceblue;
+  background-color: ${Colors.background};
 `;
