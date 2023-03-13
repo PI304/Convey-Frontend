@@ -4,7 +4,7 @@ import { AlphaToHex, Colors, Fonts, svgChevronRight } from '@styles';
 import { withoutPropagation } from '@utils/withoutPropagation';
 import { ForwardCssType } from '_types/client';
 
-export const SelectDropDown = <T extends { id: number; title?: string }[]>({
+export const SelectDropDown = <T extends { id: number; title: string }[]>({
   label,
   onSelect,
   disabled,
