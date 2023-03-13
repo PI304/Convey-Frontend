@@ -61,6 +61,16 @@ type IncludedSurveysBoxProps = {
   onRemoveSurvey: (surveyIdx: number) => void;
 };
 
+type SelectPackageDropDownProps = {
+  onSelect: (id: number) => void;
+};
+
+type SelectDropDownProps<T extends { id: number; title?: string }[]> = SelectPackageDropDownProps & {
+  label: string | number;
+  disabled: boolean;
+  data: T;
+};
+
 type SelectSurveyDropDownProps = {
   selectedSurvey: number;
   onSelect: (surveyId: number) => void;
