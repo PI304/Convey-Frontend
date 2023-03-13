@@ -7,7 +7,7 @@ export const getWorkspaces = () => {
   return request.get<ResponseWorkspaces.Get>(url);
 };
 
-export const getWorkspacesById = (workspaceId: number) => {
+export const getWorkspaceById = (workspaceId: number) => {
   const url = `${baseUrl}/${workspaceId}`;
   return request.get<ResponseWorkspaces.GetById>(url);
 };
@@ -22,7 +22,7 @@ export const getRoutineDetailsById = (routineDetailId: number) => {
   return request.get<ResponseWorkspaces.GetRoutineDetailsById>(url);
 };
 
-export const postWorkspaces = (data: RequestWorkspaces.Post) => {
+export const postWorkspace = (data: RequestWorkspaces.Post) => {
   const url = `${baseUrl}`;
   return request.post<ResponseWorkspaces.Post, RequestWorkspaces.Post>(url, data);
 };
@@ -42,7 +42,7 @@ export const postPackages = (workspaceId: number, data: RequestWorkspaces.PostPa
   return request.post<ResponseWorkspaces.PostPackages, RequestWorkspaces.PostPackages>(url, data);
 };
 
-export const deleteWorkspacesById = (workspaceId: number) => {
+export const deleteWorkspaceById = (workspaceId: number) => {
   const url = `${baseUrl}/${workspaceId}`;
   return request.delete(url);
 };

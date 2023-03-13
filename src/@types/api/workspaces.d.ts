@@ -32,7 +32,16 @@ declare namespace ResponseWorkspaces {
 
   type GetById = {
     id: number;
-    owner: number;
+    owner: {
+      id: number;
+      email: string;
+      name: string;
+      socialProvider: string;
+      role: number;
+      password: string;
+      createdAt: string;
+      updatedAt: string;
+    };
     name: string;
     uuid: string;
     accessCode: string;
