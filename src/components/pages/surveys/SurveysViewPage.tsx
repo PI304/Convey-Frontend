@@ -5,7 +5,7 @@ import { useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import { getSurveysById, putSurveys, patchSurveys } from '@api';
 import { addSurveyAtom, resetSurveysAtom, setSurveysFromServerDataAtom, surveysAtom } from '@atoms';
-import { Button, Input, Modal, SurveyBox } from '@components';
+import { AutoResizeTextArea, Button, Input, Modal, SurveyBox } from '@components';
 import { QueryKeys, QuestionTypes } from '@constants';
 import { useInput } from '@hooks/useInput';
 import { useQueryString } from '@hooks/useQueryString';
@@ -83,7 +83,7 @@ export const SurveysViewPage = () => {
       </div>
       <Modal title='기본 정보 수정' onCancel={onCloseModal} onSubmit={patch} isHidden={!isModalOpened}>
         <Input value={title} onChange={onChangeTitle} placeholder='제목' />
-        <Input value={description} onChange={onChangeDescription} placeholder='설명' />
+        <AutoResizeTextArea value={description} onChange={onChangeDescription} placeholder='설명' />
         <Input value={abbr} onChange={onChangeAbbr} placeholder='약어' />
       </Modal>
     </div>
@@ -114,6 +114,8 @@ const Meta = css`
 
   > h2 {
     ${Fonts.medium16}
+    white-space: pre-wrap;
+    line-height: 140%;
   }
 
   > p {

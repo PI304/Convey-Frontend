@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { useEffect } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import { getSurveys, postSurveys } from '@api';
-import { Board, Button, Input, Modal } from '@components';
+import { AutoResizeTextArea, Board, Button, Input, Modal } from '@components';
 import { Paths, QueryKeys } from '@constants';
 import { useInput } from '@hooks/useInput';
 import { useSwitch } from '@hooks/useSwitch';
@@ -55,7 +55,7 @@ export const SurveysPage = () => {
       />
       <Modal title='새로운 소주제' onCancel={onCloseModal} onSubmit={post} isHidden={!isModalOpened}>
         <Input value={title} onChange={onChangeTitle} placeholder='제목' />
-        <Input value={description} onChange={onChangeDescription} placeholder='설명' />
+        <AutoResizeTextArea value={description} onChange={onChangeDescription} placeholder='설명' />
         <Input value={abbr} onChange={onChangeAbbr} placeholder='약어' />
       </Modal>
     </div>
