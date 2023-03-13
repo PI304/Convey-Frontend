@@ -11,7 +11,6 @@ declare namespace ResponseAuth {
   };
 
   type PostRefresh = {
-    refresh: string;
-    access: string;
+    accessToken: string;
   };
 }

@@ -43,3 +43,29 @@ type ResponseChoiceType = ChoiceType & {
   relatedSector: number;
   relatedQuestion: number;
 };
+
+type ResponseAuthorType = {
+  id: number;
+  email: string;
+  name: string;
+  socialProvider: string;
+  role: number;
+  password: string;
+  createdAt: string;
+  updatedAt: string;
+};
+
+type ResponseContactType = {
+  id: number;
+  createdAt: string;
+  updatedAt: string;
+  type: string;
+  content: string;
+  surveyPackage: number;
+};
+
+type IncludedSurveyType = {
+  number: number;
+  title: string;
+  survey: number;
+};
