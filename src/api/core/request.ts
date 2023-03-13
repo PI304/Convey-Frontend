@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import axios, { AxiosRequestConfig } from 'axios';
+import axios, { AxiosError, AxiosRequestConfig } from 'axios';
 import { authAtom, store } from '@atoms';
+import { StorageKeys } from '@constants';
 import { GenericInstance } from '_types/dep/axios';
 
 export const request: GenericInstance = axios.create({
@@ -25,8 +26,8 @@ request.interceptors.response.use(
     if (response.data.results) return response.data.results;
     return response.data;
   },
-  (error) => {
-    console.log(error);
+  (error: AxiosError) => {
+    handleError(error);
     return new Promise(() => {});
   },
 );
@@ -34,4 +35,15 @@ request.interceptors.response.use(
 const setAuthorizedConfig = (config: AxiosRequestConfig, authToken: string) => {
   config.headers = { Authorization: `Bearer ${authToken}` };
   config.withCredentials = true;
+};
+
+const handleError = (error: AxiosError) => {
+  switch (error?.response?.status) {
+    case 401:
+      sessionStorage.removeItem(StorageKeys.accessToken);
+      history.go();
+      break;
+    default:
+      console.log(error);
+  }
 };
