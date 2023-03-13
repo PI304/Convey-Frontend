@@ -3,3 +3,4 @@ export * from './Button';
 export * from './Board';
 export * from './SurveyBox';
 export * from './Input';
+export * from './Modal';

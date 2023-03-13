@@ -26,6 +26,7 @@
       "@models": ["src/models"],
       "@hooks/*": ["src/hooks/*"],
       "@utils/*": ["src/utils/*"],
+      "@pages/*": ["./pages/*"],
       "@emotion/*": ["./node_modules/@emotion/*"]
     },
     "outDir": "./dist"
