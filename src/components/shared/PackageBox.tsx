@@ -194,7 +194,7 @@ const SubjectBox = ({ subject }: SubjectBoxProps) => {
           {isEditMode ? (
             <>
               <Button label='소주제 +' onClick={onAddSurvey} />
-              <Button label='소주제 저장' onClick={onRequestPut} />
+              <Button label='소주제 구성 저장' onClick={onRequestPut} />
               <Button label='취소' onClick={onRequestFinishEdit} />
             </>
           ) : (

@@ -31,6 +31,7 @@ const Background = css`
   align-items: center;
   justify-content: center;
   transition: 0.3s ease;
+  z-index: 100;
 `;
 
 const Container = css`
