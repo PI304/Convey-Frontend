@@ -1,7 +1,9 @@
 import { SerializedStyles } from '@emotion/utils/types';
 import { QuestionTypes } from '@constants';
 
-type LayoutProps = ChildrenType & {
+type LayoutProps = ChildrenType & ForwardCssType;
+
+type ForwardCssType = {
   forwardCss?: SerializedStyles;
 };
 
