@@ -7,7 +7,7 @@ import { withoutPropagation } from '@utils/withoutPropagation';
 export const Modal = ({ title, children, onCancel, onSubmit, isHidden }: ModalProps) => {
   usePreventScroll(!isHidden);
   return (
-    <div css={[Background, isHidden && C.hidden]} onClick={withoutPropagation}>
+    <div css={[Background, isHidden && C.Hidden]} onClick={withoutPropagation}>
       <div css={Container}>
         <h1>{title}</h1>
         <div css={Inputs}>{children}</div>

@@ -37,7 +37,7 @@ export const postRoutineDetails = (data: RequestWorkspaces.PostRoutineDetails) =
   return request.post<ResponseWorkspaces.PostRoutineDetails, RequestWorkspaces.PostRoutineDetails>(url, data);
 };
 
-export const postPackages = (workspaceId: number, data: RequestWorkspaces.PostPackages) => {
+export const postPackagesToWorkspace = (workspaceId: number, data: RequestWorkspaces.PostPackages) => {
   const url = `${baseUrl}/${workspaceId}/survey-packages`;
   return request.post<ResponseWorkspaces.PostPackages, RequestWorkspaces.PostPackages>(url, data);
 };
@@ -52,7 +52,7 @@ export const deleteRoutineDetailsById = (routineDetailId: number) => {
   return request.delete(url);
 };
 
-export const deletePackagesById = (packageId: number) => {
+export const deletePackageInWorkspaceById = (packageId: number) => {
   const url = `${baseUrl}/survey-packages/${packageId}`;
   return request.delete(url);
 };

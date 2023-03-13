@@ -6,4 +6,6 @@ export const QueryKeys = {
   subjects: 'subjects',
   includedSurveys: 'includedSurveys',
   workspaces: 'workspaces',
+  workspace: 'workspace',
+  routines: 'routines',
 } as const;
