@@ -5,4 +5,5 @@ export const QueryKeys = {
   parts: 'parts',
   subjects: 'subjects',
   includedSurveys: 'includedSurveys',
+  workspaces: 'workspaces',
 } as const;
