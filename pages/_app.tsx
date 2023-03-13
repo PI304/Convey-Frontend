@@ -9,7 +9,7 @@ import { store } from '@atoms';
 import { RouterGuard } from '@components';
 import { GlobalStyle } from 'src/styles';
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 
 const AtomsDevtools = ({ children }: ChildrenType) => {
   useAtomsDevtools('store');
