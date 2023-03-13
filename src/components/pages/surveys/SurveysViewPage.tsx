@@ -1,31 +1,41 @@
+/* eslint-disable react-hooks/exhaustive-deps */
 import { css } from '@emotion/react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import { Colors } from '../../../styles/colors';
-import { getSurveysById, putSurveys } from '@api';
+import { getSurveysById, putSurveys, patchSurveys } from '@api';
 import { addSurveyAtom, resetSurveysAtom, setSurveysFromServerDataAtom, surveysAtom } from '@atoms';
-import { Button, SurveyBox } from '@components';
+import { Button, Input, Modal, SurveyBox } from '@components';
 import { QueryKeys, QuestionTypes } from '@constants';
+import { useInput } from '@hooks/useInput';
 import { useQueryString } from '@hooks/useQueryString';
-import { AlphaToHex, Fonts } from '@styles';
+import { useSwitch } from '@hooks/useSwitch';
+import { queryClient } from '@pages/_app';
+import { AlphaToHex, Colors, Fonts } from '@styles';
 import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const SurveysViewPage = () => {
   const id = useQueryString('id');
+  const [title, onChangeTitle, , onManuallySetTitle] = useInput();
+  const [description, onChangeDescription, , onManuallySetDescription] = useInput();
+  const [abbr, onChangeAbbr, , onManuallySetAbbr] = useInput();
+  const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const surveys = useAtomValue(surveysAtom);
   const addSurvey = useSetAtom(addSurveyAtom);
   const setSurveysFromServerData = useSetAtom(setSurveysFromServerDataAtom);
   const resetSurveys = useSetAtom(resetSurveysAtom);
-  const { mutate } = useMutation(() => putSurveys(+(id || 0), surveys || []), {
-    onSuccess: (data) => {
-      console.log(data);
+  const { mutate: put } = useMutation(() => putSurveys(+(id || 0), surveys || []));
+  const { mutate: patch } = useMutation(() => patchSurveys(+(id || 0), { title, description, abbr }), {
+    onSuccess: () => {
+      onCloseModal();
+      queryClient.invalidateQueries([QueryKeys.surveysById]);
     },
   });
   const { data } = useQuery(
     [QueryKeys.surveysById, id],
     () => {
       if (id) return getSurveysById(+(id || 0));
+      // if (id) return getMockSurveysById();
     },
     {
       onSuccess: (data) => {
@@ -35,8 +45,15 @@ export const SurveysViewPage = () => {
   );
 
   useEffect(() => {
+    if (!data) return;
+    if (!isModalOpened) return;
+    onManuallySetTitle(data.title);
+    onManuallySetDescription(data.description);
+    onManuallySetAbbr(data.abbr);
+  }, [isModalOpened, data]);
+
+  useEffect(() => {
     return () => resetSurveys();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   return (
@@ -47,13 +64,16 @@ export const SurveysViewPage = () => {
           <span>{data?.abbr}</span>
         </h1>
         <h2>{data?.description}</h2>
-        <p>{parseSubmitDate(data?.createdAt ?? '')}</p>
-        <Button label='저장하기' onClick={mutate} backgroundColor={`${Colors.highlight}${AlphaToHex['0.6']}`} />
+        <p>created. {parseSubmitDate(data?.createdAt ?? '')}</p>
+        <div css={Buttons}>
+          <Button label='기본 정보 수정' onClick={onOpenModal} />
+          <Button label='서베이 구성 저장' onClick={put} backgroundColor={`${Colors.highlight}${AlphaToHex['0.6']}`} />
+        </div>
       </div>
       {surveys?.map((survey, i) => (
         <SurveyBox survey={survey} surveyIdx={i} key={i} />
       ))}
-      <div css={AddSurveyButtons}>
+      <div css={Buttons}>
         <Button label='리커트추가' onClick={() => addSurvey({ questionType: QuestionTypes.likert })} />
         <Button label='정도추가' onClick={() => addSurvey({ questionType: QuestionTypes.extent })} />
         <Button label='단일선택추가' onClick={() => addSurvey({ questionType: QuestionTypes.singleSelect })} />
@@ -61,6 +81,11 @@ export const SurveysViewPage = () => {
         <Button label='단답형추가' onClick={() => addSurvey({ questionType: QuestionTypes.shortAnswer })} />
         <Button label='장문형추가' onClick={() => addSurvey({ questionType: QuestionTypes.longAnswer })} />
       </div>
+      <Modal title='기본 정보 수정' onCancel={onCloseModal} onSubmit={patch} isHidden={!isModalOpened}>
+        <Input value={title} onChange={onChangeTitle} placeholder='제목' />
+        <Input value={description} onChange={onChangeDescription} placeholder='설명' />
+        <Input value={abbr} onChange={onChangeAbbr} placeholder='약어' />
+      </Modal>
     </div>
   );
 };
@@ -77,7 +102,7 @@ const Meta = css`
   flex-direction: column;
   gap: 1.5rem;
   border-bottom: 0.1rem solid lightgray;
-  padding-bottom: 1.5rem;
+  padding-bottom: 2rem;
 
   > h1 {
     ${Fonts.semiBold32}
@@ -87,12 +112,16 @@ const Meta = css`
     }
   }
 
+  > h2 {
+    ${Fonts.medium16}
+  }
+
   > p {
     ${Fonts.light14}
   }
 `;
 
-const AddSurveyButtons = css`
+const Buttons = css`
   display: flex;
   gap: 1rem;
 `;
