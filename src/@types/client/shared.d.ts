@@ -66,3 +66,7 @@ type SelectSurveyDropDownProps = {
   onSelect: (surveyId: number) => void;
   disabled: boolean;
 };
+
+type AutoResizeTextAreaProps = InputProps & {
+  rows?: number;
+};
