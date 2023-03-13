@@ -11,7 +11,7 @@ import { useInput } from '@hooks/useInput';
 import { useQueryString } from '@hooks/useQueryString';
 import { useSwitch } from '@hooks/useSwitch';
 import { queryClient } from '@pages/_app';
-import { AlphaToHex, Colors, Fonts } from '@styles';
+import { AlphaToHex, C, Colors } from '@styles';
 import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const SurveysViewPage = () => {
@@ -58,7 +58,7 @@ export const SurveysViewPage = () => {
 
   return (
     <div css={Container}>
-      <div css={Meta}>
+      <div css={C.Meta}>
         <h1>
           {data?.title}&nbsp;
           <span>{data?.abbr}</span>
@@ -94,33 +94,6 @@ const Container = css`
   display: flex;
   flex-direction: column;
   gap: 2rem;
-`;
-
-const Meta = css`
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 1.5rem;
-  border-bottom: 0.1rem solid lightgray;
-  padding-bottom: 2rem;
-
-  > h1 {
-    ${Fonts.semiBold32}
-
-    > span {
-      ${Fonts.medium16}
-    }
-  }
-
-  > h2 {
-    ${Fonts.medium16}
-    white-space: pre-wrap;
-    line-height: 140%;
-  }
-
-  > p {
-    ${Fonts.light14}
-  }
 `;
 
 const Buttons = css`

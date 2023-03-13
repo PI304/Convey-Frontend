@@ -21,7 +21,7 @@ export const AutoResizeTextArea = ({ value, onChange, placeholder, rows }: AutoR
       placeholder={placeholder}
       ref={textAreaRef}
       rows={rows || 1}
-      css={C.form}
+      css={C.Form}
     />
   );
 };

@@ -244,7 +244,7 @@ const IncludedSurveysBox = ({
             disabled={!isEditMode}
           />
           <SelectSurveyDropDown
-            selectedSurvey={includedSurvey.survey}
+            selectedSurveyId={includedSurvey.survey}
             onSelect={(surveyId: number) => onChangeSurvey(i, surveyId)}
             disabled={!isEditMode}
           />

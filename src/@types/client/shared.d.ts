@@ -61,10 +61,20 @@ type IncludedSurveysBoxProps = {
   onRemoveSurvey: (surveyIdx: number) => void;
 };
 
+type SelectPackageDropDownProps = {
+  onSelect: (id: number) => void;
+};
+
 type SelectSurveyDropDownProps = {
-  selectedSurvey: number;
-  onSelect: (surveyId: number) => void;
+  selectedSurveyId: number;
+  onSelect: (id: number) => void;
   disabled: boolean;
+};
+
+type SelectDropDownProps<T extends { id: number; title: string }[]> = SelectPackageDropDownProps & {
+  label: string | number;
+  disabled: boolean;
+  data: T;
 };
 
 type AutoResizeTextAreaProps = InputProps & {
