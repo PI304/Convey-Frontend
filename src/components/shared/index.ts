@@ -6,3 +6,4 @@ export * from './Input';
 export * from './Modal';
 export * from './SelectSurveyDropDown';
 export * from './PackageBox';
+export * from './AutoResizeTextArea';
