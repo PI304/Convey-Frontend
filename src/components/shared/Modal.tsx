@@ -2,11 +2,12 @@ import { css } from '@emotion/react';
 import { Button } from '@components';
 import { usePreventScroll } from '@hooks/usePreventScroll';
 import { AlphaToHex, C, Colors, Fonts } from '@styles';
+import { withoutPropagation } from '@utils/withoutPropagation';
 
 export const Modal = ({ title, children, onCancel, onSubmit, isHidden }: ModalProps) => {
   usePreventScroll(!isHidden);
   return (
-    <div css={[Background, isHidden && C.hidden]}>
+    <div css={[Background, isHidden && C.hidden]} onClick={withoutPropagation}>
       <div css={Container}>
         <h1>{title}</h1>
         <div css={Inputs}>{children}</div>
