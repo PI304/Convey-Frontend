@@ -4,11 +4,11 @@ import { getPackages } from '@api';
 import { SelectDropDown } from '@components';
 import { QueryKeys } from '@constants';
 
-export const SelectPackageDropDown = ({ onSelect }: SelectPackageDropDownProps) => {
+export const SelectPackageDropDown = ({ onSelect, label }: SelectPackageDropDownProps) => {
   const { data: packages } = useQuery(QueryKeys.packages, getPackages);
   return (
     <SelectDropDown
-      label='추가할 패키지를 선택하세요.'
+      label={label || '추가할 패키지를 선택하세요.'}
       onSelect={onSelect}
       disabled={false}
       data={packages || []}

@@ -1,9 +1,16 @@
 import { css } from '@emotion/react';
 import { useState } from 'react';
 import { useQuery, useMutation } from 'react-query';
-import { deletePackageInWorkspaceById, getRoutinesById, getWorkspaceById, postPackagesToWorkspace } from '@api';
-import { Button, Modal, SelectPackageDropDown } from '@components';
+import {
+  deletePackageInWorkspaceById,
+  getRoutinesById,
+  getWorkspaceById,
+  postPackagesToWorkspace,
+  postRoutines,
+} from '@api';
+import { Button, Input, Modal, SelectDropDown, SelectPackageDropDown } from '@components';
 import { QueryKeys } from '@constants';
+import { useInput } from '@hooks/useInput';
 import { useQueryString } from '@hooks/useQueryString';
 import { useSwitch } from '@hooks/useSwitch';
 import { queryClient } from '@pages/_app';
@@ -13,7 +20,10 @@ import { parseSubmitDate } from '@utils/parseSubmitDate';
 export const WorkspacesViewPage = () => {
   const id = useQueryString('id');
   const [isPackageModalOpened, onOpenPackageModal, onClosePackageModal] = useSwitch();
+  const [isRoutineModalOpened, onOpenRoutineModal, onCloseRoutineModal] = useSwitch();
   const [packages, setPackages] = useState<number[]>([]);
+  const [duration, onChangeDuration] = useInput();
+  const [kickOff, onChangeKickedOff] = useState<number>();
   const { data: workspace } = useQuery([QueryKeys.workspace, id], () => {
     if (id) return getWorkspaceById(+(id || 0));
   });
@@ -34,6 +44,20 @@ export const WorkspacesViewPage = () => {
       queryClient.invalidateQueries([QueryKeys.workspace]);
     },
   });
+  const { mutate: _postRoutines } = useMutation(
+    () =>
+      postRoutines(+(id || ''), {
+        duration: +duration,
+        kickOff: kickOff || 0,
+        routines: [],
+      }),
+    {
+      onSuccess: () => {
+        onCloseRoutineModal();
+        queryClient.invalidateQueries([QueryKeys.routines]);
+      },
+    },
+  );
 
   const onAddPackage = (packageId: number) => {
     if (packages.includes(packageId)) return;
@@ -73,8 +97,9 @@ export const WorkspacesViewPage = () => {
           {workspace?.surveyPackages.length ? (
             <div css={Tags}>
               {workspace.surveyPackages.map((_package, i) => (
-                <div css={Tag} onClick={() => deletePackage(_package)} key={i}>
-                  {_package}
+                <div css={Tag} onClick={() => deletePackage(_package.id)} key={i}>
+                  <div>{_package.id}</div>
+                  <div>{_package.title}</div>
                 </div>
               ))}
             </div>
@@ -88,7 +113,7 @@ export const WorkspacesViewPage = () => {
           <h1>Routines</h1>
           <Button
             label='루틴 +'
-            onClick={() => alert('루틴')}
+            onClick={onOpenRoutineModal}
             backgroundColor={`${Colors.highlight}${AlphaToHex['0.5']}`}
           />
         </div>
@@ -103,12 +128,24 @@ export const WorkspacesViewPage = () => {
           <div css={Tags}>
             {packages.map((_package, i) => (
               <div css={Tag} onClick={() => onRemovePackage(_package)} key={i}>
-                {_package}
+                <div>{_package}</div>
               </div>
             ))}
           </div>
         )}
         <SelectPackageDropDown onSelect={(packageId) => onAddPackage(packageId)} />
+      </Modal>
+      <Modal title='루틴 생성' onCancel={onCloseRoutineModal} onSubmit={_postRoutines} isHidden={!isRoutineModalOpened}>
+        <Input value={duration} onChange={onChangeDuration} placeholder='킥오프 서베이 이후부터의 루틴 날짜 수' />
+        <SelectDropDown
+          onSelect={(id) => onChangeKickedOff(id)}
+          label={kickOff ?? '킥오프 서베이를 선택하세요.'}
+          disabled={false}
+          data={workspace?.surveyPackages.map((_package) => ({ id: _package.id, title: _package.title })) || []}
+          forwardCss={css`
+            width: 100%;
+          `}
+        />
       </Modal>
     </div>
   );
@@ -160,15 +197,26 @@ const Tags = css`
 
 const Tag = css`
   ${Fonts.medium14}
-  padding: 0.5rem 0.8rem;
   border-radius: 0.3rem;
   background-color: ${Colors.highlight}${AlphaToHex['0.5']};
   width: fit-content;
   cursor: pointer;
-  transition: 0.3s ease;
+  display: flex;
+  overflow: hidden;
 
   :hover {
-    background-color: lightcoral;
-    color: white;
+    > div {
+      background-color: lightcoral;
+      color: white;
+    }
+  }
+
+  > div {
+    padding: 0.5rem 0.8rem;
+    transition: 0.3s ease;
+  }
+
+  > div:first-of-type {
+    background-color: ${Colors.highlight};
   }
 `;
