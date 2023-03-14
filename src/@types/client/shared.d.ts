@@ -31,7 +31,7 @@ type ModalProps = ChildrenType & {
 };
 
 type PackageBoxProps = {
-  _package: ResponsePackages.Package;
+  _package: ResponsePackages.GetById;
 };
 
 type PartsBoxProps = {

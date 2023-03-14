@@ -3,13 +3,11 @@ import produce from 'immer';
 import { useState, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
 import {
-  deletePackage,
   deletePart,
   deleteSubject,
   getIncludedSurveys,
   getParts,
   getSubjects,
-  postPart,
   postSubject,
   putIncludedSurveys,
 } from '@api';
@@ -23,39 +21,9 @@ import { svgChevronDown, svgChevronRight } from '@styles';
 import { withoutPropagation } from '@utils/withoutPropagation';
 
 export const PackageBox = ({ _package }: PackageBoxProps) => {
-  const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
-  const [isPartsOpened, onOpenParts, , onToggleParts] = useSwitch();
-  const [data, onChangeData] = useInputs<RequestParts.Post>({
-    title: '',
-    subjects: [{ number: 1, title: '대주제1' }],
-  });
-  const { mutate: post } = useMutation(() => postPart(_package.id, data), {
-    onSuccess: () => {
-      onCloseModal();
-      onOpenParts();
-      queryClient.invalidateQueries([QueryKeys.parts]);
-    },
-  });
-  const { mutate: _delete } = useMutation(() => deletePackage(_package.id), {
-    onSuccess: () => queryClient.invalidateQueries([QueryKeys.packages]),
-  });
-
   return (
     <div css={Container}>
-      <div css={[Common, Package, Pointer]} onClick={onToggleParts}>
-        <div css={Title}>
-          {isPartsOpened ? svgChevronDown : svgChevronRight}
-          {_package.title}
-        </div>
-        <div css={Buttons}>
-          <Button label='디바이더 +' onClick={(e) => withoutPropagation(e, onOpenModal)} />
-          <Button label='삭제' onClick={(e) => withoutPropagation(e, _delete)} backgroundColor='lightcoral' />
-        </div>
-      </div>
-      <Modal title='새로운 디바이더' onCancel={onCloseModal} onSubmit={post} isHidden={!isModalOpened}>
-        <Input value={data.title} onChange={(e) => onChangeData(e, 'title')} placeholder='제목' />
-      </Modal>
-      {isPartsOpened && <PartsBox packageId={_package.id} />}
+      <PartsBox packageId={_package.id} />
     </div>
   );
 };
