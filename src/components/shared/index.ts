@@ -4,7 +4,6 @@ export * from './Board';
 export * from './SurveyBox';
 export * from './Input';
 export * from './Modal';
-export * from './PackageBox';
 export * from './AutoResizeTextArea';
 export * from './SelectDropDown';
 export * from './SelectPackageDropDown';
