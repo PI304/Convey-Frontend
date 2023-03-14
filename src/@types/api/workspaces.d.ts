@@ -45,7 +45,13 @@ declare namespace ResponseWorkspaces {
     name: string;
     uuid: string;
     accessCode: string;
-    surveyPackages: number[];
+    surveyPackages: {
+      id: number;
+      title: string;
+      createdAt: string;
+      updatedAt: string;
+      workspaceId: number;
+    }[];
     createdAt: string;
     updatedAt: string;
   };

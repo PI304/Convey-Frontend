@@ -254,24 +254,19 @@ const Common = css`
   margin-left: auto;
 `;
 
-const Package = css`
-  background-color: pink;
-  width: 100rem;
-`;
-
 const Part = css`
-  background-color: lightblue;
+  background-color: pink;
   width: 95rem;
 `;
 
 const Subject = css`
-  background-color: #95eb95;
+  background-color: lightblue;
   width: 90rem;
 `;
 
 const _IncludedSurvey = css`
-  background-color: #ffd76b;
-  width: 80rem;
+  background-color: #c2f09c;
+  width: 85rem;
   justify-content: flex-start;
   gap: 1rem;
 `;
