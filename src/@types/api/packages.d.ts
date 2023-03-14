@@ -5,7 +5,7 @@ declare namespace RequestPackages {
     accessCode: string;
     manager: string;
     contacts: {
-      type: string;
+      type: 'email' | 'phone';
       content: string;
     }[];
   };
@@ -15,7 +15,7 @@ declare namespace RequestPackages {
     description: string;
     manager: string;
     contacts: {
-      type: string;
+      type: 'email' | 'phone';
       content: string;
     }[];
   };

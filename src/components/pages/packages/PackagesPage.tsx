@@ -4,6 +4,7 @@ import { useMutation, useQuery } from 'react-query';
 import { getPackages, postPackage } from '@api';
 import { AutoResizeTextArea, Board, Button, Input, Modal } from '@components';
 import { Paths, QueryKeys } from '@constants';
+import { useInput } from '@hooks/useInput';
 import { useInputs } from '@hooks/useInputs';
 import { useSwitch } from '@hooks/useSwitch';
 import { queryClient } from '@pages/_app';
@@ -11,20 +12,31 @@ import { Colors, AlphaToHex } from '@styles';
 
 export const PackagesPage = () => {
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
-  const [data, onChangeData] = useInputs<RequestPackages.Post>({
+  const [data, onChangeData] = useInputs<Omit<RequestPackages.Post, 'contacts'>>({
     title: '',
     description: '',
     accessCode: '',
     manager: '',
-    contacts: [],
   });
+  const [email, onChangeEmail] = useInput();
+  const [phone, onChangePhone] = useInput();
   const { data: packages } = useQuery(QueryKeys.packages, getPackages);
-  const { mutate: post } = useMutation(() => postPackage(data), {
-    onSuccess: () => {
-      onCloseModal();
-      queryClient.invalidateQueries([QueryKeys.packages]);
+  const { mutate: post } = useMutation(
+    () =>
+      postPackage({
+        ...data,
+        contacts: [
+          { type: 'email', content: email },
+          { type: 'phone', content: phone },
+        ],
+      }),
+    {
+      onSuccess: () => {
+        onCloseModal();
+        queryClient.invalidateQueries([QueryKeys.packages]);
+      },
     },
-  });
+  );
 
   return (
     <div css={Container}>
@@ -47,6 +59,8 @@ export const PackagesPage = () => {
         />
         <Input value={data?.accessCode ?? ''} onChange={(e) => onChangeData(e, 'accessCode')} placeholder='접근코드' />
         <Input value={data?.manager ?? ''} onChange={(e) => onChangeData(e, 'manager')} placeholder='담당자' />
+        <Input value={email} onChange={onChangeEmail} placeholder='이메일' />
+        <Input value={phone} onChange={onChangePhone} placeholder='전화번호' />
       </Modal>
     </div>
   );
