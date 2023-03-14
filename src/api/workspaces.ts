@@ -52,7 +52,7 @@ export const deleteRoutineDetailsById = (routineDetailId: number) => {
   return request.delete(url);
 };
 
-export const deletePackageInWorkspaceById = (packageId: number) => {
-  const url = `${baseUrl}/survey-packages/${packageId}`;
+export const deletePackageInWorkspaceById = (workspaceId: number, packageId: number) => {
+  const url = `${baseUrl}/${workspaceId}/survey-packages/${packageId}`;
   return request.delete(url);
 };

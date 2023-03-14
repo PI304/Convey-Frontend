@@ -39,11 +39,14 @@ export const WorkspacesViewPage = () => {
       },
     },
   );
-  const { mutate: deletePackage } = useMutation((packageId: number) => deletePackageInWorkspaceById(packageId), {
-    onSuccess: () => {
-      queryClient.invalidateQueries([QueryKeys.workspace]);
+  const { mutate: deletePackage } = useMutation(
+    (packageId: number) => deletePackageInWorkspaceById(+(id || 0), packageId),
+    {
+      onSuccess: () => {
+        queryClient.invalidateQueries([QueryKeys.workspace]);
+      },
     },
-  });
+  );
   const { mutate: _postRoutines } = useMutation(
     () =>
       postRoutines(+(id || ''), {
