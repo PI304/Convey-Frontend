@@ -43,6 +43,9 @@ const handleError = (error: AxiosError) => {
       sessionStorage.removeItem(StorageKeys.accessToken);
       history.go();
       break;
+    case 409:
+      alert('이미 추가된 데이터가 있습니다.');
+      break;
     default:
       console.log(error);
   }
