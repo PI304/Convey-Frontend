@@ -2,8 +2,8 @@
 import { css } from '@emotion/react';
 import { useMutation, useQuery } from 'react-query';
 import { getPackages, postPackage } from '@api';
-import { AutoResizeTextArea, Button, Input, Modal, PackageBox } from '@components';
-import { QueryKeys } from '@constants';
+import { AutoResizeTextArea, Board, Button, Input, Modal } from '@components';
+import { Paths, QueryKeys } from '@constants';
 import { useInputs } from '@hooks/useInputs';
 import { useSwitch } from '@hooks/useSwitch';
 import { queryClient } from '@pages/_app';
@@ -33,9 +33,11 @@ export const PackagesPage = () => {
         onClick={onOpenModal}
         backgroundColor={`${Colors.highlight}${AlphaToHex['0.5']}`}
       />
-      {packages?.map((_package, i) => (
-        <PackageBox _package={_package} key={i} />
-      ))}
+      <Board
+        heads={['ID', '제목', '작성자']}
+        bodies={packages?.map((_package) => [_package.id, _package.title, _package.author.name]) || []}
+        viewPath={Paths.packages}
+      />
       <Modal title='새로운 패키지' onCancel={onCloseModal} onSubmit={post} isHidden={!isModalOpened}>
         <Input value={data?.title ?? ''} onChange={(e) => onChangeData(e, 'title')} placeholder='제목' />
         <AutoResizeTextArea

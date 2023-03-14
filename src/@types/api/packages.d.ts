@@ -9,6 +9,16 @@ declare namespace RequestPackages {
       content: string;
     }[];
   };
+
+  type Patch = {
+    title: string;
+    description: string;
+    manager: string;
+    contacts: {
+      type: string;
+      content: string;
+    }[];
+  };
 }
 
 declare namespace ResponsePackages {
@@ -16,9 +26,13 @@ declare namespace ResponsePackages {
     id: number;
   };
 
-  type Get = Package[];
+  type Patch = {
+    id: number;
+  };
 
-  type Package = {
+  type Get = GetById[];
+
+  type GetById = {
     id: number;
     author: ResponseAuthorType;
     title: string;
