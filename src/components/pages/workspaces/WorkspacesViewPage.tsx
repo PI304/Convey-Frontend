@@ -3,9 +3,11 @@ import { useState } from 'react';
 import { useQuery, useMutation } from 'react-query';
 import {
   deletePackageInWorkspaceById,
+  deleteRoutineDetailsById,
   getRoutinesById,
   getWorkspaceById,
   postPackagesToWorkspace,
+  postRoutineDetails,
   postRoutines,
 } from '@api';
 import { Button, Input, Modal, SelectDropDown, SelectPackageDropDown } from '@components';
@@ -21,9 +23,13 @@ export const WorkspacesViewPage = () => {
   const id = useQueryString('id');
   const [isPackageModalOpened, onOpenPackageModal, onClosePackageModal] = useSwitch();
   const [isRoutineModalOpened, onOpenRoutineModal, onCloseRoutineModal] = useSwitch();
+  const [isRoutineDetailsModalOpened, onOpenRoutineDetailsModal, onCloseRoutineDetailsModal] = useSwitch();
   const [packages, setPackages] = useState<number[]>([]);
   const [duration, onChangeDuration] = useInput();
   const [kickOff, onChangeKickedOff] = useState<number>();
+  const [nthDay, onChangeNthDay] = useInput();
+  const [time, onChangeTime] = useInput();
+  const [surveyPackage, , , onManuallyChangeSurveyPackage] = useInput();
   const { data: workspace } = useQuery([QueryKeys.workspace, id], () => {
     if (id) return getWorkspaceById(+(id || 0));
   });
@@ -57,6 +63,20 @@ export const WorkspacesViewPage = () => {
     {
       onSuccess: () => {
         onCloseRoutineModal();
+        queryClient.invalidateQueries([QueryKeys.routines]);
+      },
+    },
+  );
+  const { mutate: _postRoutineDetails } = useMutation(
+    () =>
+      postRoutineDetails(routines?.id ?? 0, {
+        nthDay: +nthDay,
+        time: time,
+        surveyPackage: +surveyPackage,
+      }),
+    {
+      onSuccess: () => {
+        onCloseRoutineDetailsModal();
         queryClient.invalidateQueries([QueryKeys.routines]);
       },
     },
@@ -115,12 +135,41 @@ export const WorkspacesViewPage = () => {
         <div>
           <h1>Routines</h1>
           <Button
-            label='루틴 +'
-            onClick={onOpenRoutineModal}
-            backgroundColor={`${Colors.highlight}${AlphaToHex['0.5']}`}
+            label={routines ? '루틴 +' : '루틴 생성'}
+            onClick={routines ? onOpenRoutineDetailsModal : onOpenRoutineModal}
+            backgroundColor={routines ? `${Colors.highlight}${AlphaToHex['0.5']}` : 'lightblue'}
           />
         </div>
-        <div css={InnerBox}>{!routines?.routines.length && <div css={Empty}>생성된 루틴 없음</div>}</div>
+        <div css={InnerBox}>
+          {!routines && <div css={Empty}>생성된 루틴 없음</div>}
+          {routines && (
+            <div css={RoutineMeta}>
+              <h2>
+                <span>Duration</span> {routines.duration}
+              </h2>
+              <h2>
+                <span>KickOff</span> {routines.kickOff}
+              </h2>
+            </div>
+          )}
+          {!!routines?.routines.length && (
+            <div css={RoutineDetails}>
+              <h2>NthDay</h2>
+              <h2>Time</h2>
+              <h2>Package</h2>
+              <h2>삭제</h2>
+              {routines.routines.map((routine, i) => (
+                <RoutineDetail
+                  id={routine.id}
+                  nthDay={routine.nthDay}
+                  time={routine.time}
+                  surveyPackage={routine.surveyPackage}
+                  key={i}
+                />
+              ))}
+            </div>
+          )}
+        </div>
       </div>
       <Modal
         title='패키지 추가'
@@ -150,7 +199,41 @@ export const WorkspacesViewPage = () => {
           `}
         />
       </Modal>
+      <Modal
+        title='루틴 +'
+        onCancel={onCloseRoutineDetailsModal}
+        onSubmit={_postRoutineDetails}
+        isHidden={!isRoutineDetailsModalOpened}>
+        <Input value={nthDay + ''} onChange={onChangeNthDay} placeholder='n번째 날' />
+        <Input value={time + ''} onChange={onChangeTime} placeholder='HH:MM' />
+        <SelectDropDown
+          onSelect={(id) => onManuallyChangeSurveyPackage(id + '')}
+          label={surveyPackage || '패키지를 선택하세요.'}
+          disabled={false}
+          data={workspace?.surveyPackages.map((_package) => ({ id: _package.id, title: _package.title })) || []}
+          forwardCss={css`
+            width: 100%;
+          `}
+        />
+      </Modal>
     </div>
+  );
+};
+
+const RoutineDetail = ({ id, nthDay, time, surveyPackage }: RoutineDetailProps) => {
+  const { mutate: _deleteRoutineDetails } = useMutation(
+    (routineDetailsid: number) => deleteRoutineDetailsById(routineDetailsid),
+    {
+      onSuccess: () => queryClient.invalidateQueries([QueryKeys.routines]),
+    },
+  );
+  return (
+    <>
+      <div>{nthDay}번째 날</div>
+      <div>{time}</div>
+      <div>{surveyPackage}</div>
+      <Button label='삭제' onClick={() => _deleteRoutineDetails(id)} backgroundColor='lightCoral' />
+    </>
   );
 };
 
@@ -166,7 +249,7 @@ const OuterBox = css`
   gap: 1rem;
   min-width: 50rem;
 
-  > div {
+  > div:first-of-type {
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -181,6 +264,7 @@ const InnerBox = css`
   border: 0.1rem solid lightgray;
   padding: 1rem 1.2rem;
   border-radius: 0.8rem;
+  text-align: center;
 `;
 
 const Empty = css`
@@ -221,5 +305,41 @@ const Tag = css`
 
   > div:first-of-type {
     background-color: ${Colors.highlight};
+  }
+`;
+
+const RoutineMeta = css`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+
+  > h2 {
+    line-height: 140%;
+    text-align: left;
+
+    > span {
+      ${Fonts.medium14}
+      color: ${Colors.highlight};
+    }
+  }
+`;
+
+const RoutineDetails = css`
+  ${Fonts.medium18}
+  margin-top: 1rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  align-items: center;
+  text-align: center;
+  row-gap: 1rem;
+
+  > h2 {
+    ${Fonts.medium14}
+    color: ${Colors.highlight};
+  }
+
+  > button {
+    margin: 0 auto;
   }
 `;
