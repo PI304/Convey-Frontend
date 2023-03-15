@@ -1,7 +1,14 @@
 import { useRef, MutableRefObject, useEffect } from 'react';
 import { C } from '@styles';
+import { ForwardCssType } from '_types/client';
 
-export const AutoResizeTextArea = ({ value, onChange, placeholder, rows }: AutoResizeTextAreaProps) => {
+export const AutoResizeTextArea = ({
+  value,
+  onChange,
+  placeholder,
+  rows,
+  forwardCss,
+}: AutoResizeTextAreaProps & ForwardCssType) => {
   const textAreaRef = useRef() as MutableRefObject<HTMLTextAreaElement>;
 
   const autoResize = () => {
@@ -21,7 +28,7 @@ export const AutoResizeTextArea = ({ value, onChange, placeholder, rows }: AutoR
       placeholder={placeholder}
       ref={textAreaRef}
       rows={rows || 1}
-      css={C.Form}
+      css={[C.Form, forwardCss]}
     />
   );
 };

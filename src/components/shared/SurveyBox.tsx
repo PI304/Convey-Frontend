@@ -23,7 +23,7 @@ import {
   toggleChoiceIsDescriptiveAtom,
   removeSurveyAtom,
 } from '@atoms';
-import { Button, Input } from '@components';
+import { AutoResizeTextArea, Button, Input } from '@components';
 import { QuestionTypeLables, QuestionTypes } from '@constants';
 import { useInput } from '@hooks/useInput';
 import { Fonts } from '@styles';
@@ -65,11 +65,13 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
         />
       </div>
       <div css={Meta}>
-        <Input
+        <AutoResizeTextArea
           value={survey.description}
           onChange={(e) => writeDescription({ surveyIdx, description: e.target.value })}
           placeholder='설명'
-          width='50%'
+          forwardCss={css`
+            width: 50%;
+          `}
         />
       </div>
       <div css={Table}>
@@ -110,11 +112,14 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
             </div>
             {/* 질문 */}
             <div>
-              <Input
+              <AutoResizeTextArea
                 value={question.content}
                 onChange={(e) => writeQuestionContent({ surveyIdx, questionIdx, content: e.target.value })}
                 placeholder={'질문' + question.number}
                 width='100%'
+                forwardCss={css`
+                  width: 100%;
+                `}
               />
             </div>
             {/* 선지 */}
