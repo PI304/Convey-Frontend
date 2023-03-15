@@ -32,8 +32,8 @@ export const postRoutines = (workspaceId: number, data: RequestWorkspaces.PostRo
   return request.post<ResponseWorkspaces.PostRoutines, RequestWorkspaces.PostRoutines>(url, data);
 };
 
-export const postRoutineDetails = (data: RequestWorkspaces.PostRoutineDetails) => {
-  const url = `${baseUrl}/routine-details`;
+export const postRoutineDetails = (routineId: number, data: RequestWorkspaces.PostRoutineDetails) => {
+  const url = `${baseUrl}/routines/${routineId}/routine-details`;
   return request.post<ResponseWorkspaces.PostRoutineDetails, RequestWorkspaces.PostRoutineDetails>(url, data);
 };
 
