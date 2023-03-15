@@ -16,7 +16,6 @@ declare namespace RequestWorkspaces {
   };
 
   type PostRoutineDetails = {
-    routine: string;
     nthDay: number;
     time: string;
     surveyPackage: number;
