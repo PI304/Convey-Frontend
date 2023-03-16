@@ -41,6 +41,7 @@ export const SurveysViewPage = () => {
       onSuccess: (data) => {
         if (data) setSurveysFromServerData({ surveys: data.sectors });
       },
+      refetchOnWindowFocus: false,
     },
   );
 
