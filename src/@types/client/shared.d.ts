@@ -82,3 +82,10 @@ type SelectDropDownProps<T extends { id: number; title?: string }[]> = {
 type AutoResizeTextAreaProps = InputProps & {
   rows?: number;
 };
+
+type ToggleButtonProps = {
+  isActive: boolean;
+  onToggle: () => void;
+  labelForActive: string;
+  labelForDeactive: string;
+};
