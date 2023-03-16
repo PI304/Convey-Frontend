@@ -256,3 +256,12 @@ export const setSurveysFromServerDataAtom = atom(null, (get, set, update: SetFro
 export const resetSurveysAtom = atom(null, (get, set) => {
   set(surveysAtom, []);
 });
+
+export const toggleSurveyIsLinkedAtom = atom(null, (get, set, update: ToggleSurveyIsLinkedType) => {
+  const surveys = get(surveysAtom);
+  if (!surveys) return;
+  const newSurveys = produce(surveys, (draft) => {
+    draft[update.surveyIdx].isLinked = !draft[update.surveyIdx].isLinked;
+  });
+  set(surveysAtom, newSurveys);
+});

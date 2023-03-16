@@ -1,6 +1,7 @@
 type SurveyType = {
   title: string;
   description: string;
+  isLinked: boolean;
   questionType: string;
   commonChoices: ChoiceType[] | null;
   questions: QuestionType[];
@@ -9,8 +10,6 @@ type SurveyType = {
 type QuestionType = {
   number: number;
   content: string;
-  isRequired: boolean;
-  linkedSector: number | null;
   choices: ChoiceType[] | null;
 };
 

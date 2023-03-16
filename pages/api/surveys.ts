@@ -14,6 +14,7 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
           id: 1,
           survey: 1,
           title: 'string',
+          isLinked: false,
           description: 'string',
           questionType: 'single_select',
           commonChoices: null,
@@ -25,8 +26,6 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
               updatedAt: 'string',
               number: 1,
               content: 'string',
-              isRequired: true,
-              linkedSector: null,
               choices: [
                 {
                   id: 1,
@@ -59,8 +58,6 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
               updatedAt: 'string',
               number: 1,
               content: 'string',
-              isRequired: true,
-              linkedSector: null,
               choices: [
                 {
                   id: 1,
@@ -81,6 +78,7 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
           id: 1,
           survey: 1,
           title: 'string',
+          isLinked: true,
           description: 'string',
           questionType: 'likert',
           commonChoices: [
@@ -126,8 +124,6 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
               updatedAt: 'string',
               number: 1,
               content: 'string',
-              isRequired: true,
-              linkedSector: null,
               choices: null,
             },
             {
@@ -137,8 +133,6 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
               updatedAt: 'string',
               number: 1,
               content: 'string',
-              isRequired: true,
-              linkedSector: null,
               choices: null,
             },
           ],

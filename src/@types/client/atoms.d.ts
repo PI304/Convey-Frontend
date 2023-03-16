@@ -91,3 +91,7 @@ type ToggleChoiceIsDescriptiveType = {
 type SetFromServerDataType = {
   surveys: ResponseSurveyType[];
 };
+
+type ToggleSurveyIsLinkedType = {
+  surveyIdx: number;
+};
