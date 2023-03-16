@@ -7,8 +7,6 @@ export class Question implements QuestionType {
 
   number: number;
   content: string;
-  isRequired = true;
-  linkedSector: number | null = null;
   choices: ChoiceType[] | null = null;
 
   constructor(idx: number) {
@@ -19,8 +17,6 @@ export class Question implements QuestionType {
   setFromServerData(question: ResponseQuestionType, questionType: ValueOf<typeof QuestionTypes>) {
     this.number = question.number;
     this.content = question.content;
-    this.isRequired = question.isRequired;
-    this.linkedSector = question.linkedSector;
     const choices: ChoiceType[] = [];
     question.choices?.forEach((choice, idx) => {
       const newChoice = new Choice(idx, questionType, false);

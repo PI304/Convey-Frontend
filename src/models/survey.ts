@@ -7,14 +7,13 @@ export class Survey implements SurveyType {
 
   title = '제목';
   description = '설명';
+  isLinked = false;
   questionType: ValueOf<typeof QuestionTypes>;
   commonChoices: ChoiceType[] | null = null;
   questions: QuestionType[] = [
     {
       number: 1,
       content: '질문1',
-      isRequired: true,
-      linkedSector: null,
       choices: null,
     },
   ];
@@ -122,6 +121,7 @@ export class Survey implements SurveyType {
   setFromServerData(survey: ResponseSurveyType) {
     this.title = survey.title;
     this.description = survey.description;
+    this.isLinked = survey.isLinked;
     const commonChoices: ChoiceType[] = [];
     survey.commonChoices?.forEach((choice, idx) => {
       const newCommonChoice = new Choice(idx, this.questionType, true);
