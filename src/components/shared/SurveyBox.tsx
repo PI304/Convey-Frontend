@@ -22,8 +22,9 @@ import {
   eraseDescFormAtom,
   toggleChoiceIsDescriptiveAtom,
   removeSurveyAtom,
+  toggleSurveyIsLinkedAtom,
 } from '@atoms';
-import { AutoResizeTextArea, Button, Input } from '@components';
+import { AutoResizeTextArea, Button, Input, ToggleButton } from '@components';
 import { QuestionTypeLables, QuestionTypes } from '@constants';
 import { useInput } from '@hooks/useInput';
 import { Fonts } from '@styles';
@@ -52,9 +53,16 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
   const addStaticDescForm = useSetAtom(addStaticDescFormAtom);
   const eraseDescForm = useSetAtom(eraseDescFormAtom);
   const toggleChoiceIsDescriptive = useSetAtom(toggleChoiceIsDescriptiveAtom);
+  const toggleSurveyIsLinked = useSetAtom(toggleSurveyIsLinkedAtom);
   return (
     <div css={Container}>
       <div css={QuestionTypeLabel}>{QuestionTypeLables[questionType]}</div>
+      <ToggleButton
+        isActive={survey.isLinked}
+        onToggle={() => toggleSurveyIsLinked({ surveyIdx })}
+        labelForActive='링크된 섹터 (답변필수X)'
+        labelForDeactive='링크되지 않은 섹터 (답변필수O)'
+      />
       {/* Meta */}
       <div css={Meta}>
         <Input
