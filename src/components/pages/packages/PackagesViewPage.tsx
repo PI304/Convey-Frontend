@@ -1,6 +1,6 @@
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
-import { usePackages, useParts } from '@api';
+import { usePackages } from '@api';
 import { AutoResizeTextArea, Button, Input, Modal, PackageBox } from '@components';
 import { useInput } from '@hooks/useInput';
 import { useInputs } from '@hooks/useInputs';
@@ -12,7 +12,7 @@ import { withoutPropagation } from '@utils/withoutPropagation';
 
 export const PackagesViewPage = () => {
   const id = useQueryString('id');
-  const { _postPart } = useParts();
+  const { _postPart } = usePackages();
   const { _getPackagesById, _patchPackages } = usePackages();
   const { data: packages } = _getPackagesById(id);
   const [isMetaModalOpened, onOpenMetaModal, onCloseMetaModal] = useSwitch();

@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import produce from 'immer';
 import { useState, useEffect } from 'react';
-import { useParts, useSubjects } from '@api';
+import { usePackages } from '@api';
 import { Button, Input, Modal, SelectSurveyDropDown } from '@components';
 import { QueryKeys } from '@constants';
 import { useInputs } from '@hooks/useInputs';
@@ -20,7 +20,7 @@ export const PackageBox = ({ _package }: PackageBoxProps) => {
 };
 
 const PartsBox = ({ packageId }: PartsBoxProps) => {
-  const { _getParts } = useParts();
+  const { _getParts } = usePackages();
   return (
     <>
       {_getParts(packageId).data?.map((part, i) => (
@@ -31,8 +31,8 @@ const PartsBox = ({ packageId }: PartsBoxProps) => {
 };
 
 const PartBox = ({ part }: PartBoxProps) => {
-  const { _deletePart } = useParts();
-  const { _postSubject } = useSubjects();
+  const { _deletePart } = usePackages();
+  const { _postSubject } = usePackages();
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [isSubjectsOpened, onOpenSubjects, , onToggleSubjects] = useSwitch();
   const [data, onChangeData] = useInputs<RequestSubjects.Post>({
@@ -72,7 +72,7 @@ const PartBox = ({ part }: PartBoxProps) => {
 };
 
 const SubjectsBox = ({ partId }: SubjectsBoxProps) => {
-  const { _getSubjects } = useSubjects();
+  const { _getSubjects } = usePackages();
   return (
     <>
       {_getSubjects(partId).data?.map((subject, i) => (
@@ -83,7 +83,7 @@ const SubjectsBox = ({ partId }: SubjectsBoxProps) => {
 };
 
 const SubjectBox = ({ subject }: SubjectBoxProps) => {
-  const { _putIncludedSurveys, _getIncludedSurveys, _deleteSubject } = useSubjects();
+  const { _putIncludedSurveys, _getIncludedSurveys, _deleteSubject } = usePackages();
   const { data: serverIncludedSurveys } = _getIncludedSurveys(subject.id);
   const [isEditMode, onStartEditMode, , onFinishEditMode] = useSwitch();
   const [includedSurveys, setIncludedSurveys] = useState<IncludedSurveyType[]>([]);
