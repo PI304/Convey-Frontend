@@ -17,7 +17,8 @@ export const SurveysViewPage = () => {
   const surveys = useAtomValue(surveysAtom);
   const addSurvey = useSetAtom(addSurveyAtom);
   const resetSurveys = useSetAtom(resetSurveysAtom);
-  const { _getSurveysById, _patchSurveys, _putSurveys } = useSurveys(id);
+  const { _getSurveysById, _patchSurveys, _putSurveys } = useSurveys();
+  const { data: serverSurveys } = _getSurveysById(id);
   const [title, onChangeTitle, , onManuallySetTitle] = useInput();
   const [description, onChangeDescription, , onManuallySetDescription] = useInput();
   const [abbr, onChangeAbbr, , onManuallySetAbbr] = useInput();
@@ -35,12 +36,12 @@ export const SurveysViewPage = () => {
   };
 
   useEffect(() => {
-    if (!_getSurveysById.data) return;
+    if (!serverSurveys) return;
     if (!isModalOpened) return;
-    onManuallySetTitle(_getSurveysById.data.title);
-    onManuallySetDescription(_getSurveysById.data.description);
-    onManuallySetAbbr(_getSurveysById.data.abbr);
-  }, [isModalOpened, _getSurveysById.data]);
+    onManuallySetTitle(serverSurveys.title);
+    onManuallySetDescription(serverSurveys.description);
+    onManuallySetAbbr(serverSurveys.abbr);
+  }, [isModalOpened, serverSurveys]);
 
   useEffect(() => {
     return () => resetSurveys();
@@ -50,11 +51,11 @@ export const SurveysViewPage = () => {
     <div css={Container}>
       <div css={C.Meta}>
         <h1>
-          {_getSurveysById.data?.title}&nbsp;
-          <span>{_getSurveysById.data?.abbr}</span>
+          {serverSurveys?.title}&nbsp;
+          <span>{serverSurveys?.abbr}</span>
         </h1>
-        <h2>{_getSurveysById.data?.description}</h2>
-        <p>created. {parseSubmitDate(_getSurveysById.data?.createdAt ?? '')}</p>
+        <h2>{serverSurveys?.description}</h2>
+        <p>created. {parseSubmitDate(serverSurveys?.createdAt ?? '')}</p>
         <div css={Buttons}>
           <Button label='기본 정보 수정' onClick={onOpenModal} />
           <Button

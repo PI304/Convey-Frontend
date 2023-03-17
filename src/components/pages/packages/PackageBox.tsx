@@ -20,10 +20,10 @@ export const PackageBox = ({ _package }: PackageBoxProps) => {
 };
 
 const PartsBox = ({ packageId }: PartsBoxProps) => {
-  const { _getParts } = useParts(packageId);
+  const { _getParts } = useParts();
   return (
     <>
-      {_getParts.data?.map((part, i) => (
+      {_getParts(packageId).data?.map((part, i) => (
         <PartBox part={part} key={i} />
       ))}
     </>

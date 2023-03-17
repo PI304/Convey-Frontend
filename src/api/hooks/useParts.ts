@@ -3,11 +3,8 @@ import { deletePart, getParts, postPart } from '@api';
 import { QueryKeys } from '@constants';
 import { queryClient } from '@pages/_app';
 
-export const useParts = (packageId?: number) => {
-  const _getParts = useQuery([QueryKeys.parts, packageId], () => {
-    if (packageId === undefined) return;
-    return getParts(+packageId);
-  });
+export const useParts = () => {
+  const _getParts = (packageId: number) => useQuery([QueryKeys.parts, packageId], () => getParts(packageId));
 
   const _postPart = useMutation((params: Parameters<typeof postPart>) => postPart(...params), {
     onSuccess: () => queryClient.invalidateQueries([QueryKeys.parts]),

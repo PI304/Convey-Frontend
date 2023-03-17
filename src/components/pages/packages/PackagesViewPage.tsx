@@ -13,7 +13,8 @@ import { withoutPropagation } from '@utils/withoutPropagation';
 export const PackagesViewPage = () => {
   const id = useQueryString('id');
   const { _postPart } = useParts();
-  const { _getPackagesById, _patchPackages } = usePackages(id);
+  const { _getPackagesById, _patchPackages } = usePackages();
+  const { data: packages } = _getPackagesById(id);
   const [isMetaModalOpened, onOpenMetaModal, onCloseMetaModal] = useSwitch();
   const [isPartModalOpened, onOpenPartModal, onClosePartModal] = useSwitch();
   const [meta, onChangeMeta, onSetMeta] = useInputs<Omit<RequestPackages.Patch, 'contacts'>>({
@@ -50,14 +51,14 @@ export const PackagesViewPage = () => {
   };
 
   const setPrevData = () => {
-    if (!_getPackagesById.data) return;
+    if (!packages) return;
     onSetMeta({
-      title: _getPackagesById.data.title,
-      description: _getPackagesById.data.description,
-      manager: _getPackagesById.data.manager,
+      title: packages.title,
+      description: packages.description,
+      manager: packages.manager,
     });
-    if (!_getPackagesById.data.contacts.length) return;
-    _getPackagesById.data.contacts.forEach((contact) => {
+    if (!packages.contacts.length) return;
+    packages.contacts.forEach((contact) => {
       if (contact.type === 'email') onManuallyChangeEmail(contact.content);
       if (contact.type === 'phone') onManuallyChangePhone(contact.content);
     });
@@ -71,25 +72,25 @@ export const PackagesViewPage = () => {
   return (
     <div css={Container}>
       <div css={C.Meta}>
-        <h1>{_getPackagesById.data?.title}&nbsp;</h1>
-        <h2>{_getPackagesById.data?.description}</h2>
-        {!!_getPackagesById.data?.contacts.length && (
+        <h1>{packages?.title}&nbsp;</h1>
+        <h2>{packages?.description}</h2>
+        {!!packages?.contacts.length && (
           <div css={Contacts}>
-            <div>manager. {_getPackagesById.data.manager}</div>
-            {_getPackagesById.data?.contacts.map((contact, i) => (
+            <div>manager. {packages?.manager}</div>
+            {packages?.contacts.map((contact, i) => (
               <div key={i}>
                 {contact.type}.&nbsp;{contact.content}
               </div>
             ))}
           </div>
         )}
-        <p>created. {parseSubmitDate(_getPackagesById.data?.createdAt ?? '')}</p>
+        <p>created. {parseSubmitDate(packages?.createdAt ?? '')}</p>
         <div css={Buttons} onClick={withoutPropagation}>
           <Button label='기본 정보 수정' onClick={onOpenMetaModal} />
           <Button label='디바이더 +' onClick={onOpenPartModal} />
         </div>
       </div>
-      {_getPackagesById.data && <PackageBox _package={_getPackagesById.data} />}
+      {packages && <PackageBox _package={packages} />}
       <Modal
         title='기본 정보 수정'
         onCancel={onCloseMetaModal}
