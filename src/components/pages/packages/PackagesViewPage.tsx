@@ -1,20 +1,18 @@
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
-import { useMutation } from 'react-query';
-import { postPart, usePackages } from '@api';
+import { usePackages, useParts } from '@api';
 import { AutoResizeTextArea, Button, Input, Modal, PackageBox } from '@components';
-import { QueryKeys } from '@constants';
 import { useInput } from '@hooks/useInput';
 import { useInputs } from '@hooks/useInputs';
 import { useQueryString } from '@hooks/useQueryString';
 import { useSwitch } from '@hooks/useSwitch';
-import { queryClient } from '@pages/_app';
 import { C, Fonts } from '@styles';
 import { parseSubmitDate } from '@utils/parseSubmitDate';
 import { withoutPropagation } from '@utils/withoutPropagation';
 
 export const PackagesViewPage = () => {
   const id = useQueryString('id');
+  const { _postPart } = useParts();
   const { _getPackagesById, _patchPackages } = usePackages(id);
   const [isMetaModalOpened, onOpenMetaModal, onCloseMetaModal] = useSwitch();
   const [isPartModalOpened, onOpenPartModal, onClosePartModal] = useSwitch();
@@ -25,16 +23,9 @@ export const PackagesViewPage = () => {
   });
   const [email, onChangeEmail, , onManuallyChangeEmail] = useInput();
   const [phone, onChangePhone, , onManuallyChangePhone] = useInput();
-
   const [part, onChangePart] = useInputs<RequestParts.Post>({
     title: '',
     subjects: [],
-  });
-  const { mutate: _postPart } = useMutation(() => postPart(+(id || 0), part), {
-    onSuccess: () => {
-      onClosePartModal();
-      queryClient.invalidateQueries([QueryKeys.parts]);
-    },
   });
 
   const requestPatchPackages = async () => {
@@ -50,6 +41,12 @@ export const PackagesViewPage = () => {
       },
     ]);
     onCloseMetaModal();
+  };
+
+  const requestPostPart = async () => {
+    if (!id) return;
+    await _postPart.mutateAsync([+id, part]);
+    onClosePartModal();
   };
 
   const setPrevData = () => {
@@ -108,7 +105,11 @@ export const PackagesViewPage = () => {
         <Input value={email} onChange={onChangeEmail} placeholder='이메일' />
         <Input value={phone} onChange={onChangePhone} placeholder='전화번호' />
       </Modal>
-      <Modal title='새로운 디바이더' onCancel={onClosePartModal} onSubmit={_postPart} isHidden={!isPartModalOpened}>
+      <Modal
+        title='새로운 디바이더'
+        onCancel={onClosePartModal}
+        onSubmit={requestPostPart}
+        isHidden={!isPartModalOpened}>
         <Input value={part.title} onChange={(e) => onChangePart(e, 'title')} placeholder='제목' />
       </Modal>
     </div>
