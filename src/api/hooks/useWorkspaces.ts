@@ -14,6 +14,10 @@ import { QueryKeys } from '@constants';
 import { queryClient } from '@pages/_app';
 
 export const useWorkspaces = () => {
+  /**
+   * Workspaces
+   */
+
   const _getWorkspaces = useQuery(QueryKeys.workspaces, getWorkspaces);
 
   const _postWorkspace = useMutation((params: Parameters<typeof postWorkspace>) => postWorkspace(...params), {
@@ -25,6 +29,10 @@ export const useWorkspaces = () => {
       if (id === undefined) return;
       return getWorkspaceById(+id);
     });
+
+  /**
+   * Packages
+   */
 
   const _postPackagesToWorkspace = useMutation(
     (params: Parameters<typeof postPackagesToWorkspace>) => postPackagesToWorkspace(...params),
@@ -40,6 +48,10 @@ export const useWorkspaces = () => {
     },
   );
 
+  /**
+   * Routines
+   */
+
   const _getRoutines = (id: string | undefined) =>
     useQuery([QueryKeys.routines, id], () => {
       if (id === undefined) return;
@@ -47,6 +59,10 @@ export const useWorkspaces = () => {
     });
 
   const _postRoutines = useMutation((params: Parameters<typeof postRoutines>) => postRoutines(...params));
+
+  /**
+   * Routine Details
+   */
 
   const _postRoutineDetails = useMutation(
     (params: Parameters<typeof postRoutineDetails>) => postRoutineDetails(...params),
