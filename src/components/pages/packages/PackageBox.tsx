@@ -2,15 +2,7 @@ import { css } from '@emotion/react';
 import produce from 'immer';
 import { useState, useEffect } from 'react';
 import { useMutation, useQuery } from 'react-query';
-import {
-  deletePart,
-  deleteSubject,
-  getIncludedSurveys,
-  getParts,
-  getSubjects,
-  postSubject,
-  putIncludedSurveys,
-} from '@api';
+import { deleteSubject, getIncludedSurveys, getSubjects, postSubject, putIncludedSurveys, useParts } from '@api';
 import { Button, Input, Modal, SelectSurveyDropDown } from '@components';
 import { QueryKeys } from '@constants';
 import { useInputs } from '@hooks/useInputs';
@@ -29,10 +21,10 @@ export const PackageBox = ({ _package }: PackageBoxProps) => {
 };
 
 const PartsBox = ({ packageId }: PartsBoxProps) => {
-  const { data: parts } = useQuery([QueryKeys.parts, packageId], () => getParts(packageId));
+  const { _getParts } = useParts(packageId);
   return (
     <>
-      {parts?.map((part, i) => (
+      {_getParts.data?.map((part, i) => (
         <PartBox part={part} key={i} />
       ))}
     </>
@@ -40,6 +32,7 @@ const PartsBox = ({ packageId }: PartsBoxProps) => {
 };
 
 const PartBox = ({ part }: PartBoxProps) => {
+  const { _deletePart } = useParts();
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [isSubjectsOpened, onOpenSubjects, , onToggleSubjects] = useSwitch();
   const [data, onChangeData] = useInputs<RequestSubjects.Post>({
@@ -53,9 +46,6 @@ const PartBox = ({ part }: PartBoxProps) => {
       queryClient.invalidateQueries([QueryKeys.subjects]);
     },
   });
-  const { mutate: _delete } = useMutation(() => deletePart(part.id), {
-    onSuccess: () => queryClient.invalidateQueries([QueryKeys.parts]),
-  });
 
   return (
     <div css={Container} onClick={(e) => withoutPropagation(e, onToggleSubjects)}>
@@ -66,7 +56,11 @@ const PartBox = ({ part }: PartBoxProps) => {
         </div>
         <div css={Buttons}>
           <Button label='대주제 +' onClick={(e) => withoutPropagation(e, onOpenModal)} />
-          <Button label='삭제' onClick={(e) => withoutPropagation(e, _delete)} backgroundColor='lightcoral' />
+          <Button
+            label='삭제'
+            onClick={(e) => withoutPropagation(e, () => _deletePart.mutate([part.id]))}
+            backgroundColor='lightcoral'
+          />
         </div>
       </div>
       <Modal title='새로운 대주제' onCancel={onCloseModal} onSubmit={post} isHidden={!isModalOpened}>
