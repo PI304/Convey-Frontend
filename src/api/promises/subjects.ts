@@ -1,4 +1,4 @@
-import { request } from './core';
+import { request } from '@api';
 
 const baseUrl = '/survey-packages/parts';
 
