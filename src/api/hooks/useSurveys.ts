@@ -5,7 +5,7 @@ import { setSurveysFromServerDataAtom } from '@atoms';
 import { QueryKeys } from '@constants';
 import { queryClient } from '@pages/_app';
 
-export const useSurveys = (id?: number) => {
+export const useSurveys = (id?: string | undefined) => {
   const setSurveysFromServerData = useSetAtom(setSurveysFromServerDataAtom);
 
   const _getSurveys = useQuery(QueryKeys.surveys, () => getSurveys(1));
@@ -23,11 +23,14 @@ export const useSurveys = (id?: number) => {
   const _getSurveysById = useQuery(
     [QueryKeys.surveysById, id],
     () => {
-      if (!id) throw new Error('id is undefined');
-      return getSurveysById(id);
+      if (id === undefined) return;
+      return getSurveysById(+id);
     },
     {
-      onSuccess: (data) => setSurveysFromServerData({ surveys: data.sectors }),
+      onSuccess: (data) => {
+        if (!data) return;
+        setSurveysFromServerData({ surveys: data.sectors });
+      },
       refetchOnWindowFocus: false,
     },
   );
