@@ -17,7 +17,7 @@ export const SurveysPage = () => {
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
 
   const requestPostSurveys = async () => {
-    await _postSurveys.mutate([{ title, description, abbr }]);
+    await _postSurveys.mutateAsync([{ title, description, abbr }]);
     onCloseModal();
   };
 
