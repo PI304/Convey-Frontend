@@ -12,12 +12,12 @@ export const getWorkspaceById = (workspaceId: number) => {
   return request.get<ResponseWorkspaces.GetById>(url);
 };
 
-export const getRoutinesById = (workspaceId: number) => {
+export const getRoutines = (workspaceId: number) => {
   const url = `${baseUrl}/${workspaceId}/routines`;
   return request.get<ResponseWorkspaces.GetRoutinesById>(url);
 };
 
-export const getRoutineDetailsById = (routineDetailId: number) => {
+export const getRoutineDetails = (routineDetailId: number) => {
   const url = `${baseUrl}/routine-details/${routineDetailId}`;
   return request.get<ResponseWorkspaces.GetRoutineDetailsById>(url);
 };
@@ -42,17 +42,17 @@ export const postPackagesToWorkspace = (workspaceId: number, data: RequestWorksp
   return request.post<ResponseWorkspaces.PostPackages, RequestWorkspaces.PostPackages>(url, data);
 };
 
-export const deleteWorkspaceById = (workspaceId: number) => {
+export const deleteWorkspace = (workspaceId: number) => {
   const url = `${baseUrl}/${workspaceId}`;
   return request.delete(url);
 };
 
-export const deleteRoutineDetailsById = (routineDetailId: number) => {
+export const deleteRoutineDetails = (routineDetailId: number) => {
   const url = `${baseUrl}/routine-details/${routineDetailId}`;
   return request.delete(url);
 };
 
-export const deletePackageInWorkspaceById = (workspaceId: number, packageId: number) => {
+export const deletePackageInWorkspace = (workspaceId: number, packageId: number) => {
   const url = `${baseUrl}/${workspaceId}/survey-packages/${packageId}`;
   return request.delete(url);
 };

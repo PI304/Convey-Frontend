@@ -1,5 +1,15 @@
 import { useMutation, useQuery } from 'react-query';
-import { getWorkspaceById, getWorkspaces, postWorkspace } from '@api';
+import {
+  deletePackageInWorkspace,
+  deleteRoutineDetails,
+  getRoutines,
+  getWorkspaceById,
+  getWorkspaces,
+  postPackagesToWorkspace,
+  postRoutineDetails,
+  postRoutines,
+  postWorkspace,
+} from '@api';
 import { QueryKeys } from '@constants';
 import { queryClient } from '@pages/_app';
 
@@ -16,5 +26,51 @@ export const useWorkspaces = () => {
       return getWorkspaceById(+id);
     });
 
-  return { _getWorkspaces, _postWorkspace, _getWorkspaceById };
+  const _postPackagesToWorkspace = useMutation(
+    (params: Parameters<typeof postPackagesToWorkspace>) => postPackagesToWorkspace(...params),
+    {
+      onSuccess: () => queryClient.invalidateQueries([QueryKeys.workspace]),
+    },
+  );
+
+  const _deletePackageInWorkspace = useMutation(
+    (params: Parameters<typeof deletePackageInWorkspace>) => deletePackageInWorkspace(...params),
+    {
+      onSuccess: () => queryClient.invalidateQueries([QueryKeys.workspace]),
+    },
+  );
+
+  const _getRoutines = (id: string | undefined) =>
+    useQuery([QueryKeys.routines, id], () => {
+      if (id === undefined) return;
+      return getRoutines(+id);
+    });
+
+  const _postRoutines = useMutation((params: Parameters<typeof postRoutines>) => postRoutines(...params));
+
+  const _postRoutineDetails = useMutation(
+    (params: Parameters<typeof postRoutineDetails>) => postRoutineDetails(...params),
+    {
+      onSuccess: () => queryClient.invalidateQueries([QueryKeys.routines]),
+    },
+  );
+
+  const _deleteRoutineDetails = useMutation(
+    (params: Parameters<typeof deleteRoutineDetails>) => deleteRoutineDetails(...params),
+    {
+      onSuccess: () => queryClient.invalidateQueries([QueryKeys.routines]),
+    },
+  );
+
+  return {
+    _getWorkspaces,
+    _postWorkspace,
+    _getWorkspaceById,
+    _getRoutines,
+    _postPackagesToWorkspace,
+    _deletePackageInWorkspace,
+    _postRoutines,
+    _postRoutineDetails,
+    _deleteRoutineDetails,
+  };
 };
