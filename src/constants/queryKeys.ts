@@ -1,6 +1,6 @@
 export const QueryKeys = {
   surveys: 'surveys',
-  surveysById: 'surveysById',
+  survey: 'survey',
   packages: 'packages',
   package: 'package',
   parts: 'parts',

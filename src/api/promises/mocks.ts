@@ -1,4 +1,4 @@
-import { mock } from './core';
+import { mock } from '@api';
 
 const baseUrl = '/api';
 

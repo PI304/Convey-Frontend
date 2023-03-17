@@ -1,16 +1,15 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { css } from '@emotion/react';
-import { useMutation, useQuery } from 'react-query';
-import { getPackages, postPackage } from '@api';
+import { usePackages } from '@api';
 import { AutoResizeTextArea, Board, Button, Input, Modal } from '@components';
-import { Paths, QueryKeys } from '@constants';
+import { Paths } from '@constants';
 import { useInput } from '@hooks/useInput';
 import { useInputs } from '@hooks/useInputs';
 import { useSwitch } from '@hooks/useSwitch';
-import { queryClient } from '@pages/_app';
 import { Colors, AlphaToHex } from '@styles';
 
 export const PackagesPage = () => {
+  const { _getPackages, _postPackages } = usePackages();
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [data, onChangeData] = useInputs<Omit<RequestPackages.Post, 'contacts'>>({
     title: '',
@@ -20,23 +19,19 @@ export const PackagesPage = () => {
   });
   const [email, onChangeEmail] = useInput();
   const [phone, onChangePhone] = useInput();
-  const { data: packages } = useQuery(QueryKeys.packages, getPackages);
-  const { mutate: post } = useMutation(
-    () =>
-      postPackage({
+
+  const requestPostPackages = async () => {
+    await _postPackages.mutateAsync([
+      {
         ...data,
         contacts: [
           { type: 'email', content: email },
           { type: 'phone', content: phone },
         ],
-      }),
-    {
-      onSuccess: () => {
-        onCloseModal();
-        queryClient.invalidateQueries([QueryKeys.packages]);
       },
-    },
-  );
+    ]);
+    onCloseModal();
+  };
 
   return (
     <div css={Container}>
@@ -47,10 +42,10 @@ export const PackagesPage = () => {
       />
       <Board
         heads={['ID', '제목', '작성자']}
-        bodies={packages?.map((_package) => [_package.id, _package.title, _package.author.name]) || []}
+        bodies={_getPackages.data?.map((_package) => [_package.id, _package.title, _package.author.name]) || []}
         viewPath={Paths.packages}
       />
-      <Modal title='새로운 패키지' onCancel={onCloseModal} onSubmit={post} isHidden={!isModalOpened}>
+      <Modal title='새로운 패키지' onCancel={onCloseModal} onSubmit={requestPostPackages} isHidden={!isModalOpened}>
         <Input value={data?.title ?? ''} onChange={(e) => onChangeData(e, 'title')} placeholder='제목' />
         <AutoResizeTextArea
           value={data?.description ?? ''}

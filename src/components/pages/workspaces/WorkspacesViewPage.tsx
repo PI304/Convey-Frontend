@@ -1,26 +1,26 @@
 import { css } from '@emotion/react';
 import { useState } from 'react';
-import { useQuery, useMutation } from 'react-query';
-import {
-  deletePackageInWorkspaceById,
-  deleteRoutineDetailsById,
-  getRoutinesById,
-  getWorkspaceById,
-  postPackagesToWorkspace,
-  postRoutineDetails,
-  postRoutines,
-} from '@api';
+import { useWorkspaces } from '@api';
 import { Button, Input, Modal, SelectDropDown, SelectPackageDropDown } from '@components';
-import { QueryKeys } from '@constants';
 import { useInput } from '@hooks/useInput';
 import { useQueryString } from '@hooks/useQueryString';
 import { useSwitch } from '@hooks/useSwitch';
-import { queryClient } from '@pages/_app';
 import { AlphaToHex, C, Colors, Fonts } from '@styles';
 import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const WorkspacesViewPage = () => {
   const id = useQueryString('id');
+  const {
+    _getWorkspaceById,
+    _getRoutines,
+    _postPackagesToWorkspace,
+    _deletePackageFromWorkspace,
+    _postRoutines,
+    _postRoutineDetails,
+  } = useWorkspaces();
+  const { data: workspace } = _getWorkspaceById(id);
+  const { data: routines, remove: removeRoutines, refetch: refetchRoutines } = _getRoutines(id);
+
   const [isPackageModalOpened, onOpenPackageModal, onClosePackageModal] = useSwitch();
   const [isRoutineModalOpened, onOpenRoutineModal, onCloseRoutineModal] = useSwitch();
   const [isRoutineDetailsModalOpened, onOpenRoutineDetailsModal, onCloseRoutineDetailsModal] = useSwitch();
@@ -30,62 +30,51 @@ export const WorkspacesViewPage = () => {
   const [nthDay, onChangeNthDay] = useInput();
   const [time, onChangeTime] = useInput();
   const [surveyPackage, , , onManuallyChangeSurveyPackage] = useInput();
-  const { data: workspace } = useQuery([QueryKeys.workspace, id], () => {
-    if (id) return getWorkspaceById(+(id || 0));
-  });
-  const { data: routines } = useQuery([QueryKeys.routines, id], () => {
-    if (id) return getRoutinesById(+(id || 0));
-  });
-  const { mutate: postPackages } = useMutation(
-    () => postPackagesToWorkspace(+(id || ''), { surveyPackages: packages }),
-    {
-      onSuccess: () => {
-        onClosePackageModal();
-        queryClient.invalidateQueries([QueryKeys.workspace]);
-      },
-    },
-  );
-  const { mutate: deletePackage } = useMutation(
-    (packageId: number) => deletePackageInWorkspaceById(+(id || 0), packageId),
-    {
-      onSuccess: () => {
-        queryClient.invalidateQueries([QueryKeys.workspace]);
-      },
-    },
-  );
-  const { mutate: _postRoutines } = useMutation(
-    () =>
-      postRoutines(+(id || ''), {
+
+  const requestPostPackagesToWorkspace = async () => {
+    if (id === undefined) return;
+    await _postPackagesToWorkspace.mutateAsync([+id, { surveyPackages: packages }]);
+    onClosePackageModal();
+  };
+
+  const requestDeletePackageFromWorkspace = async (packageId: number) => {
+    if (id === undefined) return;
+    await _deletePackageFromWorkspace.mutateAsync([+id, packageId]);
+  };
+
+  const requestPostRoutines = async () => {
+    if (id === undefined) return;
+    await _postRoutines.mutateAsync([
+      +id,
+      {
         duration: +duration,
         kickOff: kickOff || 0,
         routines: [],
-      }),
-    {
-      onSuccess: () => {
-        onCloseRoutineModal();
-        queryClient.invalidateQueries([QueryKeys.routines]);
       },
-    },
-  );
-  const { mutate: _postRoutineDetails } = useMutation(
-    () =>
-      postRoutineDetails(routines?.id ?? 0, {
+    ]);
+    onCloseRoutineModal();
+    removeRoutines();
+    refetchRoutines();
+  };
+
+  const requestPostRoutineDetails = async () => {
+    if (!routines?.id) return;
+    await _postRoutineDetails.mutateAsync([
+      routines.id,
+      {
         nthDay: +nthDay,
         time: time,
         surveyPackage: +surveyPackage,
-      }),
-    {
-      onSuccess: () => {
-        onCloseRoutineDetailsModal();
-        queryClient.invalidateQueries([QueryKeys.routines]);
       },
-    },
-  );
+    ]);
+    onCloseRoutineDetailsModal();
+  };
 
   const onAddPackage = (packageId: number) => {
     if (packages.includes(packageId)) return;
     setPackages([...packages, packageId]);
   };
+
   const onRemovePackage = (packageId: number) => {
     if (!packages.includes(packageId)) return;
     setPackages(packages.filter((_package) => _package !== packageId));
@@ -93,6 +82,7 @@ export const WorkspacesViewPage = () => {
 
   return (
     <div css={Container}>
+      <Button label='refetch' onClick={refetchRoutines} />
       <div css={C.Meta}>
         <h1>{workspace?.name}&nbsp;</h1>
         <h2>
@@ -120,7 +110,7 @@ export const WorkspacesViewPage = () => {
           {workspace?.surveyPackages.length ? (
             <div css={Tags}>
               {workspace.surveyPackages.map((_package, i) => (
-                <div css={Tag} onClick={() => deletePackage(_package.id)} key={i}>
+                <div css={Tag} onClick={() => requestDeletePackageFromWorkspace(_package.id)} key={i}>
                   <div>{_package.id}</div>
                   <div>{_package.title}</div>
                 </div>
@@ -174,7 +164,7 @@ export const WorkspacesViewPage = () => {
       <Modal
         title='패키지 추가'
         onCancel={onClosePackageModal}
-        onSubmit={postPackages}
+        onSubmit={requestPostPackagesToWorkspace}
         isHidden={!isPackageModalOpened}>
         {!!packages.length && (
           <div css={Tags}>
@@ -187,7 +177,11 @@ export const WorkspacesViewPage = () => {
         )}
         <SelectPackageDropDown onSelect={(packageId) => onAddPackage(packageId)} />
       </Modal>
-      <Modal title='루틴 생성' onCancel={onCloseRoutineModal} onSubmit={_postRoutines} isHidden={!isRoutineModalOpened}>
+      <Modal
+        title='루틴 생성'
+        onCancel={onCloseRoutineModal}
+        onSubmit={requestPostRoutines}
+        isHidden={!isRoutineModalOpened}>
         <Input value={duration} onChange={onChangeDuration} placeholder='킥오프 서베이 이후부터의 루틴 날짜 수' />
         <SelectDropDown
           onSelect={(id) => onChangeKickedOff(id)}
@@ -202,7 +196,7 @@ export const WorkspacesViewPage = () => {
       <Modal
         title='루틴 +'
         onCancel={onCloseRoutineDetailsModal}
-        onSubmit={_postRoutineDetails}
+        onSubmit={requestPostRoutineDetails}
         isHidden={!isRoutineDetailsModalOpened}>
         <Input value={nthDay + ''} onChange={onChangeNthDay} placeholder='n번째 날' />
         <Input value={time + ''} onChange={onChangeTime} placeholder='HH:MM' />
@@ -221,18 +215,13 @@ export const WorkspacesViewPage = () => {
 };
 
 const RoutineDetail = ({ id, nthDay, time, surveyPackage }: RoutineDetailProps) => {
-  const { mutate: _deleteRoutineDetails } = useMutation(
-    (routineDetailsid: number) => deleteRoutineDetailsById(routineDetailsid),
-    {
-      onSuccess: () => queryClient.invalidateQueries([QueryKeys.routines]),
-    },
-  );
+  const { _deleteRoutineDetails } = useWorkspaces();
   return (
     <>
       <div>{nthDay}번째 날</div>
       <div>{time}</div>
       <div>{surveyPackage}</div>
-      <Button label='삭제' onClick={() => _deleteRoutineDetails(id)} backgroundColor='lightCoral' />
+      <Button label='삭제' onClick={() => _deleteRoutineDetails.mutate([id])} backgroundColor='lightCoral' />
     </>
   );
 };
