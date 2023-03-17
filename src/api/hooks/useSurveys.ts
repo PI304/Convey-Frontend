@@ -15,13 +15,13 @@ export const useSurveys = (id?: string | undefined) => {
   });
 
   const _patchSurveys = useMutation((params: Parameters<typeof patchSurveys>) => patchSurveys(...params), {
-    onSuccess: () => queryClient.invalidateQueries([QueryKeys.surveysById]),
+    onSuccess: () => queryClient.invalidateQueries([QueryKeys.survey]),
   });
 
   const _putSurveys = useMutation((params: Parameters<typeof putSurveys>) => putSurveys(...params));
 
   const _getSurveysById = useQuery(
-    [QueryKeys.surveysById, id],
+    [QueryKeys.survey, id],
     () => {
       if (id === undefined) return;
       return getSurveysById(+id);
