@@ -10,6 +10,7 @@ import { Colors, AlphaToHex } from '@styles';
 
 export const PackagesPage = () => {
   const { _getPackages, _postPackages } = usePackages();
+
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [data, onChangeData] = useInputs<Omit<RequestPackages.Post, 'contacts'>>({
     title: '',

@@ -8,6 +8,7 @@ import { AlphaToHex, Colors } from '@styles';
 
 export const WorkspacesPage = () => {
   const { _getWorkspaces, _postWorkspace } = useWorkspaces();
+
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [data, onChangeData] = useInputs<RequestWorkspaces.Post>({
     name: '',

@@ -19,6 +19,7 @@ export const SurveysViewPage = () => {
   const resetSurveys = useSetAtom(resetSurveysAtom);
   const { _getSurveysById, _patchSurveys, _putSurveys } = useSurveys();
   const { data: serverSurveys } = _getSurveysById(id);
+
   const [title, onChangeTitle, , onManuallySetTitle] = useInput();
   const [description, onChangeDescription, , onManuallySetDescription] = useInput();
   const [abbr, onChangeAbbr, , onManuallySetAbbr] = useInput();

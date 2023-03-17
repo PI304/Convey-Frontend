@@ -12,9 +12,9 @@ import { withoutPropagation } from '@utils/withoutPropagation';
 
 export const PackagesViewPage = () => {
   const id = useQueryString('id');
-  const { _postPart } = usePackages();
-  const { _getPackagesById, _patchPackages } = usePackages();
+  const { _postPart, _getPackagesById, _patchPackages } = usePackages();
   const { data: packages } = _getPackagesById(id);
+
   const [isMetaModalOpened, onOpenMetaModal, onCloseMetaModal] = useSwitch();
   const [isPartModalOpened, onOpenPartModal, onClosePartModal] = useSwitch();
   const [meta, onChangeMeta, onSetMeta] = useInputs<Omit<RequestPackages.Patch, 'contacts'>>({

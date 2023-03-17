@@ -31,8 +31,8 @@ const PartsBox = ({ packageId }: PartsBoxProps) => {
 };
 
 const PartBox = ({ part }: PartBoxProps) => {
-  const { _deletePart } = usePackages();
-  const { _postSubject } = usePackages();
+  const { _deletePart, _postSubject } = usePackages();
+
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [isSubjectsOpened, onOpenSubjects, , onToggleSubjects] = useSwitch();
   const [data, onChangeData] = useInputs<RequestSubjects.Post>({
@@ -85,6 +85,7 @@ const SubjectsBox = ({ partId }: SubjectsBoxProps) => {
 const SubjectBox = ({ subject }: SubjectBoxProps) => {
   const { _putIncludedSurveys, _getIncludedSurveys, _deleteSubject } = usePackages();
   const { data: serverIncludedSurveys } = _getIncludedSurveys(subject.id);
+
   const [isEditMode, onStartEditMode, , onFinishEditMode] = useSwitch();
   const [includedSurveys, setIncludedSurveys] = useState<IncludedSurveyType[]>([]);
 

@@ -11,6 +11,7 @@ import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const SurveysPage = () => {
   const { _getSurveys, _postSurveys } = useSurveys();
+
   const [title, onChangeTitle, onResetTitle] = useInput();
   const [description, onChangeDescription, onResetDescription] = useInput();
   const [abbr, onChangeAbbr, onResetAbbr] = useInput();
