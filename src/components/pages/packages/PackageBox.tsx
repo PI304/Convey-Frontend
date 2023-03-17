@@ -1,8 +1,7 @@
 import { css } from '@emotion/react';
 import produce from 'immer';
 import { useState, useEffect } from 'react';
-import { useMutation, useQuery } from 'react-query';
-import { deleteSubject, getIncludedSurveys, getSubjects, postSubject, putIncludedSurveys, useParts } from '@api';
+import { useParts, useSubjects } from '@api';
 import { Button, Input, Modal, SelectSurveyDropDown } from '@components';
 import { QueryKeys } from '@constants';
 import { useInputs } from '@hooks/useInputs';
@@ -33,19 +32,19 @@ const PartsBox = ({ packageId }: PartsBoxProps) => {
 
 const PartBox = ({ part }: PartBoxProps) => {
   const { _deletePart } = useParts();
+  const { _postSubject } = useSubjects();
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [isSubjectsOpened, onOpenSubjects, , onToggleSubjects] = useSwitch();
   const [data, onChangeData] = useInputs<RequestSubjects.Post>({
     number: 0,
     title: '',
   });
-  const { mutate: post } = useMutation(() => postSubject(part.id, data), {
-    onSuccess: () => {
-      onCloseModal();
-      onOpenSubjects();
-      queryClient.invalidateQueries([QueryKeys.subjects]);
-    },
-  });
+
+  const requestPostSubject = async () => {
+    await _postSubject.mutateAsync([part.id, data]);
+    onCloseModal();
+    onOpenSubjects();
+  };
 
   return (
     <div css={Container} onClick={(e) => withoutPropagation(e, onToggleSubjects)}>
@@ -63,7 +62,7 @@ const PartBox = ({ part }: PartBoxProps) => {
           />
         </div>
       </div>
-      <Modal title='새로운 대주제' onCancel={onCloseModal} onSubmit={post} isHidden={!isModalOpened}>
+      <Modal title='새로운 대주제' onCancel={onCloseModal} onSubmit={requestPostSubject} isHidden={!isModalOpened}>
         <Input value={data.number + ''} onChange={(e) => onChangeData(e, 'number')} placeholder='번호' />
         <Input value={data.title} onChange={(e) => onChangeData(e, 'title')} placeholder='제목' />
       </Modal>
@@ -73,10 +72,10 @@ const PartBox = ({ part }: PartBoxProps) => {
 };
 
 const SubjectsBox = ({ partId }: SubjectsBoxProps) => {
-  const { data: subjects } = useQuery([QueryKeys.subjects, partId], () => getSubjects(partId));
+  const { _getSubjects } = useSubjects();
   return (
     <>
-      {subjects?.map((subject, i) => (
+      {_getSubjects(partId).data?.map((subject, i) => (
         <SubjectBox subject={subject} key={i} />
       ))}
     </>
@@ -84,56 +83,58 @@ const SubjectsBox = ({ partId }: SubjectsBoxProps) => {
 };
 
 const SubjectBox = ({ subject }: SubjectBoxProps) => {
-  const [isEditMode, onStartEdit, , onFinishEdit] = useSwitch();
+  const { _putIncludedSurveys, _getIncludedSurveys, _deleteSubject } = useSubjects();
+  const { data: serverIncludedSurveys } = _getIncludedSurveys(subject.id);
+  const [isEditMode, onStartEditMode, , onFinishEditMode] = useSwitch();
   const [includedSurveys, setIncludedSurveys] = useState<IncludedSurveyType[]>([]);
-  const { data } = useQuery([QueryKeys.includedSurveys, subject.id], () => getIncludedSurveys(subject.id));
-  const { mutate: put } = useMutation(() => putIncludedSurveys(subject.id, includedSurveys), {
-    onSuccess: () => queryClient.invalidateQueries([QueryKeys.includedSurveys]),
-  });
-  const { mutate: _delete } = useMutation(() => deleteSubject(subject.id), {
-    onSuccess: () => queryClient.invalidateQueries([QueryKeys.subjects]),
-  });
 
-  const onAddSurvey = () => setIncludedSurveys([...includedSurveys, new IncludedSurvey(1, 1)]);
-  const onRemoveSurvey = (surveyIdx: number) => {
+  const addSurvey = () => setIncludedSurveys([...includedSurveys, new IncludedSurvey(1, 1)]);
+
+  const removeSurvey = (surveyIdx: number) => {
     const newSurveys = produce(includedSurveys, (draft) => {
       draft.splice(surveyIdx, 1);
     });
     setIncludedSurveys(newSurveys);
   };
-  const onChangeNumber = (surveyIdx: number, number: number) => {
+
+  const changeNumber = (surveyIdx: number, number: number) => {
     const newSurveys = produce(includedSurveys, (draft) => {
       draft[surveyIdx].number = number;
     });
     setIncludedSurveys(newSurveys);
   };
-  const onChangeTitle = (surveyIdx: number, title: string) => {
+
+  const changeTitle = (surveyIdx: number, title: string) => {
     const newSurveys = produce(includedSurveys, (draft) => {
       draft[surveyIdx].title = title;
     });
     setIncludedSurveys(newSurveys);
   };
-  const onChangeSurvey = (surveyIdx: number, survey: number) => {
+
+  const changeSurvey = (surveyIdx: number, survey: number) => {
     const newSurveys = produce(includedSurveys, (draft) => {
       draft[surveyIdx].survey = survey;
     });
     setIncludedSurveys(newSurveys);
   };
-  const onInitIncludedSurveys = (surveys: IncludedSurveyType[]) => setIncludedSurveys(surveys);
-  const onRequestFinishEdit = () => {
+
+  const initIncludedSurveys = (surveys: IncludedSurveyType[]) => setIncludedSurveys(surveys);
+
+  const requestCancelEditMode = () => {
     setSurveysFromServerData();
-    onFinishEdit();
+    onFinishEditMode();
     queryClient.invalidateQueries([QueryKeys.includedSurveys]);
   };
-  const onRequestPut = () => {
-    onFinishEdit();
-    put();
+
+  const requestPutIncludedSurveys = () => {
+    onFinishEditMode();
+    _putIncludedSurveys.mutate([subject.id, includedSurveys]);
   };
 
   const setSurveysFromServerData = () => {
-    if (!data) return;
+    if (!serverIncludedSurveys) return;
     const newSurveys: IncludedSurvey[] = [];
-    data.surveys.forEach((survey) => {
+    serverIncludedSurveys.surveys.forEach((survey) => {
       const newSurvey = new IncludedSurvey(0, 0);
       const number = survey.number;
       const title = survey.title;
@@ -141,12 +142,12 @@ const SubjectBox = ({ subject }: SubjectBoxProps) => {
       newSurvey.setFromServerData(number, title, surveyId);
       newSurveys.push(newSurvey);
     });
-    onInitIncludedSurveys(newSurveys);
+    initIncludedSurveys(newSurveys);
   };
 
   useEffect(() => {
     setSurveysFromServerData();
-  }, [data]);
+  }, [serverIncludedSurveys]);
 
   return (
     <div css={Container}>
@@ -155,14 +156,14 @@ const SubjectBox = ({ subject }: SubjectBoxProps) => {
         <div css={Buttons}>
           {isEditMode ? (
             <>
-              <Button label='소주제 +' onClick={onAddSurvey} />
-              <Button label='소주제 구성 저장' onClick={onRequestPut} />
-              <Button label='취소' onClick={onRequestFinishEdit} />
+              <Button label='소주제 +' onClick={addSurvey} />
+              <Button label='소주제 구성 저장' onClick={requestPutIncludedSurveys} />
+              <Button label='취소' onClick={requestCancelEditMode} />
             </>
           ) : (
             <>
-              <Button label='소주제 구성 수정' onClick={onStartEdit} />
-              <Button label='삭제' onClick={_delete} backgroundColor='lightcoral' />
+              <Button label='소주제 구성 수정' onClick={onStartEditMode} />
+              <Button label='삭제' onClick={() => _deleteSubject.mutate([subject.id])} backgroundColor='lightcoral' />
             </>
           )}
         </div>
@@ -170,12 +171,12 @@ const SubjectBox = ({ subject }: SubjectBoxProps) => {
       <IncludedSurveysBox
         isEditMode={isEditMode}
         subjectId={subject.id}
-        onInitIncludedSurveys={onInitIncludedSurveys}
+        onInitIncludedSurveys={initIncludedSurveys}
         includedSurveys={includedSurveys}
-        onChangeNumber={onChangeNumber}
-        onChangeTitle={onChangeTitle}
-        onChangeSurvey={onChangeSurvey}
-        onRemoveSurvey={onRemoveSurvey}
+        onChangeNumber={changeNumber}
+        onChangeTitle={changeTitle}
+        onChangeSurvey={changeSurvey}
+        onRemoveSurvey={removeSurvey}
       />
     </div>
   );
