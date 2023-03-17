@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
-import { useQuery, useMutation } from 'react-query';
-import { getPackageById, patchPackage, postPart } from '@api';
+import { useMutation } from 'react-query';
+import { postPart, usePackages } from '@api';
 import { AutoResizeTextArea, Button, Input, Modal, PackageBox } from '@components';
 import { QueryKeys } from '@constants';
 import { useInput } from '@hooks/useInput';
@@ -15,6 +15,7 @@ import { withoutPropagation } from '@utils/withoutPropagation';
 
 export const PackagesViewPage = () => {
   const id = useQueryString('id');
+  const { _getPackagesById, _patchPackages } = usePackages(id);
   const [isMetaModalOpened, onOpenMetaModal, onCloseMetaModal] = useSwitch();
   const [isPartModalOpened, onOpenPartModal, onClosePartModal] = useSwitch();
   const [meta, onChangeMeta, onSetMeta] = useInputs<Omit<RequestPackages.Patch, 'contacts'>>({
@@ -24,25 +25,7 @@ export const PackagesViewPage = () => {
   });
   const [email, onChangeEmail, , onManuallyChangeEmail] = useInput();
   const [phone, onChangePhone, , onManuallyChangePhone] = useInput();
-  const { data: _package } = useQuery([QueryKeys.package, id], () => {
-    if (id) return getPackageById(+(id || 0));
-  });
-  const { mutate: patchMeta } = useMutation(
-    () =>
-      patchPackage(+(id || 0), {
-        ...meta,
-        contacts: [
-          { type: 'email', content: email },
-          { type: 'phone', content: phone },
-        ],
-      }),
-    {
-      onSuccess: () => {
-        onCloseMetaModal();
-        queryClient.invalidateQueries([QueryKeys.package]);
-      },
-    },
-  );
+
   const [part, onChangePart] = useInputs<RequestParts.Post>({
     title: '',
     subjects: [],
@@ -54,15 +37,30 @@ export const PackagesViewPage = () => {
     },
   });
 
+  const requestPatchPackages = async () => {
+    if (!id) return;
+    await _patchPackages.mutateAsync([
+      +id,
+      {
+        ...meta,
+        contacts: [
+          { type: 'email', content: email },
+          { type: 'phone', content: phone },
+        ],
+      },
+    ]);
+    onCloseMetaModal();
+  };
+
   const setPrevData = () => {
-    if (!_package) return;
+    if (!_getPackagesById.data) return;
     onSetMeta({
-      title: _package.title,
-      description: _package.description,
-      manager: _package.manager,
+      title: _getPackagesById.data.title,
+      description: _getPackagesById.data.description,
+      manager: _getPackagesById.data.manager,
     });
-    if (!_package.contacts.length) return;
-    _package.contacts.forEach((contact) => {
+    if (!_getPackagesById.data.contacts.length) return;
+    _getPackagesById.data.contacts.forEach((contact) => {
       if (contact.type === 'email') onManuallyChangeEmail(contact.content);
       if (contact.type === 'phone') onManuallyChangePhone(contact.content);
     });
@@ -76,26 +74,30 @@ export const PackagesViewPage = () => {
   return (
     <div css={Container}>
       <div css={C.Meta}>
-        <h1>{_package?.title}&nbsp;</h1>
-        <h2>{_package?.description}</h2>
-        {!!_package?.contacts.length && (
+        <h1>{_getPackagesById.data?.title}&nbsp;</h1>
+        <h2>{_getPackagesById.data?.description}</h2>
+        {!!_getPackagesById.data?.contacts.length && (
           <div css={Contacts}>
-            <div>manager. {_package.manager}</div>
-            {_package?.contacts.map((contact, i) => (
+            <div>manager. {_getPackagesById.data.manager}</div>
+            {_getPackagesById.data?.contacts.map((contact, i) => (
               <div key={i}>
                 {contact.type}.&nbsp;{contact.content}
               </div>
             ))}
           </div>
         )}
-        <p>created. {parseSubmitDate(_package?.createdAt ?? '')}</p>
+        <p>created. {parseSubmitDate(_getPackagesById.data?.createdAt ?? '')}</p>
         <div css={Buttons} onClick={withoutPropagation}>
           <Button label='기본 정보 수정' onClick={onOpenMetaModal} />
           <Button label='디바이더 +' onClick={onOpenPartModal} />
         </div>
       </div>
-      {_package && <PackageBox _package={_package} />}
-      <Modal title='기본 정보 수정' onCancel={onCloseMetaModal} onSubmit={patchMeta} isHidden={!isMetaModalOpened}>
+      {_getPackagesById.data && <PackageBox _package={_getPackagesById.data} />}
+      <Modal
+        title='기본 정보 수정'
+        onCancel={onCloseMetaModal}
+        onSubmit={requestPatchPackages}
+        isHidden={!isMetaModalOpened}>
         <Input value={meta.title} onChange={(e) => onChangeMeta(e, 'title')} placeholder='제목' />
         <AutoResizeTextArea
           value={meta.description}
