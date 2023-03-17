@@ -1,28 +1,25 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
-import { useQuery, useMutation } from 'react-query';
-import { getSurveys, postSurveys } from '@api';
+import { useSurveys } from '@api';
 import { AutoResizeTextArea, Board, Button, Input, Modal } from '@components';
-import { Paths, QueryKeys } from '@constants';
+import { Paths } from '@constants';
 import { useInput } from '@hooks/useInput';
 import { useSwitch } from '@hooks/useSwitch';
-import { queryClient } from '@pages/_app';
 import { AlphaToHex, Colors } from '@styles';
 import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const SurveysPage = () => {
+  const { _getSurveys, _postSurveys } = useSurveys();
   const [title, onChangeTitle, onResetTitle] = useInput();
   const [description, onChangeDescription, onResetDescription] = useInput();
   const [abbr, onChangeAbbr, onResetAbbr] = useInput();
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
-  const { data: surveys } = useQuery(QueryKeys.surveys, () => getSurveys(1));
-  const { mutate: post } = useMutation(() => postSurveys({ title, description, abbr }), {
-    onSuccess: () => {
-      onCloseModal();
-      queryClient.invalidateQueries([QueryKeys.surveys]);
-    },
-  });
+
+  const requestPostSurveys = async () => {
+    await _postSurveys.mutate([{ title, description, abbr }]);
+    onCloseModal();
+  };
 
   useEffect(() => {
     if (!isModalOpened) return;
@@ -41,8 +38,8 @@ export const SurveysPage = () => {
       <Board
         heads={['ID', '제목', '약어', '작성자', '작성일']}
         bodies={
-          (surveys?.length &&
-            surveys.map((survey) => [
+          (_getSurveys?.data?.length &&
+            _getSurveys?.data?.map((survey) => [
               survey.id, //
               survey.title,
               survey.abbr,
@@ -53,7 +50,7 @@ export const SurveysPage = () => {
         }
         viewPath={Paths.surveys}
       />
-      <Modal title='새로운 소주제' onCancel={onCloseModal} onSubmit={post} isHidden={!isModalOpened}>
+      <Modal title='새로운 소주제' onCancel={onCloseModal} onSubmit={requestPostSurveys} isHidden={!isModalOpened}>
         <Input value={title} onChange={onChangeTitle} placeholder='제목' />
         <AutoResizeTextArea value={description} onChange={onChangeDescription} placeholder='설명' />
         <Input value={abbr} onChange={onChangeAbbr} placeholder='약어' />
