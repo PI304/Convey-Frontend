@@ -5,8 +5,8 @@ import { Choice, Question } from '@models';
 export class Survey implements SurveyType {
   [immerable] = true;
 
-  title = '제목';
-  description = '설명';
+  instruction = '';
+  description = '';
   isLinked = false;
   questionType: ValueOf<typeof QuestionTypes>;
   commonChoices: ChoiceType[] | null = null;
@@ -119,7 +119,7 @@ export class Survey implements SurveyType {
   initializeLongAnswer() {}
 
   setFromServerData(survey: ResponseSurveyType) {
-    this.title = survey.title;
+    this.instruction = survey.instruction;
     this.description = survey.description;
     this.isLinked = survey.isLinked;
     const commonChoices: ChoiceType[] = [];
