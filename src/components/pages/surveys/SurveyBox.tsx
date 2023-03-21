@@ -2,7 +2,7 @@ import { css } from '@emotion/react';
 import { useSetAtom } from 'jotai';
 import { Fragment } from 'react';
 import {
-  writeSurveyTitleAtom,
+  writeSurveyInstructionAtom,
   writeSurveyDescriptionAtom,
   writeQuestionNumberAtom,
   writeQuestionContentAtom,
@@ -26,15 +26,15 @@ import {
 } from '@atoms';
 import { AutoResizeTextArea, Button, Input, ToggleButton } from '@components';
 import { QuestionTypeLables, QuestionTypes } from '@constants';
+import { useFormError } from '@hooks/useFormError';
 import { useInput } from '@hooks/useInput';
-import { Fonts } from '@styles';
+import { C, Fonts } from '@styles';
 import { parseDescForm } from '@utils/parseDescForm';
 
 export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
   const questionType = survey.questionType as ValueOf<typeof QuestionTypes>;
-  const [staticDesc, onChangeStaticDesc] = useInput();
   const removeSurvey = useSetAtom(removeSurveyAtom);
-  const writeTitle = useSetAtom(writeSurveyTitleAtom);
+  const writeInstruction = useSetAtom(writeSurveyInstructionAtom);
   const writeDescription = useSetAtom(writeSurveyDescriptionAtom);
   const writeQuestionNumber = useSetAtom(writeQuestionNumberAtom);
   const writeQuestionContent = useSetAtom(writeQuestionContentAtom);
@@ -48,10 +48,6 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
   const writeCommonChoiceContent = useSetAtom(writeCommonChoiceContentAtom);
   const addCommonChoice = useSetAtom(addCommonChoiceAtom);
   const removeCommonChoice = useSetAtom(removeCommonChoiceAtom);
-  const addNumberDescForm = useSetAtom(addNumberDescFormAtom);
-  const addStringDescForm = useSetAtom(addStringDescFormAtom);
-  const addStaticDescForm = useSetAtom(addStaticDescFormAtom);
-  const eraseDescForm = useSetAtom(eraseDescFormAtom);
   const toggleChoiceIsDescriptive = useSetAtom(toggleChoiceIsDescriptiveAtom);
   const toggleSurveyIsLinked = useSetAtom(toggleSurveyIsLinkedAtom);
   return (
@@ -65,22 +61,28 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
       />
       {/* Meta */}
       <div css={Meta}>
-        <Input
-          value={survey.title}
-          onChange={(e) => writeTitle({ surveyIdx, title: e.target.value })}
-          placeholder='제목'
-          width='30%'
-        />
-      </div>
-      <div css={Meta}>
         <AutoResizeTextArea
           value={survey.description}
           onChange={(e) => writeDescription({ surveyIdx, description: e.target.value })}
-          placeholder='설명'
+          placeholder='이 섹터에 대한 설명을 작성하세요. (필수X)'
+          rows={3}
           forwardCss={css`
-            width: 50%;
+            width: 100%;
           `}
+          isOptional
         />
+        <div css={Meta}>
+          <AutoResizeTextArea
+            value={survey.instruction}
+            onChange={(e) => writeInstruction({ surveyIdx, instruction: e.target.value })}
+            placeholder='이 섹터에 대한 지시문을 작성하세요. (필수X)'
+            rows={2}
+            forwardCss={css`
+              width: 100%;
+            `}
+            isOptional
+          />
+        </div>
       </div>
       <div css={Table}>
         {/* Head */}
@@ -173,36 +175,12 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
                     )}
                     {/* 서술형식 */}
                     {choice.isDescriptive && (
-                      <div css={DescForm} className='DescForm'>
-                        <div>
-                          {parseDescForm(choice.descForm || '') || (
-                            <span css={{ color: 'dimgray' }}>서술형식을 입력하세요</span>
-                          )}
-                        </div>
-                        <div>
-                          <Button
-                            label='숫자'
-                            onClick={() => addNumberDescForm({ surveyIdx, questionIdx, choiceIdx })}
-                          />
-                          <Button
-                            label='문자'
-                            onClick={() => addStringDescForm({ surveyIdx, questionIdx, choiceIdx })}
-                          />
-                          <Input
-                            value={staticDesc}
-                            onChange={onChangeStaticDesc}
-                            placeholder='추가할 글자'
-                            width='10rem'
-                          />
-                          <Button
-                            label='글자'
-                            onClick={() =>
-                              addStaticDescForm({ surveyIdx, questionIdx, choiceIdx, content: staticDesc })
-                            }
-                          />
-                          <Button label='지우기' onClick={() => eraseDescForm({ surveyIdx, questionIdx, choiceIdx })} />
-                        </div>
-                      </div>
+                      <DescFormBox
+                        surveyIdx={surveyIdx}
+                        questionIdx={questionIdx}
+                        choiceIdx={choiceIdx}
+                        choice={choice}
+                      />
                     )}
                     {/* 서술 ON/OFF */}
                     {survey.questionType !== QuestionTypes.shortAnswer && (
@@ -224,6 +202,37 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
       </div>
       <Button label='질문추가' onClick={() => addQuestion({ surveyIdx, questionType })} />
       <Button label='서베이삭제' onClick={() => removeSurvey({ surveyIdx })} backgroundColor='lightcoral' />
+    </div>
+  );
+};
+
+const DescFormBox = ({ surveyIdx, questionIdx, choiceIdx, choice }: DescFormBoxProps) => {
+  const errorCondition = () => {
+    if (choice.descForm === null) return false;
+    if (/(%d|%s)/g.test(choice.descForm)) return false;
+    else return true;
+  };
+  const { checkIsError } = useFormError(choice.descForm ?? '', false, errorCondition);
+
+  const [staticDesc, onChangeStaticDesc] = useInput();
+  const addNumberDescForm = useSetAtom(addNumberDescFormAtom);
+  const addStringDescForm = useSetAtom(addStringDescFormAtom);
+  const addStaticDescForm = useSetAtom(addStaticDescFormAtom);
+  const eraseDescForm = useSetAtom(eraseDescFormAtom);
+
+  return (
+    <div css={[DescForm, checkIsError() && C.Error]} className='DescForm'>
+      <div>{parseDescForm(choice.descForm || '') || <span css={{ color: 'dimgray' }}>서술형식을 입력하세요</span>}</div>
+      <div>
+        <Button label='숫자' onClick={() => addNumberDescForm({ surveyIdx, questionIdx, choiceIdx })} />
+        <Button label='문자' onClick={() => addStringDescForm({ surveyIdx, questionIdx, choiceIdx })} />
+        <Input value={staticDesc} onChange={onChangeStaticDesc} placeholder='추가할 글자' width='10rem' isOptional />
+        <Button
+          label='글자'
+          onClick={() => addStaticDescForm({ surveyIdx, questionIdx, choiceIdx, content: staticDesc })}
+        />
+        <Button label='지우기' onClick={() => eraseDescForm({ surveyIdx, questionIdx, choiceIdx })} />
+      </div>
     </div>
   );
 };
@@ -299,6 +308,9 @@ const Table = css`
 
 const Meta = css`
   grid-column: 1/4;
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
 `;
 
 const Choices = {

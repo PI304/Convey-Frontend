@@ -24,11 +24,11 @@ export const removeSurveyAtom = atom(null, (get, set, update: RemoveSurveyAtomTy
   set(surveysAtom, newSurveys);
 });
 
-export const writeSurveyTitleAtom = atom(null, (get, set, update: WriteSurveyTitleAtomType) => {
+export const writeSurveyInstructionAtom = atom(null, (get, set, update: WriteSurveyInstructionAtomType) => {
   const surveys = get(surveysAtom);
   if (!surveys) return;
   const newSurveys = produce(surveys, (draft) => {
-    draft[update.surveyIdx].title = update.title;
+    draft[update.surveyIdx].instruction = update.instruction;
   });
   set(surveysAtom, newSurveys);
 });
@@ -236,6 +236,7 @@ export const toggleChoiceIsDescriptiveAtom = atom(null, (get, set, update: Toggl
     const choices = draft[update.surveyIdx].questions[update.questionIdx].choices;
     if (!choices) return;
     if (choices[update.choiceIdx].isDescriptive) choices[update.choiceIdx].descForm = null;
+    else choices[update.choiceIdx].descForm = '%s';
     choices[update.choiceIdx].isDescriptive = !choices[update.choiceIdx].isDescriptive;
   });
   set(surveysAtom, newSurveys);

@@ -18,7 +18,9 @@ export const useSurveys = () => {
     onSuccess: () => queryClient.invalidateQueries([QueryKeys.survey]),
   });
 
-  const _putSurveys = useMutation((params: Parameters<typeof putSurveys>) => putSurveys(...params));
+  const _putSurveys = useMutation((params: Parameters<typeof putSurveys>) => putSurveys(...params), {
+    onSuccess: () => alert('서베이 구성을 저장했습니다.'),
+  });
 
   const _getSurveysById = (id: string | undefined) =>
     useQuery(

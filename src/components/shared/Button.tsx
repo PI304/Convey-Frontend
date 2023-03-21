@@ -1,9 +1,9 @@
 import { css } from '@emotion/react';
 import { Fonts } from '@styles';
 
-export const Button = ({ label, onClick, backgroundColor }: CommonButtonProps) => {
+export const Button = ({ label, onClick, backgroundColor, disabled }: CommonButtonProps) => {
   return (
-    <button onClick={onClick} css={[Container, { backgroundColor }]}>
+    <button onClick={onClick} css={[Container, { backgroundColor }]} disabled={disabled}>
       {label}
     </button>
   );
@@ -20,4 +20,11 @@ const Container = css`
   cursor: pointer;
   white-space: nowrap;
   background-color: lightgray;
+
+  :disabled {
+    background-color: #e2e1e1;
+    border-color: lightgray;
+    color: white;
+    cursor: default;
+  }
 `;

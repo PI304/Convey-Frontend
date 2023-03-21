@@ -2,9 +2,9 @@ type RemoveSurveyAtomType = {
   surveyIdx: number;
 };
 
-type WriteSurveyTitleAtomType = {
+type WriteSurveyInstructionAtomType = {
   surveyIdx: number;
-  title: string;
+  instruction: string;
 };
 
 type WriteSurveyDescriptionAtomType = {
@@ -94,4 +94,12 @@ type SetFromServerDataType = {
 
 type ToggleSurveyIsLinkedType = {
   surveyIdx: number;
+};
+
+type AddFormErrorAtomType = {
+  formId: string;
+};
+
+type RemoveFormErrorAtomType = {
+  formId: string;
 };

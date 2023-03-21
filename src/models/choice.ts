@@ -28,6 +28,7 @@ export class Choice implements ChoiceType {
 
   initializeDescriptiveChoice() {
     this.isDescriptive = true;
+    this.descForm = '%s';
     this.content = null;
   }
 

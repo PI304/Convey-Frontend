@@ -1,5 +1,5 @@
 type SurveyType = {
-  title: string;
+  instruction: string;
   description: string;
   isLinked: boolean;
   questionType: string;
