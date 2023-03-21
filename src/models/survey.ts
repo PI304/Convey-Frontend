@@ -82,7 +82,7 @@ export class Survey implements SurveyType {
         number: 1,
         content: null,
         isDescriptive: true,
-        descForm: null,
+        descForm: '%s',
       },
     ];
   }

@@ -236,7 +236,7 @@ export const toggleChoiceIsDescriptiveAtom = atom(null, (get, set, update: Toggl
     const choices = draft[update.surveyIdx].questions[update.questionIdx].choices;
     if (!choices) return;
     if (choices[update.choiceIdx].isDescriptive) choices[update.choiceIdx].descForm = null;
-    else choices[update.choiceIdx].descForm = '';
+    else choices[update.choiceIdx].descForm = '%s';
     choices[update.choiceIdx].isDescriptive = !choices[update.choiceIdx].isDescriptive;
   });
   set(surveysAtom, newSurveys);
