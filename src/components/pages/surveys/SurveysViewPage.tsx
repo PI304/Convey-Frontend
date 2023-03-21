@@ -3,7 +3,7 @@ import { css } from '@emotion/react';
 import { useAtomValue, useSetAtom } from 'jotai';
 import { useEffect } from 'react';
 import { useSurveys } from '@api';
-import { addSurveyAtom, resetSurveysAtom, surveysAtom } from '@atoms';
+import { addSurveyAtom, formErrorsAtom, resetSurveysAtom, surveysAtom } from '@atoms';
 import { AutoResizeTextArea, Button, Input, Modal, SurveyBox } from '@components';
 import { QuestionTypes } from '@constants';
 import { useInput } from '@hooks/useInput';
@@ -19,6 +19,8 @@ export const SurveysViewPage = () => {
   const resetSurveys = useSetAtom(resetSurveysAtom);
   const { _getSurveysById, _patchSurveys, _putSurveys } = useSurveys();
   const { data: serverSurveys } = _getSurveysById(id);
+
+  const formErrors = useAtomValue(formErrorsAtom);
 
   const [title, onChangeTitle, , onManuallySetTitle] = useInput();
   const [description, onChangeDescription, , onManuallySetDescription] = useInput();
@@ -63,6 +65,7 @@ export const SurveysViewPage = () => {
             label='서베이 구성 저장'
             onClick={requestPutSurveys}
             backgroundColor={`${Colors.highlight}${AlphaToHex['0.6']}`}
+            disabled={!!formErrors.length}
           />
         </div>
       </div>
