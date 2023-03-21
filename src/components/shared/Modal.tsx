@@ -1,21 +1,31 @@
 import { css } from '@emotion/react';
+import { useAtomValue } from 'jotai';
+import { formErrorsAtom } from '@atoms';
 import { Button } from '@components';
 import { usePreventScroll } from '@hooks/usePreventScroll';
 import { AlphaToHex, C, Colors, Fonts } from '@styles';
 import { withoutPropagation } from '@utils/withoutPropagation';
 
 export const Modal = ({ title, children, onCancel, onSubmit, isHidden }: ModalProps) => {
+  const formErrors = useAtomValue(formErrorsAtom);
   usePreventScroll(!isHidden);
   return (
     <div css={[Background, isHidden && C.Hidden]} onClick={withoutPropagation}>
-      <div css={Container}>
-        <h1>{title}</h1>
-        <div css={Inputs}>{children}</div>
-        <div css={Buttons}>
-          <Button label='취소' onClick={onCancel} />
-          <Button label='확인' onClick={onSubmit} backgroundColor={`${Colors.highlight}${AlphaToHex['0.5']}`} />
+      {!isHidden && (
+        <div css={Container}>
+          <h1>{title}</h1>
+          <div css={Inputs}>{children}</div>
+          <div css={Buttons}>
+            <Button label='취소' onClick={onCancel} />
+            <Button
+              label='확인'
+              onClick={onSubmit}
+              backgroundColor={`${Colors.highlight}${AlphaToHex['0.5']}`}
+              disabled={!!formErrors.length}
+            />
+          </div>
         </div>
-      </div>
+      )}
     </div>
   );
 };

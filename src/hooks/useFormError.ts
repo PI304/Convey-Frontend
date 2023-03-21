@@ -26,7 +26,7 @@ export const useFormError = (value: string, isOptional: boolean, errorCondition?
   useEffect(() => {
     if (!isOptional) validate();
     return () => removeFormError({ formId: id });
-  }, [value]);
+  }, [value, id]);
 
   return { checkIsError };
 };
