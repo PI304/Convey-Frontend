@@ -19,6 +19,10 @@ export const C = {
     }
   `,
 
+  Error: css`
+    border-color: lightcoral;
+  `,
+
   Meta: css`
     width: 100%;
     display: flex;
