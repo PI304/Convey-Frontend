@@ -2,6 +2,7 @@ type CommonButtonProps = {
   label: string;
   onClick: (...args: any) => void;
   backgroundColor?: string;
+  disabled?: boolean;
 };
 
 type BoardProps = {
@@ -16,6 +17,7 @@ type InputProps = {
   placeholder: string;
   width?: string;
   disabled?: boolean;
+  isOptional?: boolean;
 };
 
 type ModalProps = ChildrenType & {
