@@ -95,3 +95,11 @@ type SetFromServerDataType = {
 type ToggleSurveyIsLinkedType = {
   surveyIdx: number;
 };
+
+type AddFormErrorAtomType = {
+  formId: string;
+};
+
+type RemoveFormErrorAtomType = {
+  formId: string;
+};
