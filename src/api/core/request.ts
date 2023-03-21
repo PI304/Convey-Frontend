@@ -44,9 +44,9 @@ const handleError = (error: AxiosError) => {
       history.go();
       break;
     case 409:
-      alert('이미 추가된 데이터가 있습니다.');
+      alert('중복된 데이터입니다.');
       break;
     default:
-      console.log(error);
+      alert(error);
   }
 };
