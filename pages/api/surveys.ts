@@ -13,7 +13,7 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
         {
           id: 1,
           survey: 1,
-          title: 'string',
+          instruction: 'string',
           isLinked: false,
           description: 'string',
           questionType: 'single_select',
@@ -77,7 +77,7 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
         {
           id: 1,
           survey: 1,
-          title: 'string',
+          instruction: 'string',
           isLinked: true,
           description: 'string',
           questionType: 'likert',
