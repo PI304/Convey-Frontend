@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 import { useUniqueId } from './useUniqueId';
 import { formErrorsAtom, addFormErrorAtom, removeFormErrorAtom } from '@atoms';
 
-export const useFormError = (value: string, isOptional: boolean, errorCondition?: () => boolean) => {
+export const useFormError = (value: string, isOptional: boolean, errorChecker?: () => boolean) => {
   const id = useUniqueId();
   const formErrors = useAtomValue(formErrorsAtom);
   const addFormError = useSetAtom(addFormErrorAtom);
@@ -11,11 +11,11 @@ export const useFormError = (value: string, isOptional: boolean, errorCondition?
 
   const validate = () => {
     if (!id) return;
-    if (errorCondition) {
-      if (errorCondition()) addFormError({ formId: id });
+    if (errorChecker) {
+      if (errorChecker()) addFormError({ formId: id });
       else removeFormError({ formId: id });
     }
-    if (!errorCondition) {
+    if (!errorChecker) {
       if (value === '') addFormError({ formId: id });
       else removeFormError({ formId: id });
     }
