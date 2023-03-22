@@ -10,7 +10,7 @@ import { AlphaToHex, Colors } from '@styles';
 import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const SurveysPage = () => {
-  const { _getSurveys, _postSurveys } = useSurveys();
+  const { _getSurveys, _postSurveys, _deleteSurveys } = useSurveys();
 
   const [title, onChangeTitle, onResetTitle] = useInput();
   const [description, onChangeDescription, onResetDescription] = useInput();
@@ -50,6 +50,7 @@ export const SurveysPage = () => {
           []
         }
         viewPath={Paths.surveys}
+        onDelete={_deleteSurveys.mutate}
       />
       <Modal title='새로운 소주제' onCancel={onCloseModal} onSubmit={requestPostSurveys} isHidden={!isModalOpened}>
         <Input value={title} onChange={onChangeTitle} placeholder='제목' />

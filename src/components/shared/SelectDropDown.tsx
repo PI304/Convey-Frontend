@@ -32,6 +32,7 @@ export const SelectDropDown = <T extends { id: number; title?: string }[]>({
                 {data.title}
               </div>
             ))}
+            {!data.length && <div css={Option}>데이터가 없습니다.</div>}
           </div>
         )}
       </button>

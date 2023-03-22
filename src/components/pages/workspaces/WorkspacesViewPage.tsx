@@ -82,7 +82,6 @@ export const WorkspacesViewPage = () => {
 
   return (
     <div css={Container}>
-      <Button label='refetch' onClick={refetchRoutines} />
       <div css={C.Meta}>
         <h1>{workspace?.name}&nbsp;</h1>
         <h2>

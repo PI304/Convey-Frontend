@@ -43,6 +43,9 @@ const handleError = (error: AxiosError) => {
       sessionStorage.removeItem(StorageKeys.accessToken);
       history.go();
       break;
+    case 404:
+      console.log(error);
+      break;
     case 409:
       alert('중복된 데이터입니다.');
       break;

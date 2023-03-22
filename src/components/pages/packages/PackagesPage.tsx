@@ -9,7 +9,7 @@ import { useSwitch } from '@hooks/useSwitch';
 import { Colors, AlphaToHex } from '@styles';
 
 export const PackagesPage = () => {
-  const { _getPackages, _postPackages } = usePackages();
+  const { _getPackages, _postPackages, _deletePackage } = usePackages();
 
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [data, onChangeData] = useInputs<Omit<RequestPackages.Post, 'contacts'>>({
@@ -45,6 +45,7 @@ export const PackagesPage = () => {
         heads={['ID', '제목', '작성자']}
         bodies={_getPackages.data?.map((_package) => [_package.id, _package.title, _package.author.name]) || []}
         viewPath={Paths.packages}
+        onDelete={_deletePackage.mutate}
       />
       <Modal title='새로운 패키지' onCancel={onCloseModal} onSubmit={requestPostPackages} isHidden={!isModalOpened}>
         <Input value={data?.title ?? ''} onChange={(e) => onChangeData(e, 'title')} placeholder='제목' />

@@ -1,6 +1,6 @@
 import { useSetAtom } from 'jotai';
 import { useMutation, useQuery } from 'react-query';
-import { getSurveys, getSurveysById, patchSurveys, postSurveys, putSurveys } from '@api';
+import { deleteSurveys, getSurveys, getSurveysById, patchSurveys, postSurveys, putSurveys } from '@api';
 import { setSurveysFromServerDataAtom } from '@atoms';
 import { QueryKeys } from '@constants';
 import { queryClient } from '@pages/_app';
@@ -38,5 +38,9 @@ export const useSurveys = () => {
       },
     );
 
-  return { _getSurveys, _postSurveys, _patchSurveys, _putSurveys, _getSurveysById };
+  const _deleteSurveys = useMutation((params: Parameters<typeof deleteSurveys>) => deleteSurveys(...params), {
+    onSuccess: () => queryClient.invalidateQueries([QueryKeys.surveys]),
+  });
+
+  return { _getSurveys, _postSurveys, _patchSurveys, _putSurveys, _getSurveysById, _deleteSurveys };
 };
