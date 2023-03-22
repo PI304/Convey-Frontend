@@ -2,6 +2,7 @@ import { useMutation, useQuery } from 'react-query';
 import {
   deletePackageFromWorkspace,
   deleteRoutineDetails,
+  deleteRoutines,
   deleteWorkspace,
   getRoutines,
   getWorkspaceById,
@@ -65,6 +66,10 @@ export const useWorkspaces = () => {
 
   const _postRoutines = useMutation((params: Parameters<typeof postRoutines>) => postRoutines(...params));
 
+  const _deleteRoutines = useMutation((params: Parameters<typeof deleteRoutines>) => deleteRoutines(...params), {
+    onSuccess: () => queryClient.resetQueries([QueryKeys.routines]),
+  });
+
   /**
    * Routine Details
    */
@@ -88,10 +93,11 @@ export const useWorkspaces = () => {
     _postWorkspace,
     _getWorkspaceById,
     _deleteWorkspace,
-    _getRoutines,
     _postPackagesToWorkspace,
     _deletePackageFromWorkspace,
+    _getRoutines,
     _postRoutines,
+    _deleteRoutines,
     _postRoutineDetails,
     _deleteRoutineDetails,
   };

@@ -54,6 +54,11 @@ export const postRoutines = (workspaceId: number, data: RequestWorkspaces.PostRo
   return request.post<ResponseWorkspaces.PostRoutines, RequestWorkspaces.PostRoutines>(url, data);
 };
 
+export const deleteRoutines = (workspaceId: number) => {
+  const url = `${baseUrl}/${workspaceId}/routines`;
+  return request.delete(url);
+};
+
 /**
  * Routine Details
  */
