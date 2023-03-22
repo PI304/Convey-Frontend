@@ -7,7 +7,7 @@ import { useSwitch } from '@hooks/useSwitch';
 import { AlphaToHex, Colors } from '@styles';
 
 export const WorkspacesPage = () => {
-  const { _getWorkspaces, _postWorkspace } = useWorkspaces();
+  const { _getWorkspaces, _postWorkspace, _deleteWorkspace } = useWorkspaces();
 
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [data, onChangeData] = useInputs<RequestWorkspaces.Post>({
@@ -35,6 +35,7 @@ export const WorkspacesPage = () => {
           []
         }
         viewPath={Paths.workspaces}
+        onDelete={_deleteWorkspace.mutate}
       />
       <Modal
         title='새로운 워크스페이스'
