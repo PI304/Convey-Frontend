@@ -16,6 +16,7 @@ export const WorkspacesViewPage = () => {
     _postPackagesToWorkspace,
     _deletePackageFromWorkspace,
     _postRoutines,
+    _deleteRoutines,
     _postRoutineDetails,
   } = useWorkspaces();
   const { data: workspace } = _getWorkspaceById(id);
@@ -123,11 +124,20 @@ export const WorkspacesViewPage = () => {
       <div css={OuterBox}>
         <div>
           <h1>Routines</h1>
-          <Button
-            label={routines ? '루틴 +' : '루틴 생성'}
-            onClick={routines ? onOpenRoutineDetailsModal : onOpenRoutineModal}
-            backgroundColor={routines ? `${Colors.highlight}${AlphaToHex['0.5']}` : 'lightblue'}
-          />
+          <div css={Buttons}>
+            <Button
+              label={routines ? '루틴 +' : '루틴 생성'}
+              onClick={routines ? onOpenRoutineDetailsModal : onOpenRoutineModal}
+              backgroundColor={routines ? `${Colors.highlight}${AlphaToHex['0.5']}` : 'lightblue'}
+            />
+            {routines && (
+              <Button
+                label='루틴 삭제'
+                onClick={() => _deleteRoutines.mutate([+(id ?? 0)])}
+                backgroundColor='lightCoral'
+              />
+            )}
+          </div>
         </div>
         <div css={InnerBox}>
           {!routines && <div css={Empty}>생성된 루틴 없음</div>}
