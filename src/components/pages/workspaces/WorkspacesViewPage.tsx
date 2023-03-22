@@ -125,20 +125,11 @@ export const WorkspacesViewPage = () => {
       <div css={OuterBox}>
         <div>
           <h1>Routines</h1>
-          <div css={Buttons}>
-            <Button
-              label={routines ? '루틴 +' : '루틴 생성'}
-              onClick={routines ? onOpenRoutineDetailsModal : onOpenRoutineModal}
-              backgroundColor={routines ? `${Colors.highlight}${AlphaToHex['0.5']}` : 'lightblue'}
-            />
-            {routines && (
-              <Button
-                label='루틴 삭제'
-                onClick={() => _deleteRoutines.mutate([+(id ?? 0)])}
-                backgroundColor='lightCoral'
-              />
-            )}
-          </div>
+          <Button
+            label={routines ? '루틴 +' : '루틴 생성'}
+            onClick={routines ? onOpenRoutineDetailsModal : onOpenRoutineModal}
+            backgroundColor={routines ? `${Colors.highlight}${AlphaToHex['0.5']}` : 'lightblue'}
+          />
         </div>
         <div css={InnerBox}>
           {!routines && <div css={Empty}>생성된 루틴 없음</div>}
@@ -170,6 +161,15 @@ export const WorkspacesViewPage = () => {
             </div>
           )}
         </div>
+        {routines && (
+          <div css={AlignToRight}>
+            <Button
+              label='루틴 삭제'
+              onClick={() => _deleteRoutines.mutate([+(id ?? 0)])}
+              backgroundColor='lightCoral'
+            />
+          </div>
+        )}
       </div>
       <Modal
         title='패키지 추가'
@@ -211,8 +211,8 @@ export const WorkspacesViewPage = () => {
         <Input
           value={nthDay + ''}
           onChange={onChangeNthDay}
-          placeholder={`n번째 날 (최대 ${duration})`}
-          errorChecker={() => requireContentAndMaxNumber(nthDay, +duration)}
+          placeholder={`n번째 날 (0~${routines?.duration})`}
+          errorChecker={() => requireContentAndMaxNumber(nthDay, +(routines?.duration ?? 0))}
         />
         <Input value={time + ''} onChange={onChangeTime} placeholder='HH:MM' />
         <SelectDropDown
@@ -346,4 +346,8 @@ const RoutineDetails = css`
   > button {
     margin: 0 auto;
   }
+`;
+
+const AlignToRight = css`
+  margin-left: auto;
 `;
