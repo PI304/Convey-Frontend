@@ -1,7 +1,9 @@
 import { css } from '@emotion/react';
+import { Button } from '@components';
 import { useCustomRouter } from '@hooks/useCustomRouter';
+import { withoutPropagation } from '@utils/withoutPropagation';
 
-export const Board = ({ heads, bodies, viewPath }: BoardProps) => {
+export const Board = ({ heads, bodies, viewPath, onDelete }: BoardProps) => {
   const { routeToPath } = useCustomRouter();
   return (
     <table css={Table}>
@@ -10,6 +12,7 @@ export const Board = ({ heads, bodies, viewPath }: BoardProps) => {
           {heads?.map((head, i) => (
             <th key={i}>{head}</th>
           ))}
+          <th>삭제</th>
         </tr>
       </thead>
       <tbody>
@@ -18,6 +21,13 @@ export const Board = ({ heads, bodies, viewPath }: BoardProps) => {
             {data?.map((data, i) => (
               <td key={i}>{data}</td>
             ))}
+            <td>
+              <Button
+                label='삭제'
+                onClick={(e) => withoutPropagation(e, () => onDelete([data[0]]))}
+                backgroundColor='lightCoral'
+              />
+            </td>
           </tr>
         ))}
       </tbody>

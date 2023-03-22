@@ -9,6 +9,7 @@ type BoardProps = {
   heads: string[];
   bodies: (string | number)[][];
   viewPath: string;
+  onDelete: (args: any) => void;
 };
 
 type InputProps = {
