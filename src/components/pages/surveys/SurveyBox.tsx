@@ -29,6 +29,7 @@ import { QuestionTypeLables, QuestionTypes } from '@constants';
 import { useFormError } from '@hooks/useFormError';
 import { useInput } from '@hooks/useInput';
 import { C, Fonts } from '@styles';
+import { requireAtLeastOneSubstitute } from '@utils/errorCheckers';
 import { parseDescForm } from '@utils/parseDescForm';
 
 export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
@@ -207,12 +208,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
 };
 
 const DescFormBox = ({ surveyIdx, questionIdx, choiceIdx, choice }: DescFormBoxProps) => {
-  const errorCondition = () => {
-    if (choice.descForm === null) return false;
-    if (/(%d|%s)/g.test(choice.descForm)) return false;
-    else return true;
-  };
-  const { checkIsError } = useFormError(choice.descForm ?? '', false, errorCondition);
+  const { checkIsError } = useFormError(choice.descForm ?? '', false, () => requireAtLeastOneSubstitute(choice));
 
   const [staticDesc, onChangeStaticDesc] = useInput();
   const addNumberDescForm = useSetAtom(addNumberDescFormAtom);
