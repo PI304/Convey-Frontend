@@ -1,5 +1,6 @@
 import { useMutation, useQuery } from 'react-query';
 import {
+  deletePackage,
   deletePart,
   deleteSubject,
   getIncludedSurveys,
@@ -36,6 +37,10 @@ export const usePackages = () => {
       if (id === undefined) return;
       return getPackageById(+id);
     });
+
+  const _deletePackage = useMutation((params: Parameters<typeof deletePackage>) => deletePackage(...params), {
+    onSuccess: () => queryClient.invalidateQueries([QueryKeys.packages]),
+  });
 
   /**
    * Parts
@@ -84,6 +89,7 @@ export const usePackages = () => {
     _postPackages,
     _patchPackages,
     _getPackagesById,
+    _deletePackage,
     _getParts,
     _postPart,
     _deletePart,

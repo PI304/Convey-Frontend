@@ -2,6 +2,7 @@ import { useMutation, useQuery } from 'react-query';
 import {
   deletePackageFromWorkspace,
   deleteRoutineDetails,
+  deleteWorkspace,
   getRoutines,
   getWorkspaceById,
   getWorkspaces,
@@ -29,6 +30,10 @@ export const useWorkspaces = () => {
       if (id === undefined) return;
       return getWorkspaceById(+id);
     });
+
+  const _deleteWorkspace = useMutation((params: Parameters<typeof deleteWorkspace>) => deleteWorkspace(...params), {
+    onSuccess: () => queryClient.invalidateQueries([QueryKeys.workspaces]),
+  });
 
   /**
    * Packages
@@ -82,6 +87,7 @@ export const useWorkspaces = () => {
     _getWorkspaces,
     _postWorkspace,
     _getWorkspaceById,
+    _deleteWorkspace,
     _getRoutines,
     _postPackagesToWorkspace,
     _deletePackageFromWorkspace,
