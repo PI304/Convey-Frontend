@@ -6,6 +6,7 @@ import { useInput } from '@hooks/useInput';
 import { useQueryString } from '@hooks/useQueryString';
 import { useSwitch } from '@hooks/useSwitch';
 import { AlphaToHex, C, Colors, Fonts } from '@styles';
+import { requireContentAndMaxNumber } from '@utils/errorCheckers';
 import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const WorkspacesViewPage = () => {
@@ -207,7 +208,12 @@ export const WorkspacesViewPage = () => {
         onCancel={onCloseRoutineDetailsModal}
         onSubmit={requestPostRoutineDetails}
         isHidden={!isRoutineDetailsModalOpened}>
-        <Input value={nthDay + ''} onChange={onChangeNthDay} placeholder='n번째 날' />
+        <Input
+          value={nthDay + ''}
+          onChange={onChangeNthDay}
+          placeholder={`n번째 날 (최대 ${duration})`}
+          errorChecker={() => requireContentAndMaxNumber(nthDay, +duration)}
+        />
         <Input value={time + ''} onChange={onChangeTime} placeholder='HH:MM' />
         <SelectDropDown
           onSelect={(id) => onManuallyChangeSurveyPackage(id + '')}
