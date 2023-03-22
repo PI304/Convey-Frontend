@@ -9,6 +9,12 @@ export const requireContentAndMinLength = (value: string, minLength: number) => 
   else return false;
 };
 
+export const requireContentAndMaxNumber = (value: string, maxNumber: number) => {
+  if (value === '') return true;
+  if (+value > maxNumber) return true;
+  else return false;
+};
+
 export const requireAtLeastOneSubstitute = (choice: ChoiceType) => {
   if (choice.descForm === null) return false;
   if (/(%d|%s)/g.test(choice.descForm)) return false;
