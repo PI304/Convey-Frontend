@@ -5,6 +5,7 @@ import { Paths } from '@constants';
 import { useInputs } from '@hooks/useInputs';
 import { useSwitch } from '@hooks/useSwitch';
 import { AlphaToHex, Colors } from '@styles';
+import { requireContentAndMinLength } from '@utils/errorCheckers';
 
 export const WorkspacesPage = () => {
   const { _getWorkspaces, _postWorkspace, _deleteWorkspace } = useWorkspaces();
@@ -43,7 +44,12 @@ export const WorkspacesPage = () => {
         onSubmit={requestPostWorkspace}
         isHidden={!isModalOpened}>
         <Input value={data.name} onChange={(e) => onChangeData(e, 'name')} placeholder='이름' />
-        <Input value={data.accessCode} onChange={(e) => onChangeData(e, 'accessCode')} placeholder='접근코드' />
+        <Input
+          value={data.accessCode}
+          onChange={(e) => onChangeData(e, 'accessCode')}
+          placeholder='접근코드 (6자리이상)'
+          errorChecker={() => requireContentAndMinLength(data.accessCode, 6)}
+        />
       </Modal>
     </div>
   );

@@ -19,6 +19,7 @@ type InputProps = {
   width?: string;
   disabled?: boolean;
   isOptional?: boolean;
+  errorChecker?: () => boolean;
 };
 
 type ModalProps = ChildrenType & {
