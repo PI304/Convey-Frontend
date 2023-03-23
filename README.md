@@ -1,23 +1,111 @@
-## 🫖 Next.js Boilerplate
+# 🖋️ Convey
 
-sookyeongyeom의 보일러플레이트입니다 :D
+이 문서에는 Convey FE에 대한 개괄적인 정보가 담겨있습니다.  
+비즈니스 로직, 코드 컨벤션, CI/CD 등 보다 상세한 내용은 아래 링크된 위키에서 확인해주세요.
+
+📖 [Convey 위키 바로가기](https://github.com/PI304/Convey-Frontend/wiki/소개)
 
 ## Index
 
-1. [시작하기](#1-시작하기)
-2. [기술 스택](#2-기술-스택)
-3. [디렉토리 구조 가이드](#3-디렉토리-구조-가이드)
-4. [코드 컨벤션](#4-코드-컨벤션)
-5. [API 관련 컨벤션](#5-API-관련-컨벤션)
-6. [커밋 컨벤션](#6-커밋-컨벤션)
+1. [프로젝트 개요](#1-프로젝트-개요)
+2. [핵심 기능](#2-핵심-기능)
+3. [문서](#3-문서)
+4. [시작하기](#4-시작하기)
+5. [기술 스택](#5-기술-스택)
+6. [디렉토리 구조](#6-디렉토리-구조)
+7. [커밋 컨벤션](#7-커밋-컨벤션)
 
-## 1. 시작하기
+## 1. 프로젝트 개요
 
-### 1. Clone
+Convey는 연구 설문 제작 및 응답 수집을 위한 솔루션입니다.
+
+제공되는 6개의 척도를 사용하여 연구자가 원하는대로 설문지를 커스텀 제작할 수 있으며,  
+여러개의 설문을 묶어 하나의 설문 패키지로 만들 수 있습니다.
+
+이렇게 만든 설문 패키지는 워크스페이스에 등록할 수 있으며,  
+각 워크스페이스에 루틴을 생성하여 연구자가 원하는 일시에 앱을 통해 피험자에게 푸시 알림을 전송할 수 있습니다.
+
+Convey의 클라이언트는 웹와 앱, 둘로 나뉩니다.
+
+- 웹은 설문 제작, 패키지 제작, 워크스페이스 관리, 루틴 관리, 응답 확인 등을 수행할 수 있는 어드민 툴입니다.
+- 앱은 푸시 알림 및 응답 제출을 수행할 수 있는 피험자 툴입니다.
+
+이곳은 웹 FE를 위한 저장소이며, 이하의 Convey는 웹 FE를 지칭합니다.
+
+## 2. 핵심 기능
+
+Convey MVP의 목표는 전체 플로우에 대한 핵심 기능 구현입니다.
+
+### 전체 플로우
+
+1. 커스텀 설문 관리 (surveys)
+2. 다수의 설문을 묶는 패키지 관리 (packages)
+3. 다수의 패키지를 묶고, 루틴을 설정하기 위한 워크스페이스 관리 (workspaces)
+
+### 커스텀 설문 관련
+
+![surveys-preview](https://user-images.githubusercontent.com/98504939/227277111-edf5c391-d0b0-464f-9061-df2e3bd975b1.gif)
+
+커스텀 설문은 다음 6개의 척도를 제공합니다.
+
+1. 리커트 (likert)
+2. 정도 (extent)
+3. 단일선택 (single select)
+4. 복수선택 (multiple select)
+5. 단답형 (short answer)
+6. 장문형 (long answer)
+
+설문은 척도를 기준으로 구분되며, 구분된 각 영역을 섹터라고 지칭합니다.
+
+### 패키지 관련
+
+![packages-preview](https://user-images.githubusercontent.com/98504939/227277415-39640635-36e1-4082-8848-dd82c591122e.gif)
+
+1. 하나의 패키지는 다수의 디바이더를 포함합니다. (package ↢ parts)
+2. 하나의 디바이더는 다수의 대주제를 포함합니다. (part ↢ subjects)
+3. 하나의 대주제는 다수의 소주제(커스텀 설문)를 포함합니다. (subject ↢ surveys)
+
+### 워크스페이스 관련
+
+![workspace-preview](https://user-images.githubusercontent.com/98504939/227277567-08fcc5da-d404-4e57-8b44-ce551706b524.gif)
+
+1. 하나의 워크스페이스는 다수의 패키지를 포함합니다. (workspace ↢ packages)
+2. 워크스페이스에 포함된 패키지를 사용하여 루틴을 생성할 수 있습니다.
+
+### 루틴 관련
+
+루틴 첫 생성 시, duration과 kick-off survey를 지정해야 합니다.
+
+1. duration : 루틴이 진행될 전체 일수
+   - 4/1~4/3 동안 루틴이 진행된다면, duration은 3입니다.
+2. kick-off survey : 루틴 시작의 기준이 되는 설문입니다.
+
+세부 루틴 추가 시, nthDay, time 및 package를 지정해야 합니다.
+
+1. nthDay : 루틴 시작일로부터 n번째 날 알림을 보냅니다.
+2. time : HH:MM 형식으로 알림을 보낼 시간을 입력합니다.
+3. package : 응답을 요구할 설문 패키지
+
+## 3. 문서
+
+초반 아이디에이션 문서입니다.  
+용어 및 기술 기획 과정이 담겨있습니다.  
+(용어는 실제 개발 과정에서 다소 변동된 부분이 있습니다.)
+
+- [용어 정리 및 목표 설정](https://github.com/PI304/CONVEY_DEV/blob/main/%5B23.02.16%5D%20%EA%B0%9C%EB%B0%9C%EC%A7%84%201%EC%B0%A8%20%EB%AF%B8%ED%8C%85.md)
+- [핵심 로직 아이디에이션](https://github.com/PI304/CONVEY_DEV/blob/main/%5B23.03.02%5D%20MVP%20%ED%95%B5%EC%8B%AC%20%EB%A1%9C%EC%A7%81%20-%20%ED%81%B4%EB%9D%BC%EC%9D%B4%EC%96%B8%ED%8A%B8.md)
+
+API 문서는 스웨거를 사용합니다.
+
+- [Convey Swagger](http://3.34.67.68/api/swagger/)
+
+## 4. 시작하기
+
+### 1. Clone & Install
 
 ```shell
-$ git clone https://github.com/sookyeongyeom/next-boilerplate
-$ cd next-boilerplate
+$ git clone https://github.com/PI304/Convey-Frontend
+$ cd Convey-Frontend
 $ yarn install
 ```
 
@@ -27,7 +115,7 @@ $ yarn install
 $ yarn dev
 ```
 
-## 2. 기술 스택
+## 5. 기술 스택
 
 <a><img src="https://img.shields.io/badge/Next.js-black?style=flat-square&logo=next.js&logoColor=white"/></a>
 <a><img src="https://img.shields.io/badge/TS-3178C6?style=flat-square&logo=typescript&logoColor=white"/></a>
@@ -45,300 +133,48 @@ $ yarn dev
 <br/>
 <a><img src="https://img.shields.io/badge/Yarn-2C8EBB?style=flat-square&logo=yarn&logoColor=white"/></a>
 
-## 3. 디렉토리 구조 가이드
+## 6. 디렉토리 구조
 
 ```
+├── .github/workflows
+│   └── dev.yml       // Dev 서버 배포자동화를 위한 yml
 ├── pages
 ├── public
 ├── src
 │   ├── @types
-│   │   ├── api
-│   │   ├── client
-│   │   └── dep
+│   │   ├── api       // API 요청, 응답 스키마 타입
+│   │   ├── client    // API 제외 모든 타입
+│   │   └── dep       // 외부 모듈 타입 오버라이딩
 │   ├── api
-│   │   └── core
-│   ├── atoms
+│   │   ├── core      // Axios 인스턴스
+│   │   ├── hooks     // React Query Hooks
+│   │   └── promises  // API 요청 Promises
+│   ├── atoms         // Jotai Atoms
 │   ├── components
-│   │   ├── hocs
-│   │   ├── layouts
-│   │   ├── pages
-│   │   └── seo
 │   ├── constants
-│   ├── hooks
+│   ├── hooks         // Custom Hooks
+│   ├── models        // 데이터 모델
 │   ├── styles
-│   └── utils
-├── README.md
+│   └── utils         // 유틸 함수
+├── next-env.d.ts
 ├── next.config.js
-├── tsconfig.json
 ├── package.json
-└── yarn.lock
+├── tsconfig.json
+├── yarn-error.log
+├── yarn.lock
+├── Dockerfile        // 배포자동화를 위한 도커파일
+└── README.md
 ```
 
-### 1. @types/
-
-1. 모든 type 선언은 이곳에서 한다.
-2. 파일 이름은 \*.d.ts 형식을 지킨다.
-3. 외부 모듈의 타입에 의존하는 타입은 @types/index.d.ts 파일에 선언한다.
-
-### 2. api/
-
-1. api/index.ts - Axios 인스턴스 및 인터셉터 정의
-2. api/... - 각 엔드포인트의 baseUrl명을 파일 이름으로 하여 추가
-
-### 3. atoms/
-
-1. atoms/index.ts - Default Store를 선언하여 Export
-2. atoms/... - 각 atom명을 파일 이름으로 하여 추가
-
-### 4. components/
-
-1. components/layouts - 레이아웃 컴포넌트
-2. components/hocs - RouterGuard 등 HOC 컴포넌트
-3. components/pages - 각 page의 최상위 컴포넌트 및 해당 page에서 사용되는 하위 컴포넌트
-4. components/seo - CustomHead 등 SEO에 사용되는 컴포넌트
-5. components/... - 필요에 따라 추가
-
-### 5. constants/
-
-1. constants/keys.ts - 각종 Key
-2. constants/paths.ts - Paths
-3. constants/... - 필요에 따라 추가
-
-### 6. hooks/
-
-자주 사용하는 Custom Hooks
-
-1. hooks/useChange.ts
-2. hooks/useCustomRouter.ts
-3. hooks/useInput.ts
-4. hooks/useMobile.ts
-5. hooks/usePreventScroll.ts
-6. hooks/useQueryString.ts
-7. hooks/useRouteToPath.ts
-8. hooks/useSwitch.ts
-9. hooks/useUniqueId.ts
-
-### 7. styles/
-
-1. styles/alphaToHex.ts - 0~1을 Hex로 변환한 값들의 모음
-2. styles/colors.ts
-3. styles/devices.ts - 뷰포트에 따른 디바이스 구분 기준
-4. styles/fonts.ts - 기본 아토믹 타이포그래피
-5. styles/global.ts - 기본 전역 스타일
-6. styles/reset.ts - 기본 리셋 스타일
-7. styles/sizes.ts
-8. styles/svgs.tsx
-
-### 8. utils/
-
-자주 사용하는 Utils
-
-1. utils/fetchAndSet.ts
-2. utils/setLayout.ts
-3. utils/withoutPropagation.ts
-
-### 9. Named Export & Re-Export in Index.ts
-
-```javascript
-// components/shared/index.ts
-export * from './ContactWidget';
-export * from './Navigator';
-export * from './SpaceBackground';
-```
-
-```javascript
-// components/index.ts
-export * from './shared';
-```
-
-```javascript
-// components/layouts/WithNavigatorLayout.tsx
-import { Navigator, ContactWidget } from '@components';
-```
-
-## 4. 코드 컨벤션
-
-### 1. EsLint Rules
-
-1. Import문 순서 자동 배치
-2. Named Export 강제 (pages/\*\*/\* 제외)
-3. React Component props에 중괄호가 필요없는 경우 자동 삭제
-4. Prettier 연동
-5. 외 Recommended Rules
-
-### 2. Type Naming
-
-1. Props Type 선언 시 Type을 사용한다. (Interface X)
-2. Props Type의 이름은 **[컴포넌트이름]+Props** 의 형식으로 짓는다.
-
-```typescript
-type HeaderProps = {
-  onOpenDrawer: (e: React.MouseEvent) => void;
-};
-
-type PublicationBoxElementProps = {
-  title: string;
-  writer: string;
-  img: string;
-  pdf: string;
-};
-```
-
-3. Interface 선언 시, 클래스의 인터페이스로 사용할 목적이 아니라면 **접두사 I를 사용하지 않는다**.
-
-### 3. Constants
-
-객체로 정의하되, `as const` 키워드를 사용하여 read-only 객체로 만든다.
-
-```typescript
-export const Paths = {
-  new: '/new',
-  newComplete: '/new/complete',
-  main: '/main',
-  reply: '/reply',
-  replyComplete: '/reply/complete',
-  view: '/view',
-} as const;
-```
-
-### 4. px - rem 관련
-
-1rem = 10px (styles/global.ts)  
-사용자 폰트 크기 대응을 위해 가급적 px이 아닌 rem을 사용한다.
-
-## 5. API 관련 컨벤션
-
-### 1. Generic Instance
-
-Axios Instance의 Request Methods 시그니쳐 오버라이딩
-
-```typescript
-// @types/dep/axios.d.ts
-import { AxiosInstance, AxiosRequestConfig } from 'axios';
-
-export interface GenericInstance extends AxiosInstance {
-  get<T>(url: string, config?: AxiosRequestConfig): Promise<T>;
-  post<T, U = void>(url: string, data?: U, config?: AxiosRequestConfig): Promise<T>;
-  put<T, U>(url: string, data: U, config?: AxiosRequestConfig): Promise<T>;
-  patch<T, U>(url: string, data: U, config?: AxiosRequestConfig): Promise<T>;
-}
-```
-
-### 2. API Schema
-
-Request & Response Schema 정의
-
-1. 요청 스키마 네임스페이스 네이밍 - **Request+[baseUrl]**
-2. 응답 스키마 네임스페이스 네이밍 - **Response+[baseUrl]**
-3. 스키마 타입 네이밍 - **[Method]**
-
-```typescript
-// @types/api/club.d.ts
-declare namespace RequestClub {
-  type Post = {
-    name: string;
-    profileImgUrl: string;
-    startDate: string;
-    endDate: string;
-  };
-}
-
-declare namespace ResponseClub {
-  type Get = {
-    id: 1;
-    name: string;
-    profileImgUrl: string;
-    clubCode: string;
-    startDate: string;
-    endDate: string;
-    numOfMember: number;
-  };
-
-  type Post = {
-    id: number;
-    code: string;
-  };
-}
-```
-
-### 3. Axios Promise Generator
-
-API 호출용 함수 정의
-
-1. 쿼리는 데이터와 별개의 파라미터로 넘김
-2. 정의해둔 스키마 타입을 각 구간에 지정
-   1. 휴먼 에러 방지
-   2. 반환될 데이터 타입 지정
-3. Axios Promise를 반환
-
-```typescript
-// api/club.ts
-import request from './core';
-
-const baseUrl = '/club';
-
-export const getClub = (clubId: number) => {
-  const url = `${baseUrl}/${clubId}`;
-  return request.get<ResponseClub.Get>(url);
-};
-
-export const postClub = (data: RequestClub.Post) => {
-  const url = `${baseUrl}`;
-  return request.post<ResponseClub.Post, RequestClub.Post>(url, data);
-};
-```
-
-### 4. Call Generator to Request
-
-```typescript
-// Somewhere in components
-import { postClub } from '@api';
-
-const onSubmit = async () => {
-  await postClub({
-    name: clubName,
-    profileImgUrl: fileKey,
-    startDate: '2023. 3. ' + startDate,
-    endDate: '2023. 3. ' + endDate,
-  });
-  onRouteToMain();
-};
-```
-
-### 5. Error Handling
-
-에러가 발생하면 Interceptor에서 Promise Chain을 끊는다.
-
-1. 예외처리
-2. async 스코프의 흐름이 다음으로 진행하지 못하게 한다.
-
-```typescript
-// api/core/index.ts
-request.interceptors.response.use(
-  (response) => {
-    return response.data;
-  },
-  (error) => {
-    console.log(error);
-    return new Promise(() => {});
-  },
-);
-```
-
-### 6. Interceptors
-
-1. 요청 직전, auth 관련 전역 상태를 확인하여 인증 헤더를 설정한다.
-2. 백엔드가 Snake Case를 사용하는 경우, 요청쪽에 camelToSnake, 응답쪽에 snakeToCamel 컨버터를 붙인다.
-
-## 6. 커밋 컨벤션
+## 7. 커밋 컨벤션
 
 ### 1. 브랜치 이름 컨벤션
 
 ```
 Feature/[기능요약]
 
-- 맨 첫글자 F만 대문자로, 기능요약은 소문자로 작성한다.
-- 띄어쓰기는 하이픈으로 구분한다.
+- 맨 첫글자 F만 대문자로, 기능요약은 소문자로 작성합니다.
+- 띄어쓰기는 하이픈으로 구분합니다.
 
 ex) Feature/modal-publishing
 ```
@@ -348,8 +184,8 @@ ex) Feature/modal-publishing
 ```
 <태그>: <제목>
 
-- 태그의 첫글자는 대문자로 작성한다.
-- 태그는 아래에 적힌 것들만 사용한다.
+- 태그의 첫글자는 대문자로 작성합니다.
+- 태그는 아래에 적힌 것들만 사용합니다.
 
 Feat: 새로운 기능 추가, 기능 로직 변경
 Fix: 버그 수정
@@ -358,3 +194,7 @@ Style: 코드 포맷팅, 코드 변경이 없는 경우
 Chore: 빌드 업무 수정, 패키지 매니저 수정
 Docs: 문서 수정, 주석
 ```
+
+### 3. 머지 전략
+
+모든 Feature 브랜치는 Squash Merge 합니다.
