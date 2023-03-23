@@ -6,8 +6,8 @@ import { useInput } from '@hooks/useInput';
 export const LoginPage = () => {
   const { _postLogin } = useAuth();
 
-  const [email, onChangeEmail] = useInput('example@email.com');
-  const [password, onChangePassword] = useInput('12345678');
+  const [email, onChangeEmail] = useInput('');
+  const [password, onChangePassword] = useInput('');
 
   return (
     <div css={Container}>
