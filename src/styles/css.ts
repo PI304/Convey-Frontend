@@ -47,6 +47,7 @@ export const C = {
 
     > p {
       ${Fonts.light14}
+      line-height: 140%;
     }
   `,
 };

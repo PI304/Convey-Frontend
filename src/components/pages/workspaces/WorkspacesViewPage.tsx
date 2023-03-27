@@ -85,7 +85,7 @@ export const WorkspacesViewPage = () => {
   return (
     <div css={Container}>
       <div css={C.Meta}>
-        <h1>{workspace?.name}&nbsp;</h1>
+        <h1>{workspace?.name}</h1>
         <h2>
           {workspace?.owner.name}
           <br />
@@ -93,7 +93,11 @@ export const WorkspacesViewPage = () => {
           <br />
           {workspace?.accessCode}
         </h2>
-        <p>created. {parseSubmitDate(workspace?.createdAt ?? '')}</p>
+        <p>
+          created. {parseSubmitDate(workspace?.createdAt ?? '')}
+          <br />
+          uuid. {workspace?.uuid}
+        </p>
         <div css={Buttons}>
           <Button label='기본 정보 수정' onClick={() => alert('기본 정보 수정')} />
         </div>
