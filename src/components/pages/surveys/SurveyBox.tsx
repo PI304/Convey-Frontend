@@ -343,6 +343,7 @@ const DescForm = css`
     ${Fonts.medium14}
     display: flex;
     gap: 0.5rem;
+    align-items: center;
   }
 `;
 
