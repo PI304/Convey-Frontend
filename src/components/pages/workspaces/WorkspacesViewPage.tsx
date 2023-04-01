@@ -169,7 +169,7 @@ export const WorkspacesViewPage = () => {
           <div css={AlignToRight}>
             <Button
               label='루틴 삭제'
-              onClick={() => _deleteRoutines.mutate([+(id ?? 0)])}
+              onClick={() => _deleteRoutines.mutate([routines.id])}
               backgroundColor='lightCoral'
             />
           </div>
