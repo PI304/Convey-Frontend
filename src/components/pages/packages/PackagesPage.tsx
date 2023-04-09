@@ -43,7 +43,7 @@ export const PackagesPage = () => {
       />
       <Board
         heads={['ID', '제목', '작성자']}
-        bodies={_getPackages.data?.map((_package) => [_package.id, _package.title, _package.author.name]) || []}
+        bodies={_getPackages.data?.results.map((_package) => [_package.id, _package.title, _package.author.name]) || []}
         viewPath={Paths.packages}
         onDelete={_deletePackage.mutate}
       />

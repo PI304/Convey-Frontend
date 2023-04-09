@@ -32,7 +32,7 @@ export const WorkspacesPage = () => {
         heads={['ID', '이름', '담당자']}
         bodies={
           (_getWorkspaces.data &&
-            _getWorkspaces.data?.map((workspace) => [workspace.id, workspace.name, workspace.owner.name])) ||
+            _getWorkspaces.data?.results.map((workspace) => [workspace.id, workspace.name, workspace.owner.name])) ||
           []
         }
         viewPath={Paths.workspaces}

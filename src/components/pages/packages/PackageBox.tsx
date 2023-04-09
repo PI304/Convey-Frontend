@@ -23,7 +23,7 @@ const PartsBox = ({ packageId }: PartsBoxProps) => {
   const { _getParts } = usePackages();
   return (
     <>
-      {_getParts(packageId).data?.map((part, i) => (
+      {_getParts(packageId).data?.results.map((part, i) => (
         <PartBox part={part} key={i} />
       ))}
     </>
@@ -75,7 +75,7 @@ const SubjectsBox = ({ partId }: SubjectsBoxProps) => {
   const { _getSubjects } = usePackages();
   return (
     <>
-      {_getSubjects(partId).data?.map((subject, i) => (
+      {_getSubjects(partId).data?.results.map((subject, i) => (
         <SubjectBox subject={subject} key={i} />
       ))}
     </>
