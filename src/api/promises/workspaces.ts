@@ -6,8 +6,8 @@ const baseUrl = '/workspaces';
  * Workspaces
  */
 
-export const getWorkspaces = () => {
-  const url = `${baseUrl}`;
+export const getWorkspaces = (page: number) => {
+  const url = `${baseUrl}?page=${page}`;
   return request.get<ResponseWorkspaces.Get>(url);
 };
 

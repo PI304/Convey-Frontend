@@ -1,7 +1,8 @@
 import { css } from '@emotion/react';
 import { useWorkspaces } from '@api';
-import { Board, Button, Input, Modal } from '@components';
+import { Board, Button, Input, Modal, PageButton } from '@components';
 import { Paths } from '@constants';
+import { useChange } from '@hooks/useChange';
 import { useInputs } from '@hooks/useInputs';
 import { useSwitch } from '@hooks/useSwitch';
 import { AlphaToHex, Colors } from '@styles';
@@ -9,6 +10,9 @@ import { requireContentAndMinLength } from '@utils/errorCheckers';
 
 export const WorkspacesPage = () => {
   const { _getWorkspaces, _postWorkspace, _deleteWorkspace } = useWorkspaces();
+
+  const [page, onChangePage] = useChange(1);
+  const { data: workspaces } = _getWorkspaces(page);
 
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [data, onChangeData] = useInputs<RequestWorkspaces.Post>({
@@ -28,13 +32,10 @@ export const WorkspacesPage = () => {
         onClick={onOpenModal}
         backgroundColor={`${Colors.highlight}${AlphaToHex['0.5']}`}
       />
+      <PageButton currentPage={page} totalPageCount={workspaces?.totalPageCount ?? 1} onChangePage={onChangePage} />
       <Board
         heads={['ID', '이름', '담당자']}
-        bodies={
-          (_getWorkspaces.data &&
-            _getWorkspaces.data?.results.map((workspace) => [workspace.id, workspace.name, workspace.owner.name])) ||
-          []
-        }
+        bodies={workspaces?.results.map((workspace) => [workspace.id, workspace.name, workspace.owner.name]) || []}
         viewPath={Paths.workspaces}
         onDelete={_deleteWorkspace.mutate}
       />

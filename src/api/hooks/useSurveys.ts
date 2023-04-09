@@ -8,7 +8,7 @@ import { queryClient } from '@pages/_app';
 export const useSurveys = () => {
   const setSurveysFromServerData = useSetAtom(setSurveysFromServerDataAtom);
 
-  const _getSurveys = (id: number) => useQuery([QueryKeys.surveys, id], () => getSurveys(id));
+  const _getSurveys = (page: number) => useQuery([QueryKeys.surveys, page], () => getSurveys(page));
 
   const _postSurveys = useMutation((params: Parameters<typeof postSurveys>) => postSurveys(...params), {
     onSuccess: () => queryClient.invalidateQueries([QueryKeys.surveys]),
