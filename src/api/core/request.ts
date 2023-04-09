@@ -6,7 +6,7 @@ import { GenericInstance } from '_types/dep/axios';
 
 export const request: GenericInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACK_END_BASE_URL,
-  timeout: 5000,
+  timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
 });
 
