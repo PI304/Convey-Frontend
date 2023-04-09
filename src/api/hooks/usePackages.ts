@@ -22,7 +22,7 @@ export const usePackages = () => {
    * Packages
    */
 
-  const _getPackages = useQuery(QueryKeys.packages, getPackages);
+  const _getPackages = (page: number) => useQuery(QueryKeys.packages, () => getPackages(page));
 
   const _postPackages = useMutation((params: Parameters<typeof postPackage>) => postPackage(...params), {
     onSuccess: () => queryClient.invalidateQueries([QueryKeys.packages]),

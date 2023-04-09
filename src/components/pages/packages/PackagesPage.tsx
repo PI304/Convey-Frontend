@@ -1,8 +1,9 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { css } from '@emotion/react';
 import { usePackages } from '@api';
-import { AutoResizeTextArea, Board, Button, Input, Modal } from '@components';
+import { AutoResizeTextArea, Board, Button, Input, Modal, PageButton } from '@components';
 import { Paths } from '@constants';
+import { useChange } from '@hooks/useChange';
 import { useInput } from '@hooks/useInput';
 import { useInputs } from '@hooks/useInputs';
 import { useSwitch } from '@hooks/useSwitch';
@@ -10,6 +11,9 @@ import { Colors, AlphaToHex } from '@styles';
 
 export const PackagesPage = () => {
   const { _getPackages, _postPackages, _deletePackage } = usePackages();
+
+  const [page, onChangePage] = useChange(1);
+  const { data: packages } = _getPackages(page);
 
   const [isModalOpened, onOpenModal, onCloseModal] = useSwitch();
   const [data, onChangeData] = useInputs<Omit<RequestPackages.Post, 'contacts'>>({
@@ -41,9 +45,10 @@ export const PackagesPage = () => {
         onClick={onOpenModal}
         backgroundColor={`${Colors.highlight}${AlphaToHex['0.5']}`}
       />
+      <PageButton currentPage={page} totalPageCount={packages?.totalPageCount ?? 1} onChangePage={onChangePage} />
       <Board
         heads={['ID', '제목', '작성자']}
-        bodies={_getPackages.data?.results.map((_package) => [_package.id, _package.title, _package.author.name]) || []}
+        bodies={packages?.results.map((_package) => [_package.id, _package.title, _package.author.name]) || []}
         viewPath={Paths.packages}
         onDelete={_deletePackage.mutate}
       />
