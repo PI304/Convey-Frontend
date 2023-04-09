@@ -15,7 +15,7 @@ type WriteSurveyDescriptionAtomType = {
 type WriteQuestionNumberAtomType = {
   surveyIdx: number;
   questionIdx: number;
-  number: number;
+  number: string;
 };
 
 type WriteQuestionContentAtomType = {

@@ -24,7 +24,7 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
               sector: 1,
               createdAt: 'string',
               updatedAt: 'string',
-              number: 1,
+              number: '1',
               content: 'string',
               choices: [
                 {
@@ -56,7 +56,7 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
               sector: 1,
               createdAt: 'string',
               updatedAt: 'string',
-              number: 1,
+              number: '1',
               content: 'string',
               choices: [
                 {
@@ -122,7 +122,7 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
               sector: 1,
               createdAt: 'string',
               updatedAt: 'string',
-              number: 1,
+              number: '1',
               content: 'string',
               choices: null,
             },
@@ -131,7 +131,7 @@ const handler = nextConnect<NextApiRequest, NextApiResponse>() //
               sector: 1,
               createdAt: 'string',
               updatedAt: 'string',
-              number: 1,
+              number: '1',
               content: 'string',
               choices: null,
             },

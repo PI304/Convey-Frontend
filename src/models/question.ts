@@ -5,13 +5,13 @@ import { Choice } from '@models';
 export class Question implements QuestionType {
   [immerable] = true;
 
-  number: number;
+  number: string;
   content: string;
   choices: ChoiceType[] | null = null;
 
   constructor(idx: number) {
-    this.number = idx;
-    this.content = '질문' + idx;
+    this.number = (idx + '').slice(0, 3);
+    this.content = '질문' + this.number;
   }
 
   setFromServerData(question: ResponseQuestionType, questionType: ValueOf<typeof QuestionTypes>) {
