@@ -113,7 +113,7 @@ export const SurveyBox = ({ survey, surveyIdx }: SurveyBoxProps) => {
             <div>
               <Input
                 value={question.number + ''}
-                onChange={(e) => writeQuestionNumber({ surveyIdx, questionIdx, number: +e.target.value })}
+                onChange={(e) => writeQuestionNumber({ surveyIdx, questionIdx, number: e.target.value })}
                 placeholder='번호'
                 width='4rem'
               />

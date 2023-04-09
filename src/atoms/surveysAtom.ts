@@ -43,6 +43,7 @@ export const writeSurveyDescriptionAtom = atom(null, (get, set, update: WriteSur
 });
 
 export const writeQuestionNumberAtom = atom(null, (get, set, update: WriteQuestionNumberAtomType) => {
+  if (/[^0-9.]/.test(update.number) || update.number.length > 3) return;
   const surveys = get(surveysAtom);
   if (!surveys) return;
   const newSurveys = produce(surveys, (draft) => {
@@ -65,7 +66,9 @@ export const addQuestionAtom = atom(null, (get, set, update: AddQuestionAtomType
   if (!surveys) return;
   const newSurveys = produce(surveys, (draft) => {
     const questions = draft[update.surveyIdx].questions;
-    questions.push(new Question(questions.length + 1));
+    const lastQuestionNumber = +questions[questions.length - 1].number;
+    const defaultNumber = lastQuestionNumber % 1 ? lastQuestionNumber + 0.1 : lastQuestionNumber + 1;
+    questions.push(new Question(defaultNumber));
   });
   set(surveysAtom, newSurveys);
   if (update.questionType === QuestionTypes.longAnswer) return;
@@ -110,7 +113,6 @@ export const addChoiceAtom = atom(null, (get, set, update: AddChoiceAtomType) =>
   if (!surveys) return;
   const newSurveys = produce(surveys, (draft) => {
     const choices = draft[update.surveyIdx].questions[update.questionIdx].choices;
-    console.log(draft[update.surveyIdx].questions[update.questionIdx].content);
     if (!choices)
       draft[update.surveyIdx].questions[update.questionIdx].choices = [new Choice(1, update.questionType, false)];
     else choices.push(new Choice(choices.length + 1, update.questionType, false));
