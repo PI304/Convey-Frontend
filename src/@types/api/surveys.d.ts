@@ -16,23 +16,27 @@ declare namespace RequestSurveys {
 
 declare namespace ResponseSurveys {
   type Get = {
-    id: number;
-    author: {
+    totalCount: number;
+    totalPageCount: number;
+    results: {
       id: number;
-      email: string;
-      name: string;
-      socialProvider: string;
-      role: number;
-      password: string;
+      author: {
+        id: number;
+        email: string;
+        name: string;
+        socialProvider: string;
+        role: number;
+        password: string;
+        createdAt: string;
+        updatedAt: string;
+      };
+      title: string;
+      description: string;
+      abbr: string;
       createdAt: string;
       updatedAt: string;
-    };
-    title: string;
-    description: string;
-    abbr: string;
-    createdAt: string;
-    updatedAt: string;
-  }[];
+    }[];
+  };
 
   type GetById = {
     id: number;

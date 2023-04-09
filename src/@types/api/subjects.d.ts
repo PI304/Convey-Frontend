@@ -20,7 +20,11 @@ declare namespace ResponseSubjects {
     id: number;
   };
 
-  type GetAllByPartId = Subject[];
+  type GetAllByPartId = {
+    totalCount: number;
+    totalPageCount: number;
+    results: Subject[];
+  };
 
   type Subject = {
     id: number;

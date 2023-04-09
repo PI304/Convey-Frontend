@@ -37,6 +37,7 @@ export const Board = ({ heads, bodies, viewPath, onDelete }: BoardProps) => {
 
 const Table = css`
   text-align: center;
+  width: 90rem;
 
   tr {
     cursor: pointer;
@@ -46,5 +47,9 @@ const Table = css`
   td {
     padding: 1rem 3rem;
     border-bottom: 0.1rem solid black;
+
+    > button {
+      margin: 0 auto;
+    }
   }
 `;

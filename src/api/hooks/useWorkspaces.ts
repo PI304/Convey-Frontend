@@ -20,7 +20,7 @@ export const useWorkspaces = () => {
    * Workspaces
    */
 
-  const _getWorkspaces = useQuery(QueryKeys.workspaces, getWorkspaces);
+  const _getWorkspaces = (page: number) => useQuery(QueryKeys.workspaces, () => getWorkspaces(page));
 
   const _postWorkspace = useMutation((params: Parameters<typeof postWorkspace>) => postWorkspace(...params), {
     onSuccess: () => queryClient.invalidateQueries([QueryKeys.workspaces]),

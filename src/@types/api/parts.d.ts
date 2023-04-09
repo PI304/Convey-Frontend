@@ -13,7 +13,11 @@ declare namespace ResponseParts {
     id: number;
   };
 
-  type GetAllByPackageId = Part[];
+  type GetAllByPackageId = {
+    totalCount: number;
+    totalPageCount: number;
+    results: Part[];
+  };
 
   type Part = {
     id: number;
