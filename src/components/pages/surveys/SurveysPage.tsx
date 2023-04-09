@@ -2,8 +2,9 @@
 import { css } from '@emotion/react';
 import { useEffect } from 'react';
 import { useSurveys } from '@api';
-import { AutoResizeTextArea, Board, Button, Input, Modal } from '@components';
+import { AutoResizeTextArea, Board, Button, Input, Modal, PageButton } from '@components';
 import { Paths } from '@constants';
+import { useChange } from '@hooks/useChange';
 import { useInput } from '@hooks/useInput';
 import { useSwitch } from '@hooks/useSwitch';
 import { AlphaToHex, Colors } from '@styles';
@@ -11,6 +12,9 @@ import { parseSubmitDate } from '@utils/parseSubmitDate';
 
 export const SurveysPage = () => {
   const { _getSurveys, _postSurveys, _deleteSurveys } = useSurveys();
+
+  const [page, onChangePage] = useChange(1);
+  const { data: surveys } = _getSurveys(page);
 
   const [title, onChangeTitle, onResetTitle] = useInput();
   const [description, onChangeDescription, onResetDescription] = useInput();
@@ -36,18 +40,17 @@ export const SurveysPage = () => {
         onClick={onOpenModal}
         backgroundColor={`${Colors.highlight}${AlphaToHex['0.5']}`}
       />
+      <PageButton currentPage={page} totalPageCount={surveys?.totalPageCount ?? 1} onChangePage={onChangePage} />
       <Board
         heads={['ID', '제목', '약어', '작성자', '작성일']}
         bodies={
-          (_getSurveys?.data?.length &&
-            _getSurveys?.data?.map((survey) => [
-              survey.id, //
-              survey.title,
-              survey.abbr,
-              survey.author.name,
-              parseSubmitDate(survey.createdAt),
-            ])) ||
-          []
+          surveys?.results.map((survey) => [
+            survey.id, //
+            survey.title,
+            survey.abbr,
+            survey.author.name,
+            parseSubmitDate(survey.createdAt),
+          ]) || []
         }
         viewPath={Paths.surveys}
         onDelete={_deleteSurveys.mutate}
