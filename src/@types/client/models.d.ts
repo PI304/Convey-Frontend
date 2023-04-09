@@ -8,7 +8,7 @@ type SurveyType = {
 };
 
 type QuestionType = {
-  number: number;
+  number: string;
   content: string;
   choices: ChoiceType[] | null;
 };

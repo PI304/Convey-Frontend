@@ -12,7 +12,7 @@ export class Survey implements SurveyType {
   commonChoices: ChoiceType[] | null = null;
   questions: QuestionType[] = [
     {
-      number: 1,
+      number: '1',
       content: '질문1',
       choices: null,
     },
