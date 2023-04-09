@@ -6,8 +6,8 @@ const baseUrl = '/survey-packages';
  * Packages
  */
 
-export const getPackages = () => {
-  const url = `${baseUrl}`;
+export const getPackages = (page: number) => {
+  const url = `${baseUrl}?page=${page}`;
   return request.get<ResponsePackages.Get>(url);
 };
 

@@ -57,3 +57,9 @@ type ToggleButtonProps = {
   labelForActive: string;
   labelForDeactive: string;
 };
+
+type PageButtonProps = {
+  currentPage: number;
+  totalPageCount: number;
+  onChangePage: (page: number) => void;
+};

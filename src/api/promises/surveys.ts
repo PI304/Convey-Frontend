@@ -3,7 +3,7 @@ import { request } from '@api';
 const baseUrl = '/surveys';
 
 export const getSurveys = (page: number) => {
-  const url = `${baseUrl}`;
+  const url = `${baseUrl}?page=${page}`;
   return request.get<ResponseSurveys.Get>(url);
 };
 

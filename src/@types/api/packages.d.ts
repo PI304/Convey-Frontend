@@ -30,7 +30,11 @@ declare namespace ResponsePackages {
     id: number;
   };
 
-  type Get = GetById[];
+  type Get = {
+    totalCount: number;
+    totalPageCount: number;
+    results: GetById[];
+  };
 
   type GetById = {
     id: number;

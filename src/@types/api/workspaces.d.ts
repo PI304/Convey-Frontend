@@ -27,7 +27,11 @@ declare namespace RequestWorkspaces {
 }
 
 declare namespace ResponseWorkspaces {
-  type Get = GetById[];
+  type Get = {
+    totalCount: number;
+    totalPageCount: number;
+    results: GetById[];
+  };
 
   type GetById = {
     id: number;
