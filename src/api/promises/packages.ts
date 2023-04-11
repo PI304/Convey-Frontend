@@ -16,6 +16,13 @@ export const getPackageById = (packageId: number) => {
   return request.get<ResponsePackages.GetById>(url);
 };
 
+export const getPackagesDownload = (packageId: number) => {
+  const url = `${baseUrl}/${packageId}/download`;
+  return request.get<ResponsePackages.GetDownload>(url, {
+    responseType: 'arraybuffer',
+  });
+};
+
 export const postPackage = (data: RequestPackages.Post) => {
   const url = `${baseUrl}`;
   return request.post<ResponsePackages.Post, RequestPackages.Post>(url, data);

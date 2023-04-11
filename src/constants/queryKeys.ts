@@ -3,6 +3,7 @@ export const QueryKeys = {
   survey: 'survey',
   packages: 'packages',
   package: 'package',
+  packageDownload: 'packageDownload',
   parts: 'parts',
   subjects: 'subjects',
   includedSurveys: 'includedSurveys',

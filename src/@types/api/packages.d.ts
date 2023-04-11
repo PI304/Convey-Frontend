@@ -50,4 +50,6 @@ declare namespace ResponsePackages {
     createdAt: string;
     updatedAt: string;
   };
+
+  type GetDownload = BlobPart;
 }

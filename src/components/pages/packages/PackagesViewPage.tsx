@@ -6,14 +6,16 @@ import { useInput } from '@hooks/useInput';
 import { useInputs } from '@hooks/useInputs';
 import { useQueryString } from '@hooks/useQueryString';
 import { useSwitch } from '@hooks/useSwitch';
-import { C, Fonts } from '@styles';
+import { AlphaToHex, C, Colors, Fonts } from '@styles';
+import { autoDownload } from '@utils/autoDownload';
 import { parseSubmitDate } from '@utils/parseSubmitDate';
 import { withoutPropagation } from '@utils/withoutPropagation';
 
 export const PackagesViewPage = () => {
   const id = useQueryString('id');
-  const { _postPart, _getPackagesById, _patchPackages } = usePackages();
+  const { _postPart, _getPackagesById, _getPackagesDownload, _patchPackages } = usePackages();
   const { data: packages } = _getPackagesById(id);
+  const { refetch: downloadPackagesFile } = _getPackagesDownload(id);
 
   const [isMetaModalOpened, onOpenMetaModal, onCloseMetaModal] = useSwitch();
   const [isPartModalOpened, onOpenPartModal, onClosePartModal] = useSwitch();
@@ -28,6 +30,15 @@ export const PackagesViewPage = () => {
     title: '',
     subjects: [],
   });
+
+  const requestDownload = async () => {
+    const { data: content } = await downloadPackagesFile();
+    if (!content) return;
+    const file = new Blob([content], {
+      type: 'text/xlsx;charset=utf-8',
+    });
+    autoDownload(file, packages?.title);
+  };
 
   const requestPatchPackages = async () => {
     if (!id) return;
@@ -88,6 +99,11 @@ export const PackagesViewPage = () => {
         <div css={Buttons} onClick={withoutPropagation}>
           <Button label='기본 정보 수정' onClick={onOpenMetaModal} />
           <Button label='디바이더 +' onClick={onOpenPartModal} />
+          <Button
+            label='문항 다운로드'
+            onClick={requestDownload}
+            backgroundColor={`${Colors.highlight}${AlphaToHex['0.6']}`}
+          />
         </div>
       </div>
       {packages && <PackageBox _package={packages} />}

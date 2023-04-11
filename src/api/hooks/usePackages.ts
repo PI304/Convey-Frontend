@@ -6,6 +6,7 @@ import {
   getIncludedSurveys,
   getPackageById,
   getPackages,
+  getPackagesDownload,
   getParts,
   getSubjects,
   patchPackage,
@@ -37,6 +38,16 @@ export const usePackages = () => {
       if (id === undefined) return;
       return getPackageById(+id);
     });
+
+  const _getPackagesDownload = (id: string | undefined) =>
+    useQuery(
+      [QueryKeys.packageDownload, id],
+      () => {
+        if (id === undefined) return;
+        return getPackagesDownload(+id);
+      },
+      { enabled: false },
+    );
 
   const _deletePackage = useMutation((params: Parameters<typeof deletePackage>) => deletePackage(...params), {
     onSuccess: () => queryClient.invalidateQueries([QueryKeys.packages]),
@@ -89,6 +100,7 @@ export const usePackages = () => {
     _postPackages,
     _patchPackages,
     _getPackagesById,
+    _getPackagesDownload,
     _deletePackage,
     _getParts,
     _postPart,
