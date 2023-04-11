@@ -3,4 +3,5 @@ type RoutineDetailProps = {
   nthDay: number;
   time: string;
   surveyPackage: number;
+  externalResource: string;
 };

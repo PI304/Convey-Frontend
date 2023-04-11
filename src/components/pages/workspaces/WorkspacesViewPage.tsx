@@ -1,7 +1,7 @@
 import { css } from '@emotion/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useWorkspaces } from '@api';
-import { Button, Input, Modal, SelectDropDown, SelectPackageDropDown } from '@components';
+import { Button, Input, Modal, SelectDropDown, SelectPackageDropDown, ToggleButton } from '@components';
 import { useInput } from '@hooks/useInput';
 import { useQueryString } from '@hooks/useQueryString';
 import { useSwitch } from '@hooks/useSwitch';
@@ -31,7 +31,9 @@ export const WorkspacesViewPage = () => {
   const [kickOff, onChangeKickedOff] = useState<number>();
   const [nthDay, onChangeNthDay] = useInput();
   const [time, onChangeTime] = useInput();
-  const [surveyPackage, , , onManuallyChangeSurveyPackage] = useInput();
+  const [surveyPackage, , onResetSurveyPackage, onManuallyChangeSurveyPackage] = useInput();
+  const [externalResource, onChangeExternalResource, onResetExternalResource] = useInput();
+  const [isExternalResourceUsed, , , onToggleExternalResource] = useSwitch();
 
   const requestPostPackagesToWorkspace = async () => {
     if (id === undefined) return;
@@ -66,7 +68,8 @@ export const WorkspacesViewPage = () => {
       {
         nthDay: +nthDay,
         time: time,
-        surveyPackage: +surveyPackage,
+        surveyPackage: surveyPackage ? +surveyPackage : null,
+        externalResource: externalResource ? externalResource : null,
       },
     ]);
     onCloseRoutineDetailsModal();
@@ -81,6 +84,11 @@ export const WorkspacesViewPage = () => {
     if (!packages.includes(packageId)) return;
     setPackages(packages.filter((_package) => _package !== packageId));
   };
+
+  useEffect(() => {
+    onResetExternalResource();
+    onResetSurveyPackage();
+  }, [isExternalResourceUsed]);
 
   return (
     <div css={Container}>
@@ -152,6 +160,7 @@ export const WorkspacesViewPage = () => {
               <h2>NthDay</h2>
               <h2>Time</h2>
               <h2>Package</h2>
+              <h2>External Resource</h2>
               <h2>삭제</h2>
               {routines.routines.map((routine, i) => (
                 <RoutineDetail
@@ -159,6 +168,7 @@ export const WorkspacesViewPage = () => {
                   nthDay={routine.nthDay}
                   time={routine.time}
                   surveyPackage={routine.surveyPackage}
+                  externalResource={routine.externalResource}
                   key={i}
                 />
               ))}
@@ -219,27 +229,47 @@ export const WorkspacesViewPage = () => {
           errorChecker={() => requireContentAndMaxNumber(nthDay, +(routines?.duration ?? 0))}
         />
         <Input value={time + ''} onChange={onChangeTime} placeholder='HH:MM' />
-        <SelectDropDown
-          onSelect={(id) => onManuallyChangeSurveyPackage(id + '')}
-          label={surveyPackage || '패키지를 선택하세요.'}
-          disabled={false}
-          data={workspace?.surveyPackages.map((_package) => ({ id: _package.id, title: _package.title })) || []}
-          forwardCss={css`
-            width: 100%;
-          `}
+        <ToggleButton
+          isActive={isExternalResourceUsed}
+          onToggle={onToggleExternalResource}
+          labelForActive='외부링크 사용O'
+          labelForDeactive='외부링크 사용X'
         />
+        {!isExternalResourceUsed && (
+          <SelectDropDown
+            onSelect={(id) => onManuallyChangeSurveyPackage(id + '')}
+            label={surveyPackage || '패키지를 선택하세요.'}
+            disabled={false}
+            data={workspace?.surveyPackages.map((_package) => ({ id: _package.id, title: _package.title })) || []}
+            forwardCss={css`
+              width: 100%;
+            `}
+          />
+        )}
+        {isExternalResourceUsed && (
+          <Input value={externalResource + ''} onChange={onChangeExternalResource} placeholder='외부 링크' />
+        )}
       </Modal>
     </div>
   );
 };
 
-const RoutineDetail = ({ id, nthDay, time, surveyPackage }: RoutineDetailProps) => {
+const RoutineDetail = ({ id, nthDay, time, surveyPackage, externalResource }: RoutineDetailProps) => {
   const { _deleteRoutineDetails } = useWorkspaces();
   return (
     <>
       <div>{nthDay}번째 날</div>
       <div>{time}</div>
       <div>{surveyPackage}</div>
+      <div>
+        {externalResource ? (
+          <a href={externalResource} target='_blank'>
+            {externalResource}
+          </a>
+        ) : (
+          '-'
+        )}
+      </div>
       <Button label='삭제' onClick={() => _deleteRoutineDetails.mutate([id])} backgroundColor='lightCoral' />
     </>
   );
@@ -337,7 +367,7 @@ const RoutineDetails = css`
   margin-top: 1rem;
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   align-items: center;
   text-align: center;
   row-gap: 1rem;

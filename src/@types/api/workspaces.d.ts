@@ -8,17 +8,14 @@ declare namespace RequestWorkspaces {
   type PostRoutines = {
     duration: number;
     kickOff: number;
-    routines: {
-      nthDay: number;
-      time: string;
-      surveyPackage: number;
-    }[];
+    routines: PostRoutineDetails[];
   };
 
   type PostRoutineDetails = {
     nthDay: number;
     time: string;
-    surveyPackage: number;
+    surveyPackage: number | null;
+    externalResource: string | null;
   };
 
   type PostPackages = {
@@ -72,15 +69,7 @@ declare namespace ResponseWorkspaces {
       updatedAt: string;
     };
     duration: number;
-    routines: {
-      id: number;
-      routine: number;
-      nthDay: number;
-      time: string;
-      surveyPackage: number;
-      createdAt: string;
-      updatedAt: string;
-    }[];
+    routines: GetRoutineDetailsById[];
     kickOff: number;
     createdAt: string;
     updatedAt: string;
@@ -92,6 +81,7 @@ declare namespace ResponseWorkspaces {
     nthDay: number;
     time: string;
     surveyPackage: number;
+    externalResource: string;
     createdAt: string;
     updatedAt: string;
   };
