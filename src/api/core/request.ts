@@ -8,6 +8,7 @@ export const request: GenericInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BACK_END_BASE_URL,
   timeout: 10000,
   headers: { 'Content-Type': 'application/json' },
+  withCredentials: true,
 });
 
 request.interceptors.request.use(
