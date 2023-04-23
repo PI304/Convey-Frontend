@@ -9,7 +9,17 @@ import { store } from '@atoms';
 import { RouterGuard } from '@components';
 import { GlobalStyle } from 'src/styles';
 
-export const queryClient = new QueryClient();
+export const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: 0,
+      useErrorBoundary: true,
+    },
+    mutations: {
+      useErrorBoundary: true,
+    },
+  },
+});
 
 const AtomsDevtools = ({ children }: ChildrenType) => {
   useAtomsDevtools('store');
