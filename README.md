@@ -198,3 +198,6 @@ Docs: 문서 수정, 주석
 ### 3. 머지 전략
 
 모든 Feature 브랜치는 Squash Merge 합니다.
+
+
+<!-- Security scan triggered at 2025-09-01 22:48:58 -->
